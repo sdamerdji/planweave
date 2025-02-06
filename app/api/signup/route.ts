@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 // Configure Airtable with an environment variable for the API key.
 const base = new Airtable({
-  apiKey: "paty9Vb2szSUg6aNq.09b1a331f02f971dd5fd7a9948f84d86eb61a2b5b19eb99fdd3d127c45992d4b").base("appFI1HPLlijrA6VM");
+  apiKey: "paty9Vb2szSUg6aNq.09b1a331f02f971dd5fd7a9948f84d86eb61a2b5b19eb99fdd3d127c45992d4b"}).base("appFI1HPLlijrA6VM");
 
 export async function POST(request: Request) {
   try {
