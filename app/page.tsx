@@ -73,7 +73,8 @@ export default function Home() {
             <h2 className="text-2xl font-semibold">Refreshers</h2>
             <p className="text-gray-700">
               No need to reread technical memos before every public meeting.
-              Search the key questions and have answers at your fingertips.
+              Search the key questions and have answers in seconds instead of
+              hours.
             </p>
           </div>
         </div>
