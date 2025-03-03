@@ -9,6 +9,7 @@ import {
   jsonb,
   unique,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const matter = pgTable("matter", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -94,6 +95,7 @@ export const documentChunk = pgTable(
   "document_chunk",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    legistarClient: text().notNull(),
     documentTable: text().notNull(),
     documentId: integer().notNull(),
     index: integer().notNull(),
@@ -103,7 +105,11 @@ export const documentChunk = pgTable(
   },
   (table) => [
     unique().on(table.documentTable, table.documentId, table.index),
-    index("embeddingIndex").using(
+    index("document_chunk_tsvector_index").using(
+      "gin",
+      sql`to_tsvector('english', ${table.text})`
+    ),
+    index("document_chunk_embedding_index").using(
       "hnsw",
       table.embedding.op("vector_cosine_ops")
     ),

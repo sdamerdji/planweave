@@ -1,7 +1,8 @@
 type SearchLegistarResponse = {
   responseText: string;
   documents: {
-    title: string;
+    body: string;
+    dateStr: string;
     content: string;
     snippet: string;
     url: string;

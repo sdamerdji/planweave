@@ -15,13 +15,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const SupportedCities = ["Sunnyvale, CA"];
+const LegistarClientToDisplayName = {
+  sunnyvaleca: "Sunnyvale, CA",
+  mountainview: "Mountain View, CA",
+};
+
+type LegistarClient = keyof typeof LegistarClientToDisplayName;
 
 const asterisksToBold = (text: string) => {
   return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 };
 
 const SearchDemo = () => {
+  const [legistarClient, setLegistarClient] =
+    useState<LegistarClient>("sunnyvaleca");
   const [searchQuery, setSearchQuery] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
@@ -31,11 +38,11 @@ const SearchDemo = () => {
 
   const queries = ["What projects are using state density bonus law?"];
 
-  const handleSearch = () => {
+  const handleSearch = (query: string) => {
     setSearchLoading(true);
     fetch("/api/searchLegistar", {
       method: "POST",
-      body: JSON.stringify({ query: searchQuery }),
+      body: JSON.stringify({ query, legistarClient }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -44,10 +51,10 @@ const SearchDemo = () => {
       });
   };
 
-  const handleQuerySelect = (query: string) => {
+  const handleRecentQuerySelect = (query: string) => {
     setSearchQuery(query);
     setIsInputFocused(false);
-    handleSearch();
+    handleSearch(query);
   };
 
   return (
@@ -68,16 +75,23 @@ const SearchDemo = () => {
           <div className="flex-1 mr-6">
             {/* Search bar */}
             <div className="flex gap-4 w-full">
-              <Select defaultValue={SupportedCities[0]}>
-                <SelectTrigger className="w-40 h-[50px]">
+              <Select
+                defaultValue={"sunnyvaleca"}
+                onValueChange={(client: LegistarClient) =>
+                  setLegistarClient(client)
+                }
+              >
+                <SelectTrigger className="w-50 h-[50px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {SupportedCities.map((city) => (
-                    <SelectItem key={city} value={city}>
-                      {city}
-                    </SelectItem>
-                  ))}
+                  {Object.entries(LegistarClientToDisplayName).map(
+                    ([client, name]) => (
+                      <SelectItem key={name} value={client}>
+                        {name}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
               <div className="relative mb-6 grow">
@@ -101,7 +115,7 @@ const SearchDemo = () => {
                   <Button
                     style={{ top: ".4rem", right: ".4rem" }}
                     className="absolute bg-black hover:bg-gray-700"
-                    onClick={handleSearch}
+                    onClick={() => handleSearch(searchQuery)}
                   >
                     Search
                   </Button>
@@ -117,7 +131,7 @@ const SearchDemo = () => {
                           <li
                             key={index}
                             className="px-4 py-2 hover:bg-slate-50 cursor-pointer flex items-center"
-                            onClick={() => handleQuerySelect(query)}
+                            onClick={() => handleRecentQuerySelect(query)}
                           >
                             <Search className="h-4 w-4 text-slate-400 mr-2" />
                             <span>{query}</span>
@@ -174,7 +188,14 @@ const SearchDemo = () => {
                     {searchResults.documents.map((doc, i) => (
                       <a href={doc.url} key={i}>
                         <div className="p-2 border rounded">
-                          <p className="font-medium text-sm">{doc.title}</p>
+                          <p className="font-medium text-sm">{doc.body}</p>
+                          <p className="font-medium text-sm">
+                            {new Date(doc.dateStr).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </p>
                           <p className="text-xs text-slate-500">
                             {doc.snippet}
                           </p>

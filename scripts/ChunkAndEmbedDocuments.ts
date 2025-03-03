@@ -30,6 +30,7 @@ const main = async () => {
     }
 
     let chunks: {
+      legistarClient: string;
       index: number;
       text: string;
       documentId: number;
@@ -42,6 +43,7 @@ const main = async () => {
 
       chunks = chunks.concat(
         documentChunks.map((c, i) => ({
+          legistarClient: agenda.event_agenda_text.legistarClient,
           index: i,
           text: c.pageContent,
           documentId: agenda.event_agenda_text.id,
