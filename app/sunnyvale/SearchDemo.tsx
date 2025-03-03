@@ -16,13 +16,6 @@ const SearchDemo = () => {
 
   const queries = Object.keys(DocumentsBySearch);
 
-  //   const handleSearch = (e) => {
-  // e.preventDefault();
-  // if (searchQuery.trim()) {
-  //   setSearchPerformed(true);
-  // }
-  //   };
-
   const handleQuerySelect = (query: string) => {
     setSearchQuery(query);
     setSearchPerformed(true);
