@@ -111,6 +111,12 @@ const SearchDemo = () => {
                     }}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 pr-16 py-6 text-lg w-full border-slate-300"
+                    // Pressing enter triggers search
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch(searchQuery);
+                      }
+                    }}
                   />
                   <Button
                     style={{ top: ".4rem", right: ".4rem" }}
@@ -119,7 +125,7 @@ const SearchDemo = () => {
                   >
                     Search
                   </Button>
-                  {isInputFocused && (
+                  {isInputFocused && searchQuery.length === 0 && (
                     <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg rounded-md border border-slate-200 z-10">
                       <div className="p-2 border-b border-slate-100">
                         <p className="text-sm font-medium text-slate-500">
@@ -148,13 +154,15 @@ const SearchDemo = () => {
             <Card className="shadow-lg">
               <CardHeader className="px-6">
                 <CardTitle className="text-xl font-medium">
-                  {searchResults
-                    ? `Answer`
-                    : "Enter a search query to get started"}
+                  {searchLoading
+                    ? "Researching..."
+                    : searchResults
+                      ? "Answer"
+                      : "Enter a search query to get started"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {searchResults ? (
+                {searchResults && !searchLoading ? (
                   <div
                     className="prose max-w-none whitespace-pre-line"
                     dangerouslySetInnerHTML={{

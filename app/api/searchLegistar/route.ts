@@ -30,6 +30,9 @@ const getKeywords = async (query: string) => {
     input: What's the most recent hearing on 1024 Market St?
     output: 1024 Market St
 
+    input: What's the most recent hearing on the budget?
+    output: None
+
     Separate your keywords with commas.
     `;
 
@@ -45,7 +48,8 @@ const getKeywords = async (query: string) => {
   return responseText
     .split(",")
     .map((keyword) => keyword.trim())
-    .flatMap((keyword) => keyword.split(" "));
+    .flatMap((keyword) => keyword.split(" "))
+    .filter((word) => word.toLocaleLowerCase() !== "none");
 };
 
 export async function POST(request: Request) {
