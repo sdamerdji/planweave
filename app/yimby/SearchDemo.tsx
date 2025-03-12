@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import {
   Select,
   SelectContent,
@@ -35,22 +33,12 @@ const SearchDemo = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
     useState<SearchLegistarResponse | null>(null);
+
   const [searchLoading, setSearchLoading] = useState(false);
-  const { toast } = useToast();
 
   const queries = ["What projects are using state density bonus law?"];
 
   const handleSearch = (query: string) => {
-    if (!query.trim()) {
-      toast({
-        title: "What do you want to know?",
-        description: "Please enter a search query to get started.",
-      });
-      setSearchResults(null);
-      setSearchLoading(false);
-      return;
-    }
-    
     setSearchLoading(true);
     fetch("/api/searchLegistar", {
       method: "POST",
@@ -71,7 +59,6 @@ const SearchDemo = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Toaster />
       <div className="container mx-auto px-4">
         {/* Header */}
         <header className="py-6">
@@ -179,7 +166,7 @@ const SearchDemo = () => {
                   <div
                     className="prose max-w-none whitespace-pre-line"
                     dangerouslySetInnerHTML={{
-                      __html: searchResults.responseText ? `<p>${asterisksToBold(searchResults.responseText)}</p>` : '',
+                      __html: `<p>${asterisksToBold(searchResults.responseText)}</p>`,
                     }}
                   />
                 ) : (
