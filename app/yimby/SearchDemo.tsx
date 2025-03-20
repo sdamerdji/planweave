@@ -21,34 +21,118 @@ const LegistarClientToDisplayName = {
 };
 
 type LegistarClient = keyof typeof LegistarClientToDisplayName;
+/// any updates on housing element program implementation? draw attention to any updates on programs to affirmatively further fair housing, to rezone the city per the housing element obligations, anything to do with a "site inventory" from the housing element, or actions tied to 'constraints reduction' 
+// New interface for search results by city
+interface CitySearchResult {
+  city: LegistarClient;
+  displayName: string;
+  results: SearchLegistarResponse;
+  mostRecentDate: Date;
+}
 
 const asterisksToBold = (text: string) => {
   return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 };
 
 const SearchDemo = () => {
-  const [legistarClient, setLegistarClient] =
-    useState<LegistarClient>("sunnyvaleca");
   const [searchQuery, setSearchQuery] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
     useState<SearchLegistarResponse | null>(null);
-
+  const [cityResults, setCityResults] = useState<CitySearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [currentSearchState, setCurrentSearchState] = useState<
+    "idle" | "searching" | "complete"
+  >("idle");
 
   const queries = ["What projects are using state density bonus law?"];
 
-  const handleSearch = (query: string) => {
+  // Helper function to get time label and color
+  const getTimeLabel = (date: Date) => {
+    const now = new Date();
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+    
+    const oneMonthAgo = new Date(now);
+    oneMonthAgo.setMonth(now.getMonth() - 1);
+    
+    const oneYearAgo = new Date(now);
+    oneYearAgo.setFullYear(now.getFullYear() - 1);
+    
+    if (date > oneWeekAgo) {
+      return { label: "This week", color: "bg-green-100 text-green-800" };
+    } else if (date > oneMonthAgo) {
+      return { label: "This month", color: "bg-blue-100 text-blue-800" };
+    } else if (date > oneYearAgo) {
+      return { label: "This year", color: "bg-yellow-100 text-yellow-800" };
+    } else {
+      return { label: "Older", color: "bg-gray-100 text-gray-800" };
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) return;
+    
     setSearchLoading(true);
-    fetch("/api/searchLegistar", {
-      method: "POST",
-      body: JSON.stringify({ query, legistarClient }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSearchResults(data);
-        setSearchLoading(false);
-      });
+    setCurrentSearchState("searching");
+    setCityResults([]);
+    
+    // Create an array of city search promises
+    const cityPromises = Object.entries(LegistarClientToDisplayName).map(
+      async ([client, displayName]) => {
+        try {
+          const response = await fetch("/api/searchLegistar", {
+            method: "POST",
+            body: JSON.stringify({ 
+              query, 
+              legistarClient: client 
+            }),
+          });
+          
+          const data: SearchLegistarResponse = await response.json();
+          console.log(data.documents);
+
+          console.log(data);
+
+          // Sort documents by date (newest first)
+          const sortedDocuments = [...data.documents].sort((a, b) => {
+            return new Date(b.dateStr).getTime() - new Date(a.dateStr).getTime();
+          });
+          
+          // Replace documents with sorted array
+          data.documents = sortedDocuments;
+          
+          // Find most recent document date
+          const mostRecentDate = data.documents.length > 0 
+            ? new Date(data.documents[0].dateStr) // Now we can use the first document since they're sorted
+            : new Date(0);
+            
+          return {
+            city: client as LegistarClient,
+            displayName: displayName,
+            results: data,
+            mostRecentDate
+          };
+        } catch (error) {
+          console.error(`Error searching ${displayName}:`, error);
+          return null;
+        }
+      }
+    );
+    
+    // Wait for all searches to complete
+    const results = (await Promise.all(cityPromises)).filter(
+      (result): result is CitySearchResult => result !== null
+    );
+    
+    // Sort cities by most recent document date
+    const sortedResults = results.sort(
+      (a, b) => b.mostRecentDate.getTime() - a.mostRecentDate.getTime()
+    );
+    
+    setCityResults(sortedResults);
+    setSearchLoading(false);
+    setCurrentSearchState("complete");
   };
 
   const handleRecentQuerySelect = (query: string) => {
@@ -75,25 +159,6 @@ const SearchDemo = () => {
           <div className="flex-1 mr-6">
             {/* Search bar */}
             <div className="flex gap-4 w-full">
-              <Select
-                defaultValue={"sunnyvaleca"}
-                onValueChange={(client: LegistarClient) =>
-                  setLegistarClient(client)
-                }
-              >
-                <SelectTrigger className="w-50 h-[50px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(LegistarClientToDisplayName).map(
-                    ([client, name]) => (
-                      <SelectItem key={name} value={client}>
-                        {name}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
               <div className="relative mb-6 grow">
                 <div className="relative">
                   <Search
@@ -102,7 +167,7 @@ const SearchDemo = () => {
                   />
                   <Input
                     type="text"
-                    placeholder="Search Legistar agendas..."
+                    placeholder="Search across all cities..."
                     value={searchQuery}
                     onFocus={() => setIsInputFocused(true)}
                     onBlur={() => {
@@ -150,74 +215,118 @@ const SearchDemo = () => {
               </div>
             </div>
 
-            {/* AI-generated content */}
-            <Card className="shadow-lg">
-              <CardHeader className="px-6">
-                <CardTitle className="text-xl font-medium">
-                  {searchLoading
-                    ? "Researching..."
-                    : searchResults
-                      ? "Answer"
-                      : "Enter a search query to get started"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {searchResults && !searchLoading ? (
-                  <div
-                    className="prose max-w-none whitespace-pre-line"
-                    dangerouslySetInnerHTML={{
-                      __html: `<p>${asterisksToBold(searchResults.responseText)}</p>`,
-                    }}
-                  />
+            {/* Main content area - Search results by city */}
+            {currentSearchState === "searching" ? (
+              <div className="text-center py-12">
+                <Loader2 className="animate-spin mx-auto h-12 w-12 mb-4 text-slate-800" />
+                <p className="text-slate-600">Searching across all cities...</p>
+              </div>
+            ) : currentSearchState === "complete" ? (
+              <div className="space-y-8">
+                {cityResults.length > 0 ? (
+                  cityResults.map((cityResult, index) => (
+                    <Card key={index} className="shadow-lg">
+                      <CardHeader className="px-6 bg-slate-50">
+                        <CardTitle className="text-xl font-medium flex justify-between items-center">
+                          <span>{cityResult.displayName}</span>
+                          <Badge variant="outline">
+                            {cityResult.mostRecentDate.toLocaleDateString()}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div
+                          className="prose max-w-none whitespace-pre-line"
+                          dangerouslySetInnerHTML={{
+                            __html: `<p>${asterisksToBold(
+                              cityResult.results.responseText
+                            )}</p>`,
+                          }}
+                        />
+                        <Separator className="my-4" />
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-sm text-slate-700">Sources:</h4>
+                          {cityResult.results.documents.map((doc, i) => (
+                            <a href={doc.url} key={i} className="block">
+                              <div className="p-2 border rounded hover:bg-slate-50">
+                                <p className="font-medium text-sm">{doc.body}</p>
+                                <p className="text-xs text-slate-500">
+                                  {new Date(doc.dateStr).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                  {doc.snippet}
+                                </p>
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
                 ) : (
-                  <div className="text-center py-12 text-slate-500">
-                    {searchLoading ? (
-                      <Loader2 className="animate-spin mx-auto h-12 w-12 mb-4 text-slate-800" />
-                    ) : (
-                      <Search className="mx-auto h-12 w-12 mb-4 text-slate-400" />
-                    )}
-                    <p>Search Legistar agendas...</p>
-                  </div>
+                  <Card className="shadow-lg">
+                    <CardContent className="p-6 text-center">
+                      <p className="text-slate-600 py-8">No results found for your search query.</p>
+                    </CardContent>
+                  </Card>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            ) : (
+              <Card className="shadow-lg">
+                <CardHeader className="px-6">
+                  <CardTitle className="text-xl font-medium">
+                    Enter a search query to get started
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-12 text-slate-500">
+                    <Search className="mx-auto h-12 w-12 mb-4 text-slate-400" />
+                    <p>Search across all cities at once...</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="w-80 space-y-6">
-            {/* Sources Card */}
-            <Card>
-              <CardHeader className="bg-slate-50 border-b">
-                <CardTitle className="text-lg">Sources</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4">
-                {searchResults ? (
-                  <div className="space-y-3 flex flex-col">
-                    {searchResults.documents.map((doc, i) => (
-                      <a href={doc.url} key={i}>
-                        <div className="p-2 border rounded">
-                          <p className="font-medium text-sm">{doc.body}</p>
-                          <p className="font-medium text-sm">
-                            {new Date(doc.dateStr).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <p className="text-xs text-slate-500">
-                            {doc.snippet}
-                          </p>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500 py-2">
-                    Sources will be listed after search
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+            {/* Search Summary */}
+            {currentSearchState === "complete" && cityResults.length > 0 && (
+              <Card>
+                <CardHeader className="bg-slate-50 border-b">
+                  <CardTitle className="text-lg">Cities Overview</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <ul className="space-y-3">
+                    {cityResults.map((city, i) => {
+                      const timeInfo = getTimeLabel(city.mostRecentDate);
+                      return (
+                        <li key={i} className="text-sm">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-medium">{city.displayName}</span>
+                            <Badge variant="secondary">
+                              {city.results.documents.length} docs
+                            </Badge>
+                          </div>
+                          <div className="flex items-center">
+                            <span className={`text-xs px-2 py-1 rounded-full ${timeInfo.color}`}>
+                              {timeInfo.label}
+                            </span>
+                            <span className="text-xs text-slate-500 ml-2">
+                              {city.mostRecentDate.toLocaleDateString()}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
