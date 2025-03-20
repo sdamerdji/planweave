@@ -30,6 +30,15 @@ interface CitySearchResult {
   mostRecentDate: Date;
 }
 
+// Date filter options
+const dateFilterOptions = [
+  { value: "7", label: "Last 7 days" },
+  { value: "14", label: "Last 14 days" },
+  { value: "30", label: "Last 30 days" },
+  { value: "365", label: "Last 365 days" },
+  { value: "all", label: "All time" },
+];
+
 const asterisksToBold = (text: string) => {
   return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 };
@@ -38,6 +47,7 @@ const SearchDemo = () => {
   const defaultSearchQuery = "any updates on housing element program implementation? draw attention to any updates on programs to affirmatively further fair housing, to rezone the city per the housing element, anything to do with a \"site inventory\" from the housing element, or actions tied to 'constraints reduction'";
   
   const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
+  const [dateFilter, setDateFilter] = useState("30"); // Default to 30 days
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
     useState<SearchLegistarResponse | null>(null);
@@ -97,7 +107,8 @@ const SearchDemo = () => {
             method: "POST",
             body: JSON.stringify({ 
               query, 
-              legistarClient: client 
+              legistarClient: client,
+              dateFilter: dateFilter // Add date filter to the API request
             }),
           });
           
@@ -152,6 +163,9 @@ const SearchDemo = () => {
     setIsInputFocused(false);
     handleSearch(query);
   };
+
+  // Filter cities to only those with documents for the City Overview section
+  const citiesWithDocuments = cityResults.filter(city => city.results.documents.length > 0);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -224,6 +238,25 @@ const SearchDemo = () => {
                   )}
                 </div>
               </div>
+              
+              {/* Date filter dropdown */}
+              <div className="mb-6 w-48">
+                <Select
+                  value={dateFilter}
+                  onValueChange={(value) => setDateFilter(value)}
+                >
+                  <SelectTrigger className="h-full border-slate-300">
+                    <SelectValue placeholder="Filter by date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dateFilterOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Main content area - Search results by city */}
@@ -240,9 +273,11 @@ const SearchDemo = () => {
                       <CardHeader className="px-6 bg-slate-50">
                         <CardTitle className="text-xl font-medium flex justify-between items-center">
                           <span>{cityResult.displayName}</span>
-                          <Badge variant="outline">
-                            {cityResult.mostRecentDate.toLocaleDateString()}
-                          </Badge>
+                          {cityResult.results.documents.length > 0 && (
+                            <Badge variant="outline">
+                              {cityResult.mostRecentDate.toLocaleDateString()}
+                            </Badge>
+                          )}
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6">
@@ -254,27 +289,31 @@ const SearchDemo = () => {
                             )}</p>`,
                           }}
                         />
-                        <Separator className="my-4" />
-                        <div className="space-y-3">
-                          <h4 className="font-medium text-sm text-slate-700">Sources:</h4>
-                          {cityResult.results.documents.map((doc, i) => (
-                            <a href={doc.url} key={i} className="block">
-                              <div className="p-2 border rounded hover:bg-slate-50">
-                                <p className="font-medium text-sm">{doc.body}</p>
-                                <p className="text-xs text-slate-500">
-                                  {new Date(doc.dateStr).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })}
-                                </p>
-                                <p className="text-xs text-slate-500 mt-1">
-                                  {doc.snippet}
-                                </p>
-                              </div>
-                            </a>
-                          ))}
-                        </div>
+                        {cityResult.results.documents.length > 0 && (
+                          <>
+                            <Separator className="my-4" />
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-sm text-slate-700">Sources:</h4>
+                              {cityResult.results.documents.map((doc, i) => (
+                                <a href={doc.url} key={i} className="block">
+                                  <div className="p-2 border rounded hover:bg-slate-50">
+                                    <p className="font-medium text-sm">{doc.body}</p>
+                                    <p className="text-xs text-slate-500">
+                                      {new Date(doc.dateStr).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                      })}
+                                    </p>
+                                    <p className="text-xs text-slate-500 mt-1">
+                                      {doc.snippet}
+                                    </p>
+                                  </div>
+                                </a>
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </CardContent>
                     </Card>
                   ))
@@ -313,7 +352,7 @@ const SearchDemo = () => {
                 </CardHeader>
                 <CardContent className="p-4">
                   <ul className="space-y-3">
-                    {cityResults.map((city, i) => {
+                    {citiesWithDocuments.map((city, i) => {
                       const timeInfo = getTimeLabel(city.mostRecentDate);
                       return (
                         <li key={i} className="text-sm">
@@ -335,6 +374,11 @@ const SearchDemo = () => {
                       );
                     })}
                   </ul>
+                  {citiesWithDocuments.length === 0 && (
+                    <p className="text-sm text-slate-500 text-center py-2">
+                      No cities have relevant documents in the selected timeframe.
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             )}

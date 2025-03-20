@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { embedTexts } from "@/src/EmbeddingClient";
 import { db } from "@/src/db";
 import { documentChunk, eventAgendaText, rawEvent } from "@/src/db/schema";
-import { cosineDistance, eq, sql, and } from "drizzle-orm";
+import { cosineDistance, eq, sql, and, gte } from "drizzle-orm";
 import { evaluateDocumentRelevance } from "@/src/EvaluateDocumentRelevance";
 import _ from "lodash";
 import { OpenAIClient } from "@/src/OpenaiClient";
@@ -50,12 +50,29 @@ const getKeywords = async (query: string) => {
 
 export async function POST(request: Request) {
   try {
-    const { query, legistarClient } = await request.json();
+    const { query: searchQuery, legistarClient, dateFilter } = await request.json();
 
-    const queryEmbedding = Object.values(await embedTexts([query]))[0];
-    const keywords = await getKeywords(query);
+    const queryEmbedding = Object.values(await embedTexts([searchQuery]))[0];
+    const keywords = await getKeywords(searchQuery);
     console.log("extracted keywords", keywords);
 
+    // Build conditions array for the query
+    const conditions = [eq(rawEvent.legistarClient, legistarClient)];
+
+    // Add date filter condition if specified
+    if (dateFilter && dateFilter !== "all") {
+      const days = parseInt(dateFilter);
+      if (!isNaN(days)) {
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        const cutoffDateStr = cutoffDate.toISOString();
+        
+        // Add date condition to the conditions array
+        conditions.push(gte(sql`CAST((${rawEvent.json}->>'EventDate') AS DATE)`, cutoffDateStr));
+      }
+    }
+
+    // Execute the query with all conditions
     const documents = (
       await db
         .select()
@@ -71,7 +88,7 @@ export async function POST(request: Request) {
             eq(eventAgendaText.legistarEventId, rawEvent.legistarEventId)
           )
         )
-        .where(eq(rawEvent.legistarClient, legistarClient))
+        .where(and(...conditions))
         .orderBy(
           // prioritize documents that contain the keywords
           sql`to_tsquery('english', ${keywords.join(" & ")}) @@ to_tsvector('english', ${documentChunk.text}) desc`,
@@ -79,7 +96,7 @@ export async function POST(request: Request) {
           cosineDistance(documentChunk.embedding, queryEmbedding)
         )
         .limit(5)
-    ).map((doc) => ({
+    ).map((doc: any) => ({
       body: (doc.raw_event.json as any)["EventBodyName"],
       dateStr: (doc.raw_event.json as any)["EventDate"],
       content: doc.event_agenda_text.text,
@@ -90,11 +107,22 @@ export async function POST(request: Request) {
     let relevantDocuments = documents;
     if (USE_CRAG) {
       const relevance = await Promise.all(
-        documents.map((doc) => evaluateDocumentRelevance(query, doc.content))
+        documents.map((doc: any) => evaluateDocumentRelevance(searchQuery, doc.content))
       );
       console.log("relevance", relevance);
 
-      relevantDocuments = documents.filter((_, i) => relevance[i] === true);
+      relevantDocuments = documents.filter((_: any, i: number) => relevance[i] === true);
+    }
+
+    // Return early if no relevant documents are found
+    if (relevantDocuments.length === 0) {
+      return NextResponse.json<SearchLegistarResponse>(
+        {
+          responseText: "No relevant documents found within timeframe specified.",
+          documents: [],
+        },
+        { status: 201 }
+      );
     }
 
     const systemPrompt = `
@@ -109,10 +137,10 @@ export async function POST(request: Request) {
 
     const userPrompt = `
       USER QUERY:
-      ${query}
+      ${searchQuery}
 
       SUPPORTING DOCUMENTS:
-      ${relevantDocuments.map((doc, i) => i + ") " + doc.body + " " + doc.dateStr + "\n\n" + doc.content).join("\n\n")}
+      ${relevantDocuments.map((doc: any, i: number) => i + ") " + doc.body + " " + doc.dateStr + "\n\n" + doc.content).join("\n\n")}
       `;
 
     const response = await OpenAIClient.chat.completions.create({
