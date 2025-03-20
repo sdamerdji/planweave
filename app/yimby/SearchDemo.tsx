@@ -173,10 +173,10 @@ const SearchDemo = () => {
         {/* Header */}
         <header className="py-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-slate-900">Housing Element Sidekick</h1>
+            <h1 className="text-3xl font-bold text-slate-900">Housing Element Watchbot</h1>
           </div>
           <p className="mt-2 text-slate-600">
-            AI-powered search for housing element implementation
+            AI-powered search for tracking housing element implementation
           </p>
         </header>
 
