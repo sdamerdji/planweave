@@ -5,8 +5,6 @@ import { Search, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import {
@@ -50,7 +48,7 @@ const SearchDemo = () => {
       setSearchLoading(false);
       return;
     }
-    
+
     setSearchLoading(true);
     fetch("/api/searchLegistar", {
       method: "POST",
@@ -179,7 +177,9 @@ const SearchDemo = () => {
                   <div
                     className="prose max-w-none whitespace-pre-line"
                     dangerouslySetInnerHTML={{
-                      __html: searchResults.responseText ? `<p>${asterisksToBold(searchResults.responseText)}</p>` : '',
+                      __html: searchResults.responseText
+                        ? `<p>${asterisksToBold(searchResults.responseText)}</p>`
+                        : "",
                     }}
                   />
                 ) : (

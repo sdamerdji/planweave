@@ -1,17 +1,13 @@
 import { NextResponse } from "next/server";
-import { OpenAI } from "openai";
-import dotenv from "dotenv";
 import { embedTexts } from "@/src/EmbeddingClient";
 import { db } from "@/src/db";
 import { documentChunk, eventAgendaText, rawEvent } from "@/src/db/schema";
 import { cosineDistance, eq, sql, and } from "drizzle-orm";
+import { evaluateDocumentRelevance } from "@/src/EvaluateDocumentRelevance";
+import _ from "lodash";
+import { OpenAIClient } from "@/src/OpenaiClient";
 
-dotenv.config();
-
-// TODO: add OpenAI key to prod environment
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const USE_CRAG = true;
 
 // TODO: this is kinda dumb but it works ok
 const getKeywords = async (query: string) => {
@@ -36,7 +32,7 @@ const getKeywords = async (query: string) => {
     Separate your keywords with commas.
     `;
 
-  const response = await openai.chat.completions.create({
+  const response = await OpenAIClient.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       { role: "system", content: systemPrompt },
@@ -91,10 +87,15 @@ export async function POST(request: Request) {
       url: (doc.raw_event.json as any)["EventInSiteURL"],
     }));
 
-    console.log(
-      "found documents",
-      documents.map((doc) => [doc.dateStr, doc.url])
-    );
+    let relevantDocuments = documents;
+    if (USE_CRAG) {
+      const relevance = await Promise.all(
+        documents.map((doc) => evaluateDocumentRelevance(query, doc.content))
+      );
+      console.log("relevance", relevance);
+
+      relevantDocuments = documents.filter((_, i) => relevance[i] === true);
+    }
 
     const systemPrompt = `
       You will be provided with a USER QUERY as well as some SUPPORTING
@@ -111,10 +112,10 @@ export async function POST(request: Request) {
       ${query}
 
       SUPPORTING DOCUMENTS:
-      ${documents.map((doc, i) => i + ") " + doc.body + " " + doc.dateStr + "\n\n" + doc.content).join("\n\n")}
+      ${relevantDocuments.map((doc, i) => i + ") " + doc.body + " " + doc.dateStr + "\n\n" + doc.content).join("\n\n")}
       `;
 
-    const response = await openai.chat.completions.create({
+    const response = await OpenAIClient.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemPrompt },
@@ -127,7 +128,7 @@ export async function POST(request: Request) {
     return NextResponse.json<SearchLegistarResponse>(
       {
         responseText: responseText,
-        documents,
+        documents: relevantDocuments,
       },
       { status: 201 }
     );
