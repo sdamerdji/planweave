@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,7 @@ const LegistarClientToDisplayName = {
 };
 
 type LegistarClient = keyof typeof LegistarClientToDisplayName;
-/// any updates on housing element program implementation? draw attention to any updates on programs to affirmatively further fair housing, to rezone the city per the housing element obligations, anything to do with a "site inventory" from the housing element, or actions tied to 'constraints reduction' 
+
 // New interface for search results by city
 interface CitySearchResult {
   city: LegistarClient;
@@ -35,7 +35,9 @@ const asterisksToBold = (text: string) => {
 };
 
 const SearchDemo = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const defaultSearchQuery = "any updates on housing element program implementation? draw attention to any updates on programs to affirmatively further fair housing, to rezone the city per the housing element, anything to do with a \"site inventory\" from the housing element, or actions tied to 'constraints reduction'";
+  
+  const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
     useState<SearchLegistarResponse | null>(null);
@@ -69,6 +71,16 @@ const SearchDemo = () => {
       return { label: "Older", color: "bg-gray-100 text-gray-800" };
     }
   };
+
+  // Perform search on component mount
+  useEffect(() => {
+    // Use a small delay to ensure the component is fully mounted
+    const timer = setTimeout(() => {
+      handleSearch(defaultSearchQuery);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSearch = async (query: string) => {
     if (!query.trim()) return;
@@ -147,11 +159,10 @@ const SearchDemo = () => {
         {/* Header */}
         <header className="py-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-slate-900">Legisearch</h1>
+            <h1 className="text-3xl font-bold text-slate-900">Housing Element Sidekick</h1>
           </div>
           <p className="mt-2 text-slate-600">
-            AI-powered search over Legistar agendas, meeting notes, and
-            attachments
+            AI-powered search for housing element implementation
           </p>
         </header>
 
