@@ -1,0 +1,1414 @@
+MacBook-Air-7:scripts Salim$ setup.sh
+Downloading data for city: sunnyvaleca
+Need to install the following packages:
+tsx@4.19.3
+Ok to proceed? (y) y
+Downloading raw_event for sunnyvaleca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+No more events to download
+npm notice 
+npm notice New major version of npm available! 10.2.4 -> 11.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.2.0
+npm notice Run npm install -g npm@11.2.0 to update!
+npm notice 
+Downloading data for city: mountainview
+Downloading raw_event for mountainview
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: hesperia
+Downloading raw_event for hesperia
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: santabarbara
+Downloading raw_event for santabarbara
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+No more events to download
+Downloading data for city: alameda
+Downloading raw_event for alameda
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+No more events to download
+Downloading data for city: oakland
+Downloading raw_event for oakland
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+No more events to download
+Downloading data for city: sanbernardino,
+Downloading raw_event for sanbernardino,
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: octa
+Downloading raw_event for octa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+No more events to download
+Downloading data for city: hayward
+Downloading raw_event for hayward
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+No more events to download
+Downloading data for city: napa
+Downloading raw_event for napa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+No more events to download
+Downloading data for city: cityoforange
+Downloading raw_event for cityoforange
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: wauwatosacitywi
+Downloading raw_event for wauwatosacitywi
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+No more events to download
+Downloading data for city: contra-costa
+Downloading raw_event for contra-costa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: humboldt
+Downloading raw_event for humboldt
+Downloading raw_event skip=0
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:12345:11
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:17:22)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5) {
+  cause: Error: read ECONNRESET
+      at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+      at __node_internal_errnoException (node:internal/errors:690:12)
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:217:20) {
+    errno: -54,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+Downloading data for city: ci-ssf-ca
+Downloading raw_event for ci-ssf-ca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+No more events to download
+Downloading data for city: redondo
+Downloading raw_event for redondo
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+No more events to download
+Downloading data for city: tol
+Downloading raw_event for tol
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: sonoma-county
+Downloading raw_event for sonoma-county
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: manteca-ca
+Downloading raw_event for manteca-ca
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: cityofmerced
+Downloading raw_event for cityofmerced
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: monterey
+Downloading raw_event for monterey
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+No more events to download
+Downloading data for city: carson
+Downloading raw_event for carson
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: oakland
+Downloading raw_event for oakland
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+No more events to download
+Downloading data for city: sbcera
+Downloading raw_event for sbcera
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+No more events to download
+Downloading data for city: solano
+Downloading raw_event for solano
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: riversideca
+Downloading raw_event for riversideca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+No more events to download
+Downloading data for city: sunnyvaleca
+Downloading raw_event for sunnyvaleca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: temeculaca
+Downloading raw_event for temeculaca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: monterey
+Downloading raw_event for monterey
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+No more events to download
+Downloading data for city: longbeach
+Downloading raw_event for longbeach
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+Downloading raw_event skip=4800
+Downloading raw_event skip=5000
+Downloading raw_event skip=5200
+Downloading raw_event skip=5400
+Downloading raw_event skip=5600
+Downloading raw_event skip=5800
+Downloading raw_event skip=6000
+Downloading raw_event skip=6200
+Downloading raw_event skip=6400
+No more events to download
+Downloading data for city: cityofmerced
+Downloading raw_event for cityofmerced
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: longbeach
+Downloading raw_event for longbeach
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+Downloading raw_event skip=4800
+Downloading raw_event skip=5000
+Downloading raw_event skip=5200
+Downloading raw_event skip=5400
+Downloading raw_event skip=5600
+Downloading raw_event skip=5800
+Downloading raw_event skip=6000
+Downloading raw_event skip=6200
+Downloading raw_event skip=6400
+No more events to download
+Downloading data for city: sfgov
+Downloading raw_event for sfgov
+Downloading raw_event skip=0
+SyntaxError: Unexpected token ''', "'Agenda Dr"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at parseJSONFromBytes (node:internal/deps/undici/undici:5329:19)
+    at successSteps (node:internal/deps/undici/undici:5300:27)
+    at fullyReadBody (node:internal/deps/undici/undici:1447:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async specConsumeBody (node:internal/deps/undici/undici:5309:7)
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:18:25)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: solano
+Downloading raw_event for solano
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: actransit
+Downloading raw_event for actransit
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: metro
+Downloading raw_event for metro
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: cook-county
+Downloading raw_event for cook-county
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+Downloading raw_event skip=4800
+Downloading raw_event skip=5000
+Downloading raw_event skip=5200
+Downloading raw_event skip=5400
+Downloading raw_event skip=5600
+Downloading raw_event skip=5800
+Downloading raw_event skip=6000
+Downloading raw_event skip=6200
+Downloading raw_event skip=6400
+No more events to download
+Downloading data for city: humboldt
+Downloading raw_event for humboldt
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: fresno
+Downloading raw_event for fresno
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+No more events to download
+Downloading data for city: longbeach
+Downloading raw_event for longbeach
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+Downloading raw_event skip=4800
+Downloading raw_event skip=5000
+Downloading raw_event skip=5200
+Downloading raw_event skip=5400
+Downloading raw_event skip=5600
+Downloading raw_event skip=5800
+Downloading raw_event skip=6000
+Downloading raw_event skip=6200
+Downloading raw_event skip=6400
+No more events to download
+Downloading data for city: fresno
+Downloading raw_event for fresno
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+No more events to download
+Downloading data for city: cityoforange
+Downloading raw_event for cityoforange
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: contra-costa
+Downloading raw_event for contra-costa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download
+Downloading data for city: sanmateocounty
+Downloading raw_event for sanmateocounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: santabarbara
+Downloading raw_event for santabarbara
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+No more events to download
+Downloading data for city: octa
+Downloading raw_event for octa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+No more events to download
+Downloading data for city: sjrs
+Downloading raw_event for sjrs
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: burlingameca
+Downloading raw_event for burlingameca
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: culver-city
+Downloading raw_event for culver-city
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+No more events to download
+Downloading data for city: nan
+Downloading raw_event for nan
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: santaclara
+Downloading raw_event for santaclara
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+No more events to download
+Downloading data for city: nan
+Downloading raw_event for nan
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: nan
+Downloading raw_event for nan
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: santa-rosa
+Downloading raw_event for santa-rosa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+No more events to download
+Downloading data for city: sanmateocounty
+Downloading raw_event for sanmateocounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: monterey
+Downloading raw_event for monterey
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+No more events to download
+Downloading data for city: riversideca
+Downloading raw_event for riversideca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+No more events to download
+Downloading data for city: scvwd
+Downloading raw_event for scvwd
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: sdcounty
+Downloading raw_event for sdcounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+No more events to download
+Downloading data for city: monterey
+Downloading raw_event for monterey
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+No more events to download
+Downloading data for city: santabarbara
+Downloading raw_event for santabarbara
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+No more events to download
+Downloading data for city: carson
+Downloading raw_event for carson
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: culver-city
+Downloading raw_event for culver-city
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+No more events to download
+Downloading data for city: manteca-ca
+Downloading raw_event for manteca-ca
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: metro
+Downloading raw_event for metro
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+No more events to download
+Downloading data for city: cityofmerced
+Downloading raw_event for cityofmerced
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: chino
+Downloading raw_event for chino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download
+Downloading data for city: chino
+Downloading raw_event for chino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download
+Downloading data for city: cityofmerced
+Downloading raw_event for cityofmerced
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: chulavista
+Downloading raw_event for chulavista
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+No more events to download
+Downloading data for city: fontana
+Downloading raw_event for fontana
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+No more events to download
+Downloading data for city: claremontca
+Downloading raw_event for claremontca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+No more events to download
+Downloading data for city: hayward
+Downloading raw_event for hayward
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+No more events to download
+Downloading data for city: countyoflake
+Downloading raw_event for countyoflake
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: mendocino
+Downloading raw_event for mendocino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: fresno
+Downloading raw_event for fresno
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+No more events to download
+Downloading data for city: monterey
+Downloading raw_event for monterey
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+[I 19:38:36.986 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.096 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.117 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.126 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.134 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.144 NotebookApp] Saving file at /get_legistar_clients.ipynb
+[I 19:38:37.162 NotebookApp] Saving file at /get_legistar_clients.ipynb
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+No more events to download
+Downloading data for city: fresnocounty
+Downloading raw_event for fresnocounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+No more events to download
+Downloading data for city: nevco
+Downloading raw_event for nevco
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: ci-ssf-ca
+Downloading raw_event for ci-ssf-ca
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+No more events to download
+Downloading data for city: sanbernardino
+Downloading raw_event for sanbernardino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+No more events to download
+Downloading data for city: sonoma-county
+Downloading raw_event for sonoma-county
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: cityofcommerce
+Downloading raw_event for cityofcommerce
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: huntingtonbeach
+Downloading raw_event for huntingtonbeach
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+No more events to download
+Downloading data for city: contra-costa
+Downloading raw_event for contra-costa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download
+Downloading data for city: visalia
+Downloading raw_event for visalia
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+No more events to download
+Downloading data for city: tehamacounty
+Downloading raw_event for tehamacounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+No more events to download
+Downloading data for city: corona
+Downloading raw_event for corona
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: portofsandiego
+Downloading raw_event for portofsandiego
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: sfgov
+Downloading raw_event for sfgov
+Downloading raw_event skip=0
+SyntaxError: Unexpected token ''', "'Agenda Dr"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at parseJSONFromBytes (node:internal/deps/undici/undici:5329:19)
+    at successSteps (node:internal/deps/undici/undici:5300:27)
+    at fullyReadBody (node:internal/deps/undici/undici:1447:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async specConsumeBody (node:internal/deps/undici/undici:5309:7)
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:18:25)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: costamesa
+Downloading raw_event for costamesa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+No more events to download
+Downloading data for city: sonoma-county
+Downloading raw_event for sonoma-county
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: longbeach
+Downloading raw_event for longbeach
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+Downloading raw_event skip=4400
+Downloading raw_event skip=4600
+Downloading raw_event skip=4800
+Downloading raw_event skip=5000
+Downloading raw_event skip=5200
+Downloading raw_event skip=5400
+Downloading raw_event skip=5600
+Downloading raw_event skip=5800
+Downloading raw_event skip=6000
+Downloading raw_event skip=6200
+Downloading raw_event skip=6400
+No more events to download
+Downloading data for city: oakland
+Downloading raw_event for oakland
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+Downloading raw_event skip=3800
+Downloading raw_event skip=4000
+Downloading raw_event skip=4200
+No more events to download
+Downloading data for city: metro
+Downloading raw_event for metro
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:12345:11
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:17:22)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5) {
+  cause: Error: read ECONNRESET
+      at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+      at __node_internal_errnoException (node:internal/errors:690:12)
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:217:20) {
+    errno: -54,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+Downloading data for city: culver-city
+Downloading raw_event for culver-city
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+Downloading raw_event skip=3600
+No more events to download
+Downloading data for city: cupertino
+Downloading raw_event for cupertino
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+Downloading raw_event skip=1200
+Downloading raw_event skip=1400
+Downloading raw_event skip=1600
+Downloading raw_event skip=1800
+Downloading raw_event skip=2000
+Downloading raw_event skip=2200
+Downloading raw_event skip=2400
+Downloading raw_event skip=2600
+Downloading raw_event skip=2800
+Downloading raw_event skip=3000
+Downloading raw_event skip=3200
+Downloading raw_event skip=3400
+No more events to download
+Downloading data for city: actransit
+Downloading raw_event for actransit
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: sanmateocounty
+Downloading raw_event for sanmateocounty
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+No more events to download
+Downloading data for city: sjrs
+Downloading raw_event for sjrs
+Downloading raw_event skip=0
+TypeError: data.map is not a function
+    at downloadRawEvent (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:28:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at main (/Users/Salim/Desktop/civdex/nextjs-boilerplate/scripts/DownloadLegistarToRaw.ts:49:5)
+Downloading data for city: contra-costa
+Downloading raw_event for contra-costa
+Downloading raw_event skip=0
+Downloading raw_event skip=200
+Downloading raw_event skip=400
+Downloading raw_event skip=600
+Downloading raw_event skip=800
+Downloading raw_event skip=1000
+No more events to download:wq!
+
