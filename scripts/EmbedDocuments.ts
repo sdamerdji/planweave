@@ -20,7 +20,7 @@ const embedDocuments = async () => {
 
     const unembeddedTexts = unembeddedAttachments.map((attachment) =>
       // openAI limit is 8192
-      attachment.text.slice(0, 10000)
+      attachment.text.slice(0, 2000)
     );
 
     const startTs = Date.now();
