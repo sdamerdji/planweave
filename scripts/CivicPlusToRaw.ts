@@ -3,7 +3,8 @@ import path from 'path';
 import { parse } from 'csv-parse/sync';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { rawCivicplusAsset } from '../src/db/schema';
+import { db } from "@/src/db";
+import { rawCivicplusAsset } from "@/src/db/schema";
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -13,8 +14,6 @@ dotenv.config();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
-const db = drizzle(pool);
-
 // CSV file pattern
 const CSV_FILE_PATTERN = /civic_scraper_assets_meta_\d{8}T\d{4}z\.csv$/;
 const BASE_DIRECTORY = path.resolve(process.cwd(), '../notebooks/civic-scraper');
@@ -63,6 +62,7 @@ async function processCSVFile(filePath: string, cityName: string) {
     const records = parse(fileContent, {
       columns: true,
       skip_empty_lines: true,
+      
     });
     
     console.log(`Found ${records.length} records in CSV file`);
@@ -70,12 +70,7 @@ async function processCSVFile(filePath: string, cityName: string) {
     // Process each record
     for (const record of records) {
       try {
-        const meetingId = parseInt(record.meeting_id, 10);
-        
-        if (isNaN(meetingId)) {
-          console.warn(`Invalid meeting_id in record: ${JSON.stringify(record)}`);
-          continue;
-        }
+        const meetingId = record.meeting_id;
         
         // Insert into database
         await db.insert(rawCivicplusAsset).values({
@@ -85,10 +80,9 @@ async function processCSVFile(filePath: string, cityName: string) {
           json: record
         });
       } catch (recordError) {
-        console.error(`Error processing record: ${JSON.stringify(record)}`, recordError);
+        console.error(`Error processing record: ${cityName}`, recordError);
       }
     }
-    
     console.log(`Successfully processed file: ${filePath}`);
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);

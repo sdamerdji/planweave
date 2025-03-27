@@ -128,7 +128,7 @@ export const rawCivicplusAsset = pgTable(
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     cityName: text().notNull(),
-    civicplusMeetingId: integer().notNull(),
+    civicplusMeetingId: text().notNull(),
     assetType: text().notNull(),
     json: jsonb().notNull(),
   },
