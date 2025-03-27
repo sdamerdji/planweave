@@ -1,7 +1,6 @@
 import { rawPrimeGovMeeting } from "@/src/db/schema";
 import { program } from "commander";
 import { db } from "@/src/db";
-import { max, count, eq } from "drizzle-orm";
 import _ from "lodash";
 import { AllPrimeGovClients } from "@/src/constants";
 
@@ -19,11 +18,15 @@ const options = program.opts();
 
 const downloadPrimeGovMeetingsForClient = async (
   client: string,
-  year: number
+  yearOrFuture: number | "future"
 ) => {
-  console.log(`Downloading PrimeGov meetings for ${client} in ${year}`);
+  console.log(`Downloading PrimeGov meetings for ${client} in ${yearOrFuture}`);
 
-  const url = `https://${client}.primegov.com/api/v2/PublicPortal/ListArchivedMeetings?year=${year}`;
+  const url =
+    yearOrFuture === "future"
+      ? `https://${client}.primegov.com/api/v2/PublicPortal/ListUpcomingMeetings`
+      : `https://${client}.primegov.com/api/v2/PublicPortal/ListArchivedMeetings?year=${yearOrFuture}`;
+
   console.log(`Fetching from ${url}`);
 
   const response = await fetch(url);
@@ -80,6 +83,9 @@ const main = async () => {
   if (options.allClients) {
     for (const client of AllPrimeGovClients) {
       console.log(`\nProcessing client: ${client}`);
+
+      await downloadPrimeGovMeetingsForClient(client, "future");
+
       let currentYear = startYear;
       while (true) {
         console.log(`\nTrying year ${currentYear}...`);

@@ -1,0 +1,17 @@
+name: "planweave"
+version: "1.0.0"
+config-version: 2
+
+profile: "planweave"
+
+model-paths: ["dbt/models"]
+log-path: "dbt/logs"
+target-path: "dbt/target"
+
+models:
+  planweave:
+    materialized: view
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -43,3 +43,5 @@ next-env.d.ts
 .venv
 
 notebooks/.ipynb_checkpoints
+
+dbt/target

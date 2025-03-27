@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    database: postgres
+    schema: public
+    tables:
+      - name: raw_event
+      - name: raw_prime_gov_meeting
+      - name: event_agenda_text
+      - name: prime_gov_document_text
