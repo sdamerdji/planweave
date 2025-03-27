@@ -136,6 +136,28 @@ export const rawCivicplusAsset = pgTable(
     unique().on(table.cityName, table.civicplusMeetingId, table.assetType),
   ]
 );
+
+export const civicPlusDocumentText = pgTable(
+  "civic_plus_document_text",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    cityName: text().notNull(),
+    civicplusMeetingId: text().notNull(),
+    documentId: text().notNull(), // Will be meeting_id + asset_type
+    templateName: text().notNull(), // Will be asset_type
+    committeeName: text(),
+    meetingDate: text(),
+    meetingTime: text(),
+    text: text().notNull(),
+  },
+  (table) => [
+    unique("civic_plus_document_text_city_document_id").on(
+      table.cityName,
+      table.documentId
+    ),
+  ]
+);
+
 // TODO: Separate schema files for separate tables?
 
 export const rawPrimeGovMeeting = pgTable(
