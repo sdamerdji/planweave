@@ -132,7 +132,10 @@ export const rawCivicplusAsset = pgTable(
     assetType: text().notNull(),
     json: jsonb().notNull(),
   },
-  (table) => [unique().on(table.cityName, table.civicplusMeetingId, table.assetType)]
+  (table) => [
+    unique().on(table.cityName, table.civicplusMeetingId, table.assetType),
+  ]
+);
 // TODO: Separate schema files for separate tables?
 
 export const rawPrimeGovMeeting = pgTable(
