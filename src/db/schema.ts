@@ -115,3 +115,15 @@ export const documentChunk = pgTable(
     ),
   ]
 );
+
+export const rawCivicplusAsset = pgTable(
+  "raw_civicplus_asset",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    cityName: text().notNull(),
+    civicplusMeetingId: integer().notNull(),
+    assetType: text().notNull(),
+    json: jsonb().notNull(),
+  },
+  (table) => [unique().on(table.cityName, table.civicplusMeetingId, table.assetType)]
+);
