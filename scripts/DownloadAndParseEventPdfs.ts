@@ -13,6 +13,7 @@ program.parse(process.argv);
 const options = program.opts();
 
 const main = async () => {
+  console.log("Querying missing texts...");
   const eventsMissingTexts = await db
     .select()
     .from(rawEvent)

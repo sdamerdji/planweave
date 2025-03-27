@@ -8,6 +8,7 @@ import {
   index,
   jsonb,
   unique,
+  pgMaterializedView,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -77,7 +78,13 @@ export const eventAgendaText = pgTable(
     legistarEventId: integer().notNull(),
     text: text().notNull(),
   },
-  (table) => [unique().on(table.legistarClient, table.legistarEventId)]
+  (table) => [
+    unique().on(table.legistarClient, table.legistarEventId),
+    index("event_agenda_text_tsvector_index").using(
+      "gin",
+      sql`to_tsvector('english', ${table.text})`
+    ),
+  ]
 );
 
 export const eventMinutesText = pgTable(
@@ -126,4 +133,34 @@ export const rawCivicplusAsset = pgTable(
     json: jsonb().notNull(),
   },
   (table) => [unique().on(table.cityName, table.civicplusMeetingId, table.assetType)]
+// TODO: Separate schema files for separate tables?
+
+export const rawPrimeGovMeeting = pgTable(
+  "raw_prime_gov_meeting",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    primeGovClient: text().notNull(),
+    primeGovMeetingId: integer().notNull(),
+    json: jsonb().notNull(),
+  },
+  (table) => [unique().on(table.primeGovClient, table.primeGovMeetingId)]
+);
+
+export const primeGovDocumentText = pgTable(
+  "prime_gov_document_text",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    primeGovClient: text().notNull(),
+    primeGovMeetingId: integer().notNull(),
+    primeGovDocumentId: integer().notNull(),
+    primeGovTemplateName: text().notNull(),
+    text: text().notNull(),
+  },
+  // we actually have multiple documents per meeting
+  (table) => [
+    unique("prime_gov_document_text_client_document_id").on(
+      table.primeGovClient,
+      table.primeGovDocumentId
+    ),
+  ]
 );
