@@ -34,4 +34,4 @@ select
   cast(json->>'meeting_date' as date) as event_date,
   json->>'committee_name' as event_body_name
 from {{ source('raw', 'raw_civicplus_asset') }}
-where asset_type = 'meeting'  -- Only include meeting records, not other asset types
+where asset_type in ('agenda', 'agenda_packet')
