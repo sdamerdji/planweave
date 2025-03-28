@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/src/db";
 import { eventAgendaText, rawEvent } from "@/src/db/schema";
-import { unifiedDocumentTextView, unifiedEventView } from "@/src/db/views";
+import { unifiedDocumentText, unifiedEvent } from "@/src/db/views";
 import { eq, sql, and, gte, count, desc, inArray } from "drizzle-orm";
 
 // Helper function for consistent log formatting
@@ -72,30 +72,30 @@ export async function POST(request: Request) {
     const startTime = Date.now();
     const matches = await db
       .select({
-        unifiedEventId: unifiedDocumentTextView.unified_event_id,
+        unifiedEventId: unifiedDocumentText.unified_event_id,
         headline: sql<string>`ts_headline(
             'english',
-            ${unifiedDocumentTextView.truncated_text},
+            ${unifiedDocumentText.truncated_text},
             phraseto_tsquery('english', ${searchQuery}),
             'MaxWords=100, MinWords=50'
           )`,
       })
-      .from(unifiedDocumentTextView)
+      .from(unifiedDocumentText)
       .where(
         and(
-          sql`phraseto_tsquery('english', ${searchQuery}) @@ to_tsvector('english', ${unifiedDocumentTextView.truncated_text})`,
-          gte(unifiedDocumentTextView.event_date, cutoffDateStr ?? "1000-01-01")
+          sql`phraseto_tsquery('english', ${searchQuery}) @@ to_tsvector('english', ${unifiedDocumentText.truncated_text})`,
+          gte(unifiedDocumentText.event_date, cutoffDateStr ?? "1000-01-01")
         )
       )
-      .orderBy(desc(unifiedDocumentTextView.event_date))
+      .orderBy(desc(unifiedDocumentText.event_date))
       .limit(50);
 
     const events = await db
       .select()
-      .from(unifiedEventView)
+      .from(unifiedEvent)
       .where(
         inArray(
-          unifiedEventView.unified_event_id,
+          unifiedEvent.unified_event_id,
           matches.map((doc) => doc.unifiedEventId)
         )
       );
