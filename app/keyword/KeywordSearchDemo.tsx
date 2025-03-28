@@ -59,6 +59,30 @@ const KeywordSearchDemo = () => {
     "RHNA",
   ];
 
+  // Format and create Airtable URL 
+  const createAirtableUrl = (dateStr: string, description: string): string => {
+    // Ensure date is in ISO format
+    let formattedDate = dateStr;
+    try {
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        formattedDate = date.toISOString();
+      }
+    } catch (e) {
+      console.error("Date formatting error:", e);
+    }
+
+    // Limit description length to avoid extremely long URLs
+    const trimmedDescription = description.length > 500 
+      ? description.substring(0, 497) + "..."
+      : description;
+    
+    // Strip any HTML tags that might be in the description
+    const plainTextDescription = trimmedDescription.replace(/<[^>]*>/g, '');
+    
+    return `https://airtable.com/appjwA9nMuNRewKNo/pagVWkvCC4Gf0UoA9/form?prefill_Date+%26+Time=${encodeURIComponent(formattedDate)}&prefill_%F0%9F%9B%9C++Description=${encodeURIComponent(plainTextDescription)}`;
+  };
+
   const handleSearch = (query: string) => {
     if (!query.trim()) {
       toast({
@@ -256,9 +280,17 @@ const KeywordSearchDemo = () => {
                           href={doc.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:text-blue-800 mt-2 inline-block"
+                          className="text-sm text-blue-600 hover:text-blue-800 mt-2 inline-block mr-4"
                         >
                           View original document →
+                        </a>
+                        <a
+                          href={createAirtableUrl(doc.dateStr, doc.summary || doc.content)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-purple-600 hover:text-purple-800 mt-2 inline-block"
+                        >
+                          Add event to Airtable →
                         </a>
                       </div>
                     ))}
