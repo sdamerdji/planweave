@@ -72,6 +72,7 @@ const main = async () => {
             legistarClient: event.raw_event.legistarClient,
             legistarEventId: event.raw_event.legistarEventId,
             text: pdfText,
+            agendaUrl: rawEventJson["EventAgendaFile"],
           });
         } else {
           console.error(

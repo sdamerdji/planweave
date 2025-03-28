@@ -10,7 +10,8 @@ select
   cast(legistar_event_id as text) as source_event_id,
   null as source_document_id,
   'legistar' || ':' || legistar_client || ':' || legistar_event_id as unified_event_id,
-  substring(text, 1, 5000) as truncated_text
+  substring(text, 1, 5000) as truncated_text,
+  agenda_url as document_url,
 from {{ source('raw', 'event_agenda_text') }}
 
 union all
@@ -21,7 +22,8 @@ select
   cast(prime_gov_meeting_id as text) as source_event_id,
   cast(prime_gov_document_id as text) as source_document_id,
   'prime_gov' || ':' || prime_gov_client || ':' || prime_gov_meeting_id as unified_event_id,
-  substring(text, 1, 5000) as truncated_text
+  substring(text, 1, 5000) as truncated_text,
+  document_url as document_url
 from {{ source('raw', 'prime_gov_document_text') }}
 
 union all

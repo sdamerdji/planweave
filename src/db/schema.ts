@@ -77,6 +77,7 @@ export const eventAgendaText = pgTable(
     legistarClient: text().notNull(),
     legistarEventId: integer().notNull(),
     text: text().notNull(),
+    agendaUrl: text().notNull(),
   },
   (table) => [
     unique().on(table.legistarClient, table.legistarEventId),
@@ -149,6 +150,7 @@ export const civicPlusDocumentText = pgTable(
     meetingDate: text(),
     meetingTime: text(),
     text: text().notNull(),
+    documentUrl: text().notNull(),
   },
   (table) => [
     unique("civic_plus_document_text_city_document_id").on(
@@ -180,6 +182,7 @@ export const primeGovDocumentText = pgTable(
     primeGovDocumentId: integer().notNull(),
     primeGovTemplateName: text().notNull(),
     text: text().notNull(),
+    documentUrl: text().notNull(),
   },
   // we actually have multiple documents per meeting
   (table) => [
@@ -190,6 +193,8 @@ export const primeGovDocumentText = pgTable(
   ]
 );
 
+// *thinking cap*
+// this fucking sucks actually
 export const granicusEvent = pgTable(
   "granicus_event",
   {

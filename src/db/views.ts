@@ -25,4 +25,5 @@ export const unifiedDocumentText = pgTable("unified_document_text", {
   unified_event_id: text().notNull(),
   truncated_text: text().notNull(),
   event_date: date().notNull(),
+  document_url: text().notNull(),
 });

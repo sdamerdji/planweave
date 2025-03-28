@@ -17,6 +17,7 @@ select
   stg_doc.source_document_id,
   stg_doc.unified_event_id,
   stg_doc.truncated_text,
+  stg_doc.document_url,
   stg_event.event_date
 from {{ ref('stg_unified_document_text') }} as stg_doc
 join {{ ref('stg_unified_event') }} as stg_event 

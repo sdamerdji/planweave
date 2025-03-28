@@ -13,43 +13,44 @@ const logWithClientInfo = (message: string) => {
 // Function to parse search query with operators
 const parseSearchQuery = (query: string): string => {
   try {
-    if (!query || query.trim() === '') {
-      return '';
+    if (!query || query.trim() === "") {
+      return "";
     }
-    
+
     // Replace multiple spaces with single space and trim
-    const normalizedQuery = query.trim().replace(/\s+/g, ' ');
-    
+    const normalizedQuery = query.trim().replace(/\s+/g, " ");
+
     // Split by 'or' (case insensitive) and process each part
     const orParts = normalizedQuery.split(/\s+or\s+/i);
-    
+
     // Process each 'or' part (which may contain 'and's)
-    const processedOrParts = orParts.map(part => {
+    const processedOrParts = orParts.map((part) => {
       // Split by 'and' (case insensitive) and join with '&'
       const andParts = part.split(/\s+and\s+/i);
-      const processedAndParts = andParts.map(andPart => {
+      const processedAndParts = andParts.map((andPart) => {
         // For each term, escape special characters and replace spaces with &
-        const cleanedPart = andPart.trim()
-          .replace(/[!:&|()]/g, ' ') // Remove PostgreSQL tsquery special chars
-          .replace(/\s+/g, ' ')
+        const cleanedPart = andPart
+          .trim()
+          .replace(/[!:&|()]/g, " ") // Remove PostgreSQL tsquery special chars
+          .replace(/\s+/g, " ")
           .trim();
-          
-        if (!cleanedPart) return '';
-          
+
+        if (!cleanedPart) return "";
+
         // For multi-word terms, join with &
-        return cleanedPart.split(' ').filter(Boolean).join(' & ');
+        return cleanedPart.split(" ").filter(Boolean).join(" & ");
       });
-      
-      return processedAndParts.filter(Boolean).join(' & ');
+
+      return processedAndParts.filter(Boolean).join(" & ");
     });
-    
+
     // Join all 'or' parts with '|'
-    const result = processedOrParts.filter(Boolean).join(' | ');
-    return result || '';
+    const result = processedOrParts.filter(Boolean).join(" | ");
+    return result || "";
   } catch (error) {
-    console.error('Error parsing search query:', error);
+    console.error("Error parsing search query:", error);
     // Fallback to a basic query without operators
-    return query.trim().replace(/\s+/g, ' & ');
+    return query.trim().replace(/\s+/g, " & ");
   }
 };
 
@@ -84,11 +85,11 @@ export async function POST(request: Request) {
     // - "term1 OR term2" will match documents containing either term1 or term2
     // - "term1 AND term2" will match documents containing both term1 and term2
     // - Multiple words without operators are treated as AND conditions
-    // Example: "site inventory OR housing element OR annual progress report" 
+    // Example: "site inventory OR housing element OR annual progress report"
     // will match any document containing any of these phrases
     const parsedQuery = parseSearchQuery(searchQuery);
     logWithClientInfo(`Parsed query: "${parsedQuery}"`);
-    
+
     // Add date filter condition if specified
     let cutoffDateStr = null;
     if (dateFilter && dateFilter !== "all") {
@@ -124,11 +125,12 @@ export async function POST(request: Request) {
 
     const startTime = Date.now();
     let matches = [];
-    
+
     try {
       matches = await db
         .select({
           unifiedEventId: unifiedDocumentText.unified_event_id,
+          documentUrl: unifiedDocumentText.document_url,
           headline: sql<string>`ts_headline(
               'english',
               ${unifiedDocumentText.truncated_text},
@@ -148,11 +150,11 @@ export async function POST(request: Request) {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logWithClientInfo(`Error executing PostgreSQL search query: ${errorMsg}`);
-      
+
       // Fallback to a simple search without operators if the parsed query fails
-      const fallbackQuery = searchQuery.trim().replace(/\s+/g, ' & ');
+      const fallbackQuery = searchQuery.trim().replace(/\s+/g, " & ");
       logWithClientInfo(`Falling back to simple query: "${fallbackQuery}"`);
-      
+
       matches = await db
         .select({
           unifiedEventId: unifiedDocumentText.unified_event_id,

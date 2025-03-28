@@ -59,7 +59,7 @@ const KeywordSearchDemo = () => {
     "RHNA",
   ];
 
-  // Format and create Airtable URL 
+  // Format and create Airtable URL
   const createAirtableUrl = (dateStr: string, description: string): string => {
     // Ensure date is in ISO format
     let formattedDate = dateStr;
@@ -73,13 +73,14 @@ const KeywordSearchDemo = () => {
     }
 
     // Limit description length to avoid extremely long URLs
-    const trimmedDescription = description.length > 500 
-      ? description.substring(0, 497) + "..."
-      : description;
-    
+    const trimmedDescription =
+      description.length > 500
+        ? description.substring(0, 497) + "..."
+        : description;
+
     // Strip any HTML tags that might be in the description
-    const plainTextDescription = trimmedDescription.replace(/<[^>]*>/g, '');
-    
+    const plainTextDescription = trimmedDescription.replace(/<[^>]*>/g, "");
+
     return `https://airtable.com/appjwA9nMuNRewKNo/pagVWkvCC4Gf0UoA9/form?prefill_Date+%26+Time=${encodeURIComponent(formattedDate)}&prefill_%F0%9F%9B%9C++Description=${encodeURIComponent(plainTextDescription)}`;
   };
 
@@ -103,23 +104,25 @@ const KeywordSearchDemo = () => {
       .then((data) => {
         setSearchResults(data);
         setProcessingSummaries(true);
-        
+
         // Process summaries for each document
-        const summaryPromises = data.documents.map(async (doc: SearchResult) => {
-          try {
-            const response = await fetch("/api/summarizeDocument", {
-              method: "POST",
-              body: JSON.stringify({ content: doc.content, keywords: query }),
-            });
-            
-            const result = await response.json();
-            return { id: doc.id, summary: result.summary };
-          } catch (error) {
-            console.error("Error fetching summary:", error);
-            return { id: doc.id, summary: null };
+        const summaryPromises = data.documents.map(
+          async (doc: SearchResult) => {
+            try {
+              const response = await fetch("/api/summarizeDocument", {
+                method: "POST",
+                body: JSON.stringify({ content: doc.content, keywords: query }),
+              });
+
+              const result = await response.json();
+              return { id: doc.id, summary: result.summary };
+            } catch (error) {
+              console.error("Error fetching summary:", error);
+              return { id: doc.id, summary: null };
+            }
           }
-        });
-        
+        );
+
         // Once all summaries are processed, update the search results
         Promise.all(summaryPromises)
           .then((summaries) => {
@@ -130,7 +133,7 @@ const KeywordSearchDemo = () => {
                 summary: docSummary?.summary || "No summary available.",
               };
             });
-            
+
             setSearchResults({ ...data, documents: updatedDocuments });
             setProcessingSummaries(false);
           })
@@ -138,7 +141,7 @@ const KeywordSearchDemo = () => {
             console.error("Error processing summaries:", error);
             setProcessingSummaries(false);
           });
-          
+
         setSearchLoading(false);
       });
   };
@@ -215,7 +218,7 @@ const KeywordSearchDemo = () => {
                   >
                     Search
                   </Button>
-                  {(isInputFocused && searchQuery.length === 0) && (
+                  {isInputFocused && searchQuery.length === 0 && (
                     <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg rounded-md border border-slate-200 z-10">
                       <div className="p-2 border-b border-slate-100">
                         <p className="text-sm font-medium text-slate-500">
@@ -285,7 +288,10 @@ const KeywordSearchDemo = () => {
                           View original document →
                         </a>
                         <a
-                          href={createAirtableUrl(doc.dateStr, doc.summary || doc.content)}
+                          href={createAirtableUrl(
+                            doc.dateStr,
+                            doc.summary || doc.content
+                          )}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-sm text-purple-600 hover:text-purple-800 mt-2 inline-block"

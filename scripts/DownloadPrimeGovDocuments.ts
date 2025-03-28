@@ -35,7 +35,7 @@ const main = async () => {
         )
       )
     )
-    .where(isNull(primeGovDocumentText.id));
+    .where(isNull(primeGovDocumentText.documentUrl));
 
   console.log(
     `Found ${meetingsMissingTexts.length} events with missing agenda or minutes text`
@@ -60,14 +60,28 @@ const main = async () => {
           const url = `https://${meeting.raw_prime_gov_meeting.primeGovClient}.primegov.com/Public/CompiledDocument?meetingTemplateId=${document["templateId"]}&compileOutputType=1`;
           const pdfText = await downloadAndParsePdf(url);
           if (pdfText) {
-            await db.insert(primeGovDocumentText).values({
-              primeGovClient: meeting.raw_prime_gov_meeting.primeGovClient,
-              primeGovMeetingId:
-                meeting.raw_prime_gov_meeting.primeGovMeetingId,
-              primeGovDocumentId: document["id"],
-              primeGovTemplateName: document["templateName"],
-              text: pdfText,
-            });
+            await db
+              .insert(primeGovDocumentText)
+              .values({
+                primeGovClient: meeting.raw_prime_gov_meeting.primeGovClient,
+                primeGovMeetingId:
+                  meeting.raw_prime_gov_meeting.primeGovMeetingId,
+                primeGovDocumentId: document["id"],
+                primeGovTemplateName: document["templateName"],
+                text: pdfText,
+                documentUrl: url,
+              })
+              .onConflictDoUpdate({
+                target: [
+                  primeGovDocumentText.primeGovClient,
+                  primeGovDocumentText.primeGovMeetingId,
+                  primeGovDocumentText.primeGovDocumentId,
+                ],
+                set: {
+                  text: pdfText,
+                  documentUrl: url,
+                },
+              });
           } else {
             console.error(
               `[downloadAndParsePdfCoroutine ${coroNum}] Error downloading document ${document["id"]} for event ${meeting.raw_prime_gov_meeting.primeGovMeetingId}`
