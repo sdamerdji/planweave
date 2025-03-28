@@ -42,7 +42,7 @@ interface SearchResponse {
 }
 
 const KeywordSearchDemo = () => {
-  const [dateFilter, setDateFilter] = useState<DateFilter>("all");
+  const [dateFilter, setDateFilter] = useState<DateFilter>("30");
   const [searchQuery, setSearchQuery] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResponse | null>(
@@ -160,12 +160,14 @@ const KeywordSearchDemo = () => {
         <header className="py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-slate-900">
-              Keyword Search
+            Housing Element Watchbot
+
             </h1>
           </div>
           <p className="mt-2 text-slate-600">
-            Fast keyword search across all city agendas and meeting documents
-          </p>
+          AI-powered search for tracking housing element implementation
+
+</p>
         </header>
 
         <div className="flex mt-6">
@@ -173,7 +175,7 @@ const KeywordSearchDemo = () => {
             {/* Search bar */}
             <div className="flex gap-4 w-full">
               <Select
-                defaultValue="all"
+                defaultValue="30"
                 onValueChange={(filter: DateFilter) => setDateFilter(filter)}
               >
                 <SelectTrigger className="w-50 h-[50px]">
@@ -308,7 +310,7 @@ const KeywordSearchDemo = () => {
                     ) : (
                       <Search className="mx-auto h-12 w-12 mb-4 text-slate-400" />
                     )}
-                    <p>Enter keywords to search across all city documents...</p>
+                    <p>Search across all city documents...</p>
                   </div>
                 )}
               </CardContent>
