@@ -3,11 +3,56 @@ import { db } from "@/src/db";
 import { eventAgendaText, rawEvent } from "@/src/db/schema";
 import { unifiedDocumentText, unifiedEvent } from "@/src/db/views";
 import { eq, sql, and, gte, count, desc, inArray } from "drizzle-orm";
+import { OpenAIClient } from "@/src/OpenaiClient";
 
 // Helper function for consistent log formatting
 const logWithClientInfo = (message: string) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${message}`);
+};
+
+// Function to extract date and time from text using OpenAI
+const extractDateFromText = async (text: string): Promise<string | null> => {
+  try {
+    if (!text || text.trim() === '') {
+      return null;
+    }
+
+    const prompt = `
+    Extract the meeting date and time from the following text. 
+    Return ONLY the date and time in the format "YYYY-MM-DD HH:MM:SS" if found. 
+    If no date and time are found, return "NOT_FOUND".
+
+    Text:
+    ${text}
+    `;
+
+    const systemPrompt = `
+    You are extracting meeting dates and times from government meeting documents.
+    Only return the date and time in the requested format, or "NOT_FOUND".
+    `;
+
+    const response = await OpenAIClient.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+    });
+
+    const result = response.choices[0].message.content?.trim() || "NOT_FOUND";
+    
+    // If we got a valid date format (not "NOT_FOUND"), return it
+    if (result !== "NOT_FOUND" && /^\d{4}-\d{2}-\d{2}/.test(result)) {
+      console.log("Extracted date from text:", result, text);
+      return result;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error extracting date from text:", error);
+    return null;
+  }
 };
 
 // Function to parse search query with operators
@@ -137,6 +182,7 @@ export async function POST(request: Request) {
               to_tsquery('english', ${parsedQuery}),
               'MaxWords=100, MinWords=50'
             )`,
+          fullText: unifiedDocumentText.truncated_text,
         })
         .from(unifiedDocumentText)
         .where(
@@ -165,6 +211,7 @@ export async function POST(request: Request) {
               plainto_tsquery('english', ${searchQuery}),
               'MaxWords=100, MinWords=50'
             )`,
+          fullText: unifiedDocumentText.truncated_text,
         })
         .from(unifiedDocumentText)
         .where(
@@ -187,17 +234,37 @@ export async function POST(request: Request) {
         )
       );
 
+    // Process each match to extract dates where needed
+    const dateExtractionPromises = matches.map(async (match) => {
+      const extractedDate = await extractDateFromText(match.fullText);
+      return {
+        unifiedEventId: match.unifiedEventId,
+        extractedDate,
+      };
+    });
+    
+    const extractedDates = await Promise.all(dateExtractionPromises);
+    
+    // Map documents with the extracted dates when available
     const documents = matches.map((match) => {
       const event = events.find(
         (event) => event.unified_event_id === match.unifiedEventId
       )!;
+      
+      // Find the extracted date for this document, if any
+      const dateInfo = extractedDates.find(
+        (d) => d.unifiedEventId === match.unifiedEventId
+      );
+      
+      // Use the extracted date if available, otherwise fallback to event_date
+      const dateStr = dateInfo?.extractedDate || event.event_date;
+      
       return {
         id: event.source_event_id,
         client: event.client,
         body: event.event_body_name,
-        dateStr: event.event_date,
+        dateStr,
         content: match.headline,
-        // TODO: Add url
         url: match.documentUrl,
       };
     });
