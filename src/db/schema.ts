@@ -189,3 +189,16 @@ export const primeGovDocumentText = pgTable(
     ),
   ]
 );
+
+export const granicusEvent = pgTable(
+  "granicus_event",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    granicusClient: text().notNull(),
+    granicusId: text().notNull(),
+    agendaUrl: text().notNull(),
+    name: text().notNull(),
+    date: date().notNull(),
+  },
+  (table) => [unique().on(table.granicusClient, table.granicusId)]
+);
