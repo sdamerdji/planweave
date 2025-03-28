@@ -33,6 +33,7 @@ interface SearchResult {
   content: string;
   url: string;
   client: string;
+  summary?: string;
 }
 
 interface SearchResponse {
@@ -48,6 +49,7 @@ const KeywordSearchDemo = () => {
     null
   );
   const [searchLoading, setSearchLoading] = useState(false);
+  const [processingSummaries, setProcessingSummaries] = useState(false);
   const { toast } = useToast();
 
   const exampleQueries = [
@@ -76,6 +78,43 @@ const KeywordSearchDemo = () => {
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data);
+        setProcessingSummaries(true);
+        
+        // Process summaries for each document
+        const summaryPromises = data.documents.map(async (doc: SearchResult) => {
+          try {
+            const response = await fetch("/api/summarizeDocument", {
+              method: "POST",
+              body: JSON.stringify({ content: doc.content, keywords: query }),
+            });
+            
+            const result = await response.json();
+            return { id: doc.id, summary: result.summary };
+          } catch (error) {
+            console.error("Error fetching summary:", error);
+            return { id: doc.id, summary: null };
+          }
+        });
+        
+        // Once all summaries are processed, update the search results
+        Promise.all(summaryPromises)
+          .then((summaries) => {
+            const updatedDocuments = data.documents.map((doc: SearchResult) => {
+              const docSummary = summaries.find((sum) => sum.id === doc.id);
+              return {
+                ...doc,
+                summary: docSummary?.summary || "No summary available.",
+              };
+            });
+            
+            setSearchResults({ ...data, documents: updatedDocuments });
+            setProcessingSummaries(false);
+          })
+          .catch((error) => {
+            console.error("Error processing summaries:", error);
+            setProcessingSummaries(false);
+          });
+          
         setSearchLoading(false);
       });
   };
@@ -152,7 +191,7 @@ const KeywordSearchDemo = () => {
                   >
                     Search
                   </Button>
-                  {isInputFocused && searchQuery.length === 0 && (
+                  {(isInputFocused && searchQuery.length === 0) && (
                     <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg rounded-md border border-slate-200 z-10">
                       <div className="p-2 border-b border-slate-100">
                         <p className="text-sm font-medium text-slate-500">
@@ -191,9 +230,15 @@ const KeywordSearchDemo = () => {
               <CardContent>
                 {searchResults && !searchLoading ? (
                   <div className="space-y-6">
+                    {processingSummaries && (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="animate-spin h-6 w-6 mr-2 text-slate-800" />
+                        <p>Generating summaries...</p>
+                      </div>
+                    )}
                     {searchResults.documents.map((doc, index) => (
                       <div
-                        key={index}
+                        key={doc.id}
                         className="border-b border-slate-200 pb-6 last:border-0"
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -204,7 +249,7 @@ const KeywordSearchDemo = () => {
                         <p
                           className="text-slate-700 whitespace-pre-line"
                           dangerouslySetInnerHTML={{
-                            __html: doc.content,
+                            __html: doc.summary || doc.content,
                           }}
                         />
                         <a
