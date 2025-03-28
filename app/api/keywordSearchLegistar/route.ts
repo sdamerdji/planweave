@@ -158,6 +158,7 @@ export async function POST(request: Request) {
       matches = await db
         .select({
           unifiedEventId: unifiedDocumentText.unified_event_id,
+          documentUrl: unifiedDocumentText.document_url,
           headline: sql<string>`ts_headline(
               'english',
               ${unifiedDocumentText.truncated_text},
@@ -197,7 +198,7 @@ export async function POST(request: Request) {
         dateStr: event.event_date,
         content: match.headline,
         // TODO: Add url
-        url: match.unifiedEventId,
+        url: match.documentUrl,
       };
     });
 

@@ -265,7 +265,7 @@ const KeywordSearchDemo = () => {
                     )}
                     {searchResults.documents.map((doc, index) => (
                       <div
-                        key={doc.id}
+                        key={index}
                         className="border-b border-slate-200 pb-6 last:border-0"
                       >
                         <div className="flex items-center justify-between mb-2">
