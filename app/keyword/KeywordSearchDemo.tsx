@@ -283,7 +283,7 @@ const KeywordSearchDemo = () => {
                           href={doc.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:text-blue-800 mt-2 inline-block mr-4"
+                          className="text-sm text-blue-600 hover:text-blue-800 mt-2 inline-block mr-4 cursor-pointer"
                         >
                           View original document →
                         </a>
@@ -294,7 +294,7 @@ const KeywordSearchDemo = () => {
                           )}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-purple-600 hover:text-purple-800 mt-2 inline-block"
+                          className="text-sm text-purple-600 hover:text-purple-800 mt-2 inline-block cursor-pointer"
                         >
                           Add event to Airtable →
                         </a>

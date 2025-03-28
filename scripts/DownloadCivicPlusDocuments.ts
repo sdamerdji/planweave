@@ -1,9 +1,6 @@
 // scripts/DownloadCivicPlusDocuments.ts
 import { db } from "@/src/db";
-import {
-  rawCivicplusAsset,
-  civicPlusDocumentText
-} from "@/src/db/schema";
+import { rawCivicplusAsset, civicPlusDocumentText } from "@/src/db/schema";
 import { downloadAndParsePdf } from "@/src/DownloadAndParsePdf";
 import { eq, and, isNull } from "drizzle-orm";
 import _ from "lodash";
@@ -12,7 +9,7 @@ const NUM_COROUTINES = 10;
 
 const main = async () => {
   console.log("Querying CivicPlus assets missing text...");
-  
+
   const assetsMissingTexts = await db
     .select()
     .from(rawCivicplusAsset)
@@ -23,10 +20,7 @@ const main = async () => {
           rawCivicplusAsset.civicplusMeetingId,
           civicPlusDocumentText.civicplusMeetingId
         ),
-        eq(
-          rawCivicplusAsset.cityName,
-          civicPlusDocumentText.cityName
-        )
+        eq(rawCivicplusAsset.cityName, civicPlusDocumentText.cityName)
       )
     )
     .where(isNull(civicPlusDocumentText.id));
@@ -49,20 +43,20 @@ const main = async () => {
 
         const assetJson = asset.raw_civicplus_asset.json as any;
         const url = assetJson.url;
-        
+
         if (!url) {
           console.warn(
             `[downloadAndParsePdfCoroutine ${coroNum}] No URL found for asset: ${JSON.stringify(asset.raw_civicplus_asset)}`
           );
           continue;
         }
-        
+
         // Create documentId by concatenating meeting_id and asset_type
         const documentId = `${assetJson.meeting_id}_${assetJson.asset_type}`;
-        
+
         // Download and parse the PDF
         const pdfText = await downloadAndParsePdf(url);
-        
+
         if (pdfText) {
           await db.insert(civicPlusDocumentText).values({
             cityName: asset.raw_civicplus_asset.cityName,
@@ -73,8 +67,9 @@ const main = async () => {
             meetingDate: assetJson.meeting_date || null,
             meetingTime: assetJson.meeting_time || null,
             text: pdfText,
+            documentUrl: url,
           });
-          
+
           console.log(
             `[downloadAndParsePdfCoroutine ${coroNum}] Successfully saved text for document ${documentId}`
           );
