@@ -1,0 +1,812 @@
+[0m18:22:14.773949 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x105932510>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1067d3c50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1067d3ed0>]}
+
+
+============================== 18:22:14.776317 | 3f7e08a7-94ce-454b-9047-34a040162131 ==============================
+[0m18:22:14.776317 [info ] [MainThread]: Running with dbt=1.9.3
+[0m18:22:14.776551 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'debug': 'False', 'fail_fast': 'False', 'log_path': '/Users/alexshadley/nextjs-boilerplate/dbt/logs', 'version_check': 'True', 'profiles_dir': '/Users/alexshadley/.dbt', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'introspect': 'True', 'invocation_command': 'dbt build', 'log_format': 'default', 'target_path': 'None', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m18:22:14.809886 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+The `log-path` config in `dbt_project.yml` has been deprecated, and will no
+longer be supported in a future version of dbt-core. If you wish to write dbt
+logs to a custom directory, please use the --log-path CLI flag or DBT_LOG_PATH
+env var instead.
+[0m18:22:14.810078 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x106869f30>]}
+[0m18:22:14.810279 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+The `target-path` config in `dbt_project.yml` has been deprecated, and will no
+longer be supported in a future version of dbt-core. If you wish to write dbt
+artifacts to a custom directory, please use the --target-path CLI flag or
+DBT_TARGET_PATH env var instead.
+[0m18:22:14.810401 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10683e140>]}
+[0m18:22:14.847803 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1068c1650>]}
+[0m18:22:14.866195 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1059c2300>]}
+[0m18:22:14.866657 [info ] [MainThread]: Registered adapter: postgres=1.9.0
+[0m18:22:14.902473 [debug] [MainThread]: checksum: 5671c00892cdbcef29c3b00cc5ba7510c3d18a35c883caeb9ab9ee266dc29c8f, vars: {}, profile: , target: , version: 1.9.3
+[0m18:22:14.902799 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m18:22:14.902941 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x106d46a50>]}
+[0m18:22:15.271699 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10732f6c0>]}
+[0m18:22:15.297319 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/manifest.json
+[0m18:22:15.298655 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/semantic_manifest.json
+[0m18:22:15.315386 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1073cd490>]}
+[0m18:22:15.315571 [info ] [MainThread]: Found 4 models, 6 sources, 433 macros
+[0m18:22:15.316394 [info ] [MainThread]: 
+[0m18:22:15.316527 [info ] [MainThread]: Concurrency: 4 threads (target='prod')
+[0m18:22:15.316630 [info ] [MainThread]: 
+[0m18:22:15.316811 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m18:22:15.318269 [debug] [ThreadPool]: Acquiring new postgres connection 'list_postgres'
+[0m18:22:15.338711 [debug] [ThreadPool]: Using postgres connection "list_postgres"
+[0m18:22:15.338897 [debug] [ThreadPool]: On list_postgres: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "list_postgres"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m18:22:15.338996 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m18:22:15.637333 [debug] [ThreadPool]: SQL status: SELECT 15 in 0.298 seconds
+[0m18:22:15.639432 [debug] [ThreadPool]: On list_postgres: Close
+[0m18:22:15.641598 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_postgres, now list_postgres_public)
+[0m18:22:15.648551 [debug] [ThreadPool]: Using postgres connection "list_postgres_public"
+[0m18:22:15.649028 [debug] [ThreadPool]: On list_postgres_public: BEGIN
+[0m18:22:15.649261 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m18:22:15.807600 [debug] [ThreadPool]: SQL status: BEGIN in 0.158 seconds
+[0m18:22:15.808630 [debug] [ThreadPool]: Using postgres connection "list_postgres_public"
+[0m18:22:15.809317 [debug] [ThreadPool]: On list_postgres_public: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "list_postgres_public"} */
+select
+      'postgres' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'public'
+    union all
+    select
+      'postgres' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'public'
+    union all
+    select
+      'postgres' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'public'
+  
+[0m18:22:15.837679 [debug] [ThreadPool]: SQL status: SELECT 19 in 0.028 seconds
+[0m18:22:15.841107 [debug] [ThreadPool]: On list_postgres_public: ROLLBACK
+[0m18:22:15.860726 [debug] [ThreadPool]: On list_postgres_public: Close
+[0m18:22:15.870022 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:15.870490 [debug] [MainThread]: On master: BEGIN
+[0m18:22:15.870830 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m18:22:16.138901 [debug] [MainThread]: SQL status: BEGIN in 0.268 seconds
+[0m18:22:16.139985 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:16.140874 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "master"} */
+with relation as (
+        select
+            pg_rewrite.ev_class as class,
+            pg_rewrite.oid as id
+        from pg_rewrite
+    ),
+    class as (
+        select
+            oid as id,
+            relname as name,
+            relnamespace as schema,
+            relkind as kind
+        from pg_class
+    ),
+    dependency as (
+        select distinct
+            pg_depend.objid as id,
+            pg_depend.refobjid as ref
+        from pg_depend
+    ),
+    schema as (
+        select
+            pg_namespace.oid as id,
+            pg_namespace.nspname as name
+        from pg_namespace
+        where nspname != 'information_schema' and nspname not like 'pg\_%'
+    ),
+    referenced as (
+        select
+            relation.id AS id,
+            referenced_class.name ,
+            referenced_class.schema ,
+            referenced_class.kind
+        from relation
+        join class as referenced_class on relation.class=referenced_class.id
+        where referenced_class.kind in ('r', 'v', 'm')
+    ),
+    relationships as (
+        select
+            referenced.name as referenced_name,
+            referenced.schema as referenced_schema_id,
+            dependent_class.name as dependent_name,
+            dependent_class.schema as dependent_schema_id,
+            referenced.kind as kind
+        from referenced
+        join dependency on referenced.id=dependency.id
+        join class as dependent_class on dependency.ref=dependent_class.id
+        where
+            (referenced.name != dependent_class.name or
+             referenced.schema != dependent_class.schema)
+    )
+
+    select
+        referenced_schema.name as referenced_schema,
+        relationships.referenced_name as referenced_name,
+        dependent_schema.name as dependent_schema,
+        relationships.dependent_name as dependent_name
+    from relationships
+    join schema as dependent_schema on relationships.dependent_schema_id=dependent_schema.id
+    join schema as referenced_schema on relationships.referenced_schema_id=referenced_schema.id
+    group by referenced_schema, referenced_name, dependent_schema, dependent_name
+    order by referenced_schema, referenced_name, dependent_schema, dependent_name;
+[0m18:22:16.409936 [debug] [MainThread]: SQL status: SELECT 12 in 0.268 seconds
+[0m18:22:16.415728 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10776f070>]}
+[0m18:22:16.416385 [debug] [MainThread]: On master: ROLLBACK
+[0m18:22:16.465350 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:16.466234 [debug] [MainThread]: On master: BEGIN
+[0m18:22:16.506008 [debug] [MainThread]: SQL status: BEGIN in 0.039 seconds
+[0m18:22:16.506801 [debug] [MainThread]: On master: COMMIT
+[0m18:22:16.507454 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:16.508025 [debug] [MainThread]: On master: COMMIT
+[0m18:22:16.527158 [debug] [MainThread]: SQL status: COMMIT in 0.019 seconds
+[0m18:22:16.527813 [debug] [MainThread]: On master: Close
+[0m18:22:16.535396 [debug] [Thread-1 (]: Began running node model.planweave.stg_unified_document_text
+[0m18:22:16.535904 [debug] [Thread-2 (]: Began running node model.planweave.stg_unified_event
+[0m18:22:16.536529 [info ] [Thread-1 (]: 1 of 4 START sql view model public.stg_unified_document_text ................... [RUN]
+[0m18:22:16.537117 [info ] [Thread-2 (]: 2 of 4 START sql view model public.stg_unified_event ........................... [RUN]
+[0m18:22:16.537777 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_postgres_public, now model.planweave.stg_unified_document_text)
+[0m18:22:16.538291 [debug] [Thread-2 (]: Acquiring new postgres connection 'model.planweave.stg_unified_event'
+[0m18:22:16.538657 [debug] [Thread-1 (]: Began compiling node model.planweave.stg_unified_document_text
+[0m18:22:16.538977 [debug] [Thread-2 (]: Began compiling node model.planweave.stg_unified_event
+[0m18:22:16.547138 [debug] [Thread-1 (]: Writing injected SQL for node "model.planweave.stg_unified_document_text"
+[0m18:22:16.549919 [debug] [Thread-2 (]: Writing injected SQL for node "model.planweave.stg_unified_event"
+[0m18:22:16.550983 [debug] [Thread-2 (]: Began executing node model.planweave.stg_unified_event
+[0m18:22:16.551309 [debug] [Thread-1 (]: Began executing node model.planweave.stg_unified_document_text
+[0m18:22:16.575443 [debug] [Thread-2 (]: Writing runtime sql for node "model.planweave.stg_unified_event"
+[0m18:22:16.576335 [debug] [Thread-1 (]: Writing runtime sql for node "model.planweave.stg_unified_document_text"
+[0m18:22:16.576999 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:22:16.577218 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:22:16.577405 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: BEGIN
+[0m18:22:16.577571 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: BEGIN
+[0m18:22:16.577730 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m18:22:16.577879 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m18:22:16.734836 [debug] [Thread-1 (]: SQL status: BEGIN in 0.157 seconds
+[0m18:22:16.735205 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:22:16.735592 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_document_text"} */
+
+  create view "postgres"."public"."stg_unified_document_text__dbt_tmp"
+    
+    
+  as (
+    
+
+select
+  'legistar' as source,
+  legistar_client as client,
+  legistar_event_id as source_event_id,
+  null as source_document_id,
+  'legistar' || ':' || legistar_client || ':' || legistar_event_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."event_agenda_text"
+
+union all
+
+select
+  'prime_gov' as source,
+  prime_gov_client as client,
+  prime_gov_meeting_id as source_event_id,
+  prime_gov_document_id as source_document_id,
+  'prime_gov' || ':' || prime_gov_client || ':' || prime_gov_meeting_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."prime_gov_document_text"
+
+union all
+
+select
+  'civic_plus' as source,
+  city_name as client,
+  civicplus_meeting_id as source_event_id,
+  document_id as source_document_id,
+  'civic_plus' || ':' || city_name || ':' || civicplus_meeting_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."civic_plus_document_text"
+  );
+[0m18:22:16.744925 [debug] [Thread-2 (]: SQL status: BEGIN in 0.167 seconds
+[0m18:22:16.745237 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:22:16.745601 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_event"} */
+
+  create view "postgres"."public"."stg_unified_event__dbt_tmp"
+    
+    
+  as (
+    
+
+select
+  'legistar' as source,
+  legistar_client as client,
+  legistar_event_id as source_event_id,
+  'legistar' || ':' || legistar_client || ':' || legistar_event_id as unified_event_id,
+  cast(json->>'EventDate' as date) as event_date,
+  json->>'EventBodyName' as event_body_name
+from "postgres"."public"."raw_event"
+
+union all
+
+select
+  'prime_gov' as source,
+  prime_gov_client as client,
+  prime_gov_meeting_id as source_event_id,
+  'prime_gov' || ':' || prime_gov_client || ':' || prime_gov_meeting_id as unified_event_id,
+  cast(json->>'dateTime' as date) as event_date,
+  json->>'title' as event_body_name
+from "postgres"."public"."raw_prime_gov_meeting"
+
+union all
+
+select
+  'civic_plus' as source,
+  city_name as client,
+  civicplus_meeting_id as source_event_id,
+  'civic_plus' || ':' || city_name || ':' || civicplus_meeting_id as unified_event_id,
+  cast(json->>'meeting_date' as date) as event_date,
+  json->>'committee_name' as event_body_name
+from "postgres"."public"."raw_civicplus_asset"
+where asset_type = 'meeting'  -- Only include meeting records, not other asset types
+  );
+[0m18:22:16.762675 [debug] [Thread-1 (]: Postgres adapter: Postgres error: UNION types integer and text cannot be matched
+LINE 34:   civicplus_meeting_id as source_event_id,
+           ^
+
+[0m18:22:16.763008 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: ROLLBACK
+[0m18:22:16.764427 [debug] [Thread-2 (]: Postgres adapter: Postgres error: UNION types integer and text cannot be matched
+LINE 34:   civicplus_meeting_id as source_event_id,
+           ^
+
+[0m18:22:16.764744 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: ROLLBACK
+[0m18:22:16.779662 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: Close
+[0m18:22:16.785981 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: Close
+[0m18:22:16.795540 [debug] [Thread-1 (]: Database Error in model stg_unified_document_text (dbt/models/staging/stg_unified_document_text.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_document_text.sql
+[0m18:22:16.799860 [debug] [Thread-2 (]: Database Error in model stg_unified_event (dbt/models/staging/stg_unified_event.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_event.sql
+[0m18:22:16.800695 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1077cd310>]}
+[0m18:22:16.800992 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '3f7e08a7-94ce-454b-9047-34a040162131', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107bc60f0>]}
+[0m18:22:16.801600 [error] [Thread-1 (]: 1 of 4 ERROR creating sql view model public.stg_unified_document_text .......... [[31mERROR[0m in 0.26s]
+[0m18:22:16.802626 [debug] [Thread-1 (]: Finished running node model.planweave.stg_unified_document_text
+[0m18:22:16.802088 [error] [Thread-2 (]: 2 of 4 ERROR creating sql view model public.stg_unified_event .................. [[31mERROR[0m in 0.26s]
+[0m18:22:16.803200 [debug] [Thread-7 (]: Marking all children of 'model.planweave.stg_unified_document_text' to be skipped because of status 'error'.  Reason: Database Error in model stg_unified_document_text (dbt/models/staging/stg_unified_document_text.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_document_text.sql.
+[0m18:22:16.803617 [debug] [Thread-2 (]: Finished running node model.planweave.stg_unified_event
+[0m18:22:16.804365 [debug] [Thread-7 (]: Marking all children of 'model.planweave.stg_unified_event' to be skipped because of status 'error'.  Reason: Database Error in model stg_unified_event (dbt/models/staging/stg_unified_event.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_event.sql.
+[0m18:22:16.804972 [debug] [Thread-4 (]: Began running node model.planweave.unified_event
+[0m18:22:16.805339 [debug] [Thread-3 (]: Began running node model.planweave.unified_document_text
+[0m18:22:16.805608 [info ] [Thread-4 (]: 4 of 4 SKIP relation public.unified_event ...................................... [[33mSKIP[0m]
+[0m18:22:16.805928 [info ] [Thread-3 (]: 3 of 4 SKIP relation public.unified_document_text .............................. [[33mSKIP[0m]
+[0m18:22:16.806213 [debug] [Thread-4 (]: Finished running node model.planweave.unified_event
+[0m18:22:16.806461 [debug] [Thread-3 (]: Finished running node model.planweave.unified_document_text
+[0m18:22:16.806691 [debug] [Thread-7 (]: Marking all children of 'model.planweave.unified_event' to be skipped because of status 'skipped'. 
+[0m18:22:16.806953 [debug] [Thread-7 (]: Marking all children of 'model.planweave.unified_document_text' to be skipped because of status 'skipped'. 
+[0m18:22:16.807779 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:16.808009 [debug] [MainThread]: On master: BEGIN
+[0m18:22:16.808203 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m18:22:16.967691 [debug] [MainThread]: SQL status: BEGIN in 0.159 seconds
+[0m18:22:16.968730 [debug] [MainThread]: On master: COMMIT
+[0m18:22:16.969419 [debug] [MainThread]: Using postgres connection "master"
+[0m18:22:16.969980 [debug] [MainThread]: On master: COMMIT
+[0m18:22:16.989212 [debug] [MainThread]: SQL status: COMMIT in 0.019 seconds
+[0m18:22:16.989921 [debug] [MainThread]: On master: Close
+[0m18:22:16.991097 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m18:22:16.991742 [debug] [MainThread]: Connection 'model.planweave.stg_unified_document_text' was properly closed.
+[0m18:22:16.992283 [debug] [MainThread]: Connection 'model.planweave.stg_unified_event' was properly closed.
+[0m18:22:16.992892 [info ] [MainThread]: 
+[0m18:22:16.993448 [info ] [MainThread]: Finished running 2 table models, 2 view models in 0 hours 0 minutes and 1.68 seconds (1.68s).
+[0m18:22:16.994889 [debug] [MainThread]: Command end result
+[0m18:22:17.018690 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/manifest.json
+[0m18:22:17.020295 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/semantic_manifest.json
+[0m18:22:17.024682 [debug] [MainThread]: Wrote artifact RunExecutionResult to /Users/alexshadley/nextjs-boilerplate/dbt/target/run_results.json
+[0m18:22:17.024872 [info ] [MainThread]: 
+[0m18:22:17.025083 [info ] [MainThread]: [31mCompleted with 2 errors, 0 partial successes, and 0 warnings:[0m
+[0m18:22:17.025261 [info ] [MainThread]: 
+[0m18:22:17.025475 [error] [MainThread]:   Database Error in model stg_unified_document_text (dbt/models/staging/stg_unified_document_text.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_document_text.sql
+[0m18:22:17.025647 [info ] [MainThread]: 
+[0m18:22:17.025843 [error] [MainThread]:   Database Error in model stg_unified_event (dbt/models/staging/stg_unified_event.sql)
+  UNION types integer and text cannot be matched
+  LINE 34:   civicplus_meeting_id as source_event_id,
+             ^
+  compiled code at dbt/target/run/planweave/dbt/models/staging/stg_unified_event.sql
+[0m18:22:17.026006 [info ] [MainThread]: 
+[0m18:22:17.026186 [info ] [MainThread]: Done. PASS=0 WARN=0 ERROR=2 SKIP=2 TOTAL=4
+[0m18:22:17.027600 [debug] [MainThread]: Resource report: {"command_name": "build", "command_success": false, "command_wall_clock_time": 2.2822974, "process_in_blocks": "0", "process_kernel_time": 0.144579, "process_mem_max_rss": "135643136", "process_out_blocks": "0", "process_user_time": 1.125746}
+[0m18:22:17.027826 [debug] [MainThread]: Command `dbt build` failed at 18:22:17.027774 after 2.28 seconds
+[0m18:22:17.028031 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x106816040>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1024ffc40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x104f29f70>]}
+[0m18:22:17.028222 [debug] [MainThread]: Flushing usage events
+[0m18:22:17.459831 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:25:11.018720 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1064ce510>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107373c50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107373ed0>]}
+
+
+============================== 18:25:11.021238 | 928625a6-c37b-436a-aee2-8b12ec63e87d ==============================
+[0m18:25:11.021238 [info ] [MainThread]: Running with dbt=1.9.3
+[0m18:25:11.021473 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '/Users/alexshadley/.dbt', 'debug': 'False', 'version_check': 'True', 'log_path': '/Users/alexshadley/nextjs-boilerplate/dbt/logs', 'warn_error': 'None', 'fail_fast': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'False', 'quiet': 'False', 'no_print': 'None', 'log_format': 'default', 'static_parser': 'True', 'introspect': 'True', 'invocation_command': 'dbt build', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m18:25:11.055370 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+The `log-path` config in `dbt_project.yml` has been deprecated, and will no
+longer be supported in a future version of dbt-core. If you wish to write dbt
+logs to a custom directory, please use the --log-path CLI flag or DBT_LOG_PATH
+env var instead.
+[0m18:25:11.055559 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107409f30>]}
+[0m18:25:11.055760 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+The `target-path` config in `dbt_project.yml` has been deprecated, and will no
+longer be supported in a future version of dbt-core. If you wish to write dbt
+artifacts to a custom directory, please use the --target-path CLI flag or
+DBT_TARGET_PATH env var instead.
+[0m18:25:11.055878 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1073e2140>]}
+[0m18:25:11.094197 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107461650>]}
+[0m18:25:11.112390 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x106562300>]}
+[0m18:25:11.112751 [info ] [MainThread]: Registered adapter: postgres=1.9.0
+[0m18:25:11.148446 [debug] [MainThread]: checksum: 5671c00892cdbcef29c3b00cc5ba7510c3d18a35c883caeb9ab9ee266dc29c8f, vars: {}, profile: , target: , version: 1.9.3
+[0m18:25:11.195177 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 2 files changed.
+[0m18:25:11.195416 [debug] [MainThread]: Partial parsing: updated file: planweave://dbt/models/staging/stg_unified_document_text.sql
+[0m18:25:11.195565 [debug] [MainThread]: Partial parsing: updated file: planweave://dbt/models/staging/stg_unified_event.sql
+[0m18:25:11.284847 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10810c3d0>]}
+[0m18:25:11.310391 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/manifest.json
+[0m18:25:11.311783 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/semantic_manifest.json
+[0m18:25:11.327686 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108340e20>]}
+[0m18:25:11.327861 [info ] [MainThread]: Found 4 models, 6 sources, 433 macros
+[0m18:25:11.328712 [info ] [MainThread]: 
+[0m18:25:11.328840 [info ] [MainThread]: Concurrency: 4 threads (target='prod')
+[0m18:25:11.328938 [info ] [MainThread]: 
+[0m18:25:11.329119 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m18:25:11.330603 [debug] [ThreadPool]: Acquiring new postgres connection 'list_postgres'
+[0m18:25:11.352263 [debug] [ThreadPool]: Using postgres connection "list_postgres"
+[0m18:25:11.352443 [debug] [ThreadPool]: On list_postgres: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "list_postgres"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m18:25:11.352545 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m18:25:11.614832 [debug] [ThreadPool]: SQL status: SELECT 15 in 0.262 seconds
+[0m18:25:11.617153 [debug] [ThreadPool]: On list_postgres: Close
+[0m18:25:11.619575 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_postgres, now list_postgres_public)
+[0m18:25:11.626288 [debug] [ThreadPool]: Using postgres connection "list_postgres_public"
+[0m18:25:11.626634 [debug] [ThreadPool]: On list_postgres_public: BEGIN
+[0m18:25:11.626900 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m18:25:11.793044 [debug] [ThreadPool]: SQL status: BEGIN in 0.166 seconds
+[0m18:25:11.793794 [debug] [ThreadPool]: Using postgres connection "list_postgres_public"
+[0m18:25:11.794279 [debug] [ThreadPool]: On list_postgres_public: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "list_postgres_public"} */
+select
+      'postgres' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'public'
+    union all
+    select
+      'postgres' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'public'
+    union all
+    select
+      'postgres' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'public'
+  
+[0m18:25:11.819549 [debug] [ThreadPool]: SQL status: SELECT 19 in 0.025 seconds
+[0m18:25:11.823404 [debug] [ThreadPool]: On list_postgres_public: ROLLBACK
+[0m18:25:11.840801 [debug] [ThreadPool]: On list_postgres_public: Close
+[0m18:25:11.851112 [debug] [MainThread]: Using postgres connection "master"
+[0m18:25:11.851553 [debug] [MainThread]: On master: BEGIN
+[0m18:25:11.851888 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m18:25:12.016768 [debug] [MainThread]: SQL status: BEGIN in 0.165 seconds
+[0m18:25:12.017790 [debug] [MainThread]: Using postgres connection "master"
+[0m18:25:12.018766 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "connection_name": "master"} */
+with relation as (
+        select
+            pg_rewrite.ev_class as class,
+            pg_rewrite.oid as id
+        from pg_rewrite
+    ),
+    class as (
+        select
+            oid as id,
+            relname as name,
+            relnamespace as schema,
+            relkind as kind
+        from pg_class
+    ),
+    dependency as (
+        select distinct
+            pg_depend.objid as id,
+            pg_depend.refobjid as ref
+        from pg_depend
+    ),
+    schema as (
+        select
+            pg_namespace.oid as id,
+            pg_namespace.nspname as name
+        from pg_namespace
+        where nspname != 'information_schema' and nspname not like 'pg\_%'
+    ),
+    referenced as (
+        select
+            relation.id AS id,
+            referenced_class.name ,
+            referenced_class.schema ,
+            referenced_class.kind
+        from relation
+        join class as referenced_class on relation.class=referenced_class.id
+        where referenced_class.kind in ('r', 'v', 'm')
+    ),
+    relationships as (
+        select
+            referenced.name as referenced_name,
+            referenced.schema as referenced_schema_id,
+            dependent_class.name as dependent_name,
+            dependent_class.schema as dependent_schema_id,
+            referenced.kind as kind
+        from referenced
+        join dependency on referenced.id=dependency.id
+        join class as dependent_class on dependency.ref=dependent_class.id
+        where
+            (referenced.name != dependent_class.name or
+             referenced.schema != dependent_class.schema)
+    )
+
+    select
+        referenced_schema.name as referenced_schema,
+        relationships.referenced_name as referenced_name,
+        dependent_schema.name as dependent_schema,
+        relationships.dependent_name as dependent_name
+    from relationships
+    join schema as dependent_schema on relationships.dependent_schema_id=dependent_schema.id
+    join schema as referenced_schema on relationships.referenced_schema_id=referenced_schema.id
+    group by referenced_schema, referenced_name, dependent_schema, dependent_name
+    order by referenced_schema, referenced_name, dependent_schema, dependent_name;
+[0m18:25:12.041954 [debug] [MainThread]: SQL status: SELECT 12 in 0.022 seconds
+[0m18:25:12.047378 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10837d550>]}
+[0m18:25:12.047989 [debug] [MainThread]: On master: ROLLBACK
+[0m18:25:12.063732 [debug] [MainThread]: Using postgres connection "master"
+[0m18:25:12.064226 [debug] [MainThread]: On master: BEGIN
+[0m18:25:12.097159 [debug] [MainThread]: SQL status: BEGIN in 0.032 seconds
+[0m18:25:12.097858 [debug] [MainThread]: On master: COMMIT
+[0m18:25:12.098496 [debug] [MainThread]: Using postgres connection "master"
+[0m18:25:12.099080 [debug] [MainThread]: On master: COMMIT
+[0m18:25:12.118578 [debug] [MainThread]: SQL status: COMMIT in 0.019 seconds
+[0m18:25:12.119252 [debug] [MainThread]: On master: Close
+[0m18:25:12.126897 [debug] [Thread-2 (]: Began running node model.planweave.stg_unified_event
+[0m18:25:12.127352 [debug] [Thread-1 (]: Began running node model.planweave.stg_unified_document_text
+[0m18:25:12.128039 [info ] [Thread-2 (]: 2 of 4 START sql view model public.stg_unified_event ........................... [RUN]
+[0m18:25:12.128752 [info ] [Thread-1 (]: 1 of 4 START sql view model public.stg_unified_document_text ................... [RUN]
+[0m18:25:12.129355 [debug] [Thread-2 (]: Acquiring new postgres connection 'model.planweave.stg_unified_event'
+[0m18:25:12.129810 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_postgres_public, now model.planweave.stg_unified_document_text)
+[0m18:25:12.130230 [debug] [Thread-2 (]: Began compiling node model.planweave.stg_unified_event
+[0m18:25:12.130608 [debug] [Thread-1 (]: Began compiling node model.planweave.stg_unified_document_text
+[0m18:25:12.139859 [debug] [Thread-2 (]: Writing injected SQL for node "model.planweave.stg_unified_event"
+[0m18:25:12.142815 [debug] [Thread-1 (]: Writing injected SQL for node "model.planweave.stg_unified_document_text"
+[0m18:25:12.143528 [debug] [Thread-1 (]: Began executing node model.planweave.stg_unified_document_text
+[0m18:25:12.143861 [debug] [Thread-2 (]: Began executing node model.planweave.stg_unified_event
+[0m18:25:12.173461 [debug] [Thread-2 (]: Writing runtime sql for node "model.planweave.stg_unified_event"
+[0m18:25:12.174213 [debug] [Thread-1 (]: Writing runtime sql for node "model.planweave.stg_unified_document_text"
+[0m18:25:12.174735 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.174925 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: BEGIN
+[0m18:25:12.175108 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.175272 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m18:25:12.175435 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: BEGIN
+[0m18:25:12.175650 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m18:25:12.353811 [debug] [Thread-2 (]: SQL status: BEGIN in 0.178 seconds
+[0m18:25:12.354978 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.356216 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_event"} */
+
+  create view "postgres"."public"."stg_unified_event__dbt_tmp"
+    
+    
+  as (
+    
+
+select
+  'legistar' as source,
+  legistar_client as client,
+  cast(legistar_event_id as text) as source_event_id,
+  'legistar' || ':' || legistar_client || ':' ||legistar_event_id as unified_event_id,
+  cast(json->>'EventDate' as date) as event_date,
+  json->>'EventBodyName' as event_body_name
+from "postgres"."public"."raw_event"
+
+union all
+
+select
+  'prime_gov' as source,
+  prime_gov_client as client,
+  cast(prime_gov_meeting_id as text) as source_event_id,
+  'prime_gov' || ':' || prime_gov_client || ':' || prime_gov_meeting_id as unified_event_id,
+  cast(json->>'dateTime' as date) as event_date,
+  json->>'title' as event_body_name
+from "postgres"."public"."raw_prime_gov_meeting"
+
+union all
+
+select
+  'civic_plus' as source,
+  city_name as client,
+  civicplus_meeting_id as source_event_id,
+  'civic_plus' || ':' || city_name || ':' || civicplus_meeting_id as unified_event_id,
+  cast(json->>'meeting_date' as date) as event_date,
+  json->>'committee_name' as event_body_name
+from "postgres"."public"."raw_civicplus_asset"
+where asset_type = 'meeting'  -- Only include meeting records, not other asset types
+  );
+[0m18:25:12.359944 [debug] [Thread-1 (]: SQL status: BEGIN in 0.184 seconds
+[0m18:25:12.360674 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.361476 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_document_text"} */
+
+  create view "postgres"."public"."stg_unified_document_text__dbt_tmp"
+    
+    
+  as (
+    
+
+select
+  'legistar' as source,
+  legistar_client as client,
+  cast(legistar_event_id as text) as source_event_id,
+  null as source_document_id,
+  'legistar' || ':' || legistar_client || ':' || legistar_event_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."event_agenda_text"
+
+union all
+
+select
+  'prime_gov' as source,
+  prime_gov_client as client,
+  cast(prime_gov_meeting_id as text) as source_event_id,
+  cast(prime_gov_document_id as text) as source_document_id,
+  'prime_gov' || ':' || prime_gov_client || ':' || prime_gov_meeting_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."prime_gov_document_text"
+
+union all
+
+select
+  'civic_plus' as source,
+  city_name as client,
+  civicplus_meeting_id as source_event_id,
+  document_id as source_document_id,
+  'civic_plus' || ':' || city_name || ':' || civicplus_meeting_id as unified_event_id,
+  substring(text, 1, 5000) as truncated_text
+from "postgres"."public"."civic_plus_document_text"
+  );
+[0m18:25:12.420039 [debug] [Thread-1 (]: SQL status: CREATE VIEW in 0.058 seconds
+[0m18:25:12.427737 [debug] [Thread-2 (]: SQL status: CREATE VIEW in 0.071 seconds
+[0m18:25:12.431382 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.434917 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.435424 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_document_text"} */
+alter table "postgres"."public"."stg_unified_document_text" rename to "stg_unified_document_text__dbt_backup"
+[0m18:25:12.435888 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_event"} */
+alter table "postgres"."public"."stg_unified_event" rename to "stg_unified_event__dbt_backup"
+[0m18:25:12.460808 [debug] [Thread-2 (]: SQL status: ALTER TABLE in 0.024 seconds
+[0m18:25:12.461207 [debug] [Thread-1 (]: SQL status: ALTER TABLE in 0.025 seconds
+[0m18:25:12.465283 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.468234 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.468711 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_event"} */
+alter table "postgres"."public"."stg_unified_event__dbt_tmp" rename to "stg_unified_event"
+[0m18:25:12.469144 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_document_text"} */
+alter table "postgres"."public"."stg_unified_document_text__dbt_tmp" rename to "stg_unified_document_text"
+[0m18:25:12.488754 [debug] [Thread-1 (]: SQL status: ALTER TABLE in 0.019 seconds
+[0m18:25:12.489512 [debug] [Thread-2 (]: SQL status: ALTER TABLE in 0.020 seconds
+[0m18:25:12.514645 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: COMMIT
+[0m18:25:12.515171 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: COMMIT
+[0m18:25:12.515421 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.515649 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.515869 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: COMMIT
+[0m18:25:12.516081 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: COMMIT
+[0m18:25:12.534918 [debug] [Thread-1 (]: SQL status: COMMIT in 0.019 seconds
+[0m18:25:12.540603 [debug] [Thread-1 (]: Applying DROP to: "postgres"."public"."stg_unified_document_text__dbt_backup"
+[0m18:25:12.540862 [debug] [Thread-2 (]: SQL status: COMMIT in 0.025 seconds
+[0m18:25:12.544331 [debug] [Thread-1 (]: Using postgres connection "model.planweave.stg_unified_document_text"
+[0m18:25:12.545827 [debug] [Thread-2 (]: Applying DROP to: "postgres"."public"."stg_unified_event__dbt_backup"
+[0m18:25:12.546096 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_document_text"} */
+drop view if exists "postgres"."public"."stg_unified_document_text__dbt_backup" cascade
+[0m18:25:12.546558 [debug] [Thread-2 (]: Using postgres connection "model.planweave.stg_unified_event"
+[0m18:25:12.546795 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.stg_unified_event"} */
+drop view if exists "postgres"."public"."stg_unified_event__dbt_backup" cascade
+[0m18:25:12.573321 [debug] [Thread-2 (]: SQL status: DROP VIEW in 0.026 seconds
+[0m18:25:12.573593 [debug] [Thread-1 (]: SQL status: DROP VIEW in 0.027 seconds
+[0m18:25:12.575725 [debug] [Thread-2 (]: On model.planweave.stg_unified_event: Close
+[0m18:25:12.576763 [debug] [Thread-1 (]: On model.planweave.stg_unified_document_text: Close
+[0m18:25:12.578844 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1086a0520>]}
+[0m18:25:12.579082 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1067305f0>]}
+[0m18:25:12.579563 [info ] [Thread-1 (]: 1 of 4 OK created sql view model public.stg_unified_document_text .............. [[32mCREATE VIEW[0m in 0.45s]
+[0m18:25:12.580066 [info ] [Thread-2 (]: 2 of 4 OK created sql view model public.stg_unified_event ...................... [[32mCREATE VIEW[0m in 0.45s]
+[0m18:25:12.580515 [debug] [Thread-1 (]: Finished running node model.planweave.stg_unified_document_text
+[0m18:25:12.580879 [debug] [Thread-2 (]: Finished running node model.planweave.stg_unified_event
+[0m18:25:12.581523 [debug] [Thread-4 (]: Began running node model.planweave.unified_event
+[0m18:25:12.581846 [debug] [Thread-3 (]: Began running node model.planweave.unified_document_text
+[0m18:25:12.582178 [info ] [Thread-4 (]: 4 of 4 START sql table model public.unified_event .............................. [RUN]
+[0m18:25:12.582548 [info ] [Thread-3 (]: 3 of 4 START sql table model public.unified_document_text ...................... [RUN]
+[0m18:25:12.582924 [debug] [Thread-4 (]: Acquiring new postgres connection 'model.planweave.unified_event'
+[0m18:25:12.583259 [debug] [Thread-3 (]: Acquiring new postgres connection 'model.planweave.unified_document_text'
+[0m18:25:12.583508 [debug] [Thread-4 (]: Began compiling node model.planweave.unified_event
+[0m18:25:12.583738 [debug] [Thread-3 (]: Began compiling node model.planweave.unified_document_text
+[0m18:25:12.588839 [debug] [Thread-4 (]: Writing injected SQL for node "model.planweave.unified_event"
+[0m18:25:12.592010 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:25:12.592268 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+
+    set statement_timeout = '10min'
+  
+[0m18:25:12.592474 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m18:25:12.592904 [debug] [Thread-4 (]: Began executing node model.planweave.unified_event
+[0m18:25:12.633206 [debug] [Thread-4 (]: Writing runtime sql for node "model.planweave.unified_event"
+[0m18:25:12.633654 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:12.633796 [debug] [Thread-4 (]: On model.planweave.unified_event: BEGIN
+[0m18:25:12.633921 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m18:25:12.778587 [debug] [Thread-3 (]: SQL status: SET in 0.186 seconds
+[0m18:25:12.780628 [debug] [Thread-3 (]: Writing injected SQL for node "model.planweave.unified_document_text"
+[0m18:25:12.781347 [debug] [Thread-3 (]: Began executing node model.planweave.unified_document_text
+[0m18:25:12.784333 [debug] [Thread-3 (]: Writing runtime sql for node "model.planweave.unified_document_text"
+[0m18:25:12.784895 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:25:12.785158 [debug] [Thread-3 (]: On model.planweave.unified_document_text: BEGIN
+[0m18:25:12.793834 [debug] [Thread-4 (]: SQL status: BEGIN in 0.160 seconds
+[0m18:25:12.794132 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:12.794438 [debug] [Thread-4 (]: On model.planweave.unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_event"} */
+
+  
+    
+
+  create  table "postgres"."public"."unified_event__dbt_tmp"
+  
+  
+    as
+  
+  (
+    
+
+select * from "postgres"."public"."stg_unified_event"
+  );
+  
+[0m18:25:12.799797 [debug] [Thread-3 (]: SQL status: BEGIN in 0.014 seconds
+[0m18:25:12.800087 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:25:12.800414 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+
+  
+    
+
+  create  table "postgres"."public"."unified_document_text__dbt_tmp"
+  
+  
+    as
+  
+  (
+    
+
+-- aboslute GIGAhack to set statement timeout; I couldn't find another way to do this...
+
+
+select
+  stg_doc.source,
+  stg_doc.client,
+  stg_doc.source_event_id,
+  stg_doc.source_document_id,
+  stg_doc.unified_event_id,
+  stg_doc.truncated_text,
+  stg_event.event_date
+from "postgres"."public"."stg_unified_document_text" as stg_doc
+join "postgres"."public"."stg_unified_event" as stg_event 
+    on stg_event.unified_event_id = stg_doc.unified_event_id
+  );
+  
+[0m18:25:13.924091 [debug] [Thread-4 (]: SQL status: SELECT 126160 in 1.129 seconds
+[0m18:25:13.930586 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:13.931047 [debug] [Thread-4 (]: On model.planweave.unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_event"} */
+alter table "postgres"."public"."unified_event" rename to "unified_event__dbt_backup"
+[0m18:25:13.950906 [debug] [Thread-4 (]: SQL status: ALTER TABLE in 0.019 seconds
+[0m18:25:13.955859 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:13.956281 [debug] [Thread-4 (]: On model.planweave.unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_event"} */
+alter table "postgres"."public"."unified_event__dbt_tmp" rename to "unified_event"
+[0m18:25:13.972592 [debug] [Thread-4 (]: SQL status: ALTER TABLE in 0.016 seconds
+[0m18:25:13.985449 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:13.985829 [debug] [Thread-4 (]: On model.planweave.unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_event"} */
+
+    create  index if not exists
+  "8a99c939c0b88f683ada49232ed07103"
+  on "postgres"."public"."unified_event" 
+  (unified_event_id)
+  
+[0m18:25:14.883444 [debug] [Thread-4 (]: SQL status: CREATE INDEX in 0.897 seconds
+[0m18:25:14.885957 [debug] [Thread-4 (]: On model.planweave.unified_event: COMMIT
+[0m18:25:14.886471 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:14.886844 [debug] [Thread-4 (]: On model.planweave.unified_event: COMMIT
+[0m18:25:16.430428 [debug] [Thread-4 (]: SQL status: COMMIT in 1.543 seconds
+[0m18:25:16.436293 [debug] [Thread-4 (]: Applying DROP to: "postgres"."public"."unified_event__dbt_backup"
+[0m18:25:16.440135 [debug] [Thread-4 (]: Using postgres connection "model.planweave.unified_event"
+[0m18:25:16.440527 [debug] [Thread-4 (]: On model.planweave.unified_event: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_event"} */
+drop table if exists "postgres"."public"."unified_event__dbt_backup" cascade
+[0m18:25:16.464309 [debug] [Thread-4 (]: SQL status: DROP TABLE in 0.023 seconds
+[0m18:25:16.466327 [debug] [Thread-4 (]: On model.planweave.unified_event: Close
+[0m18:25:16.467549 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107890ad0>]}
+[0m18:25:16.468422 [info ] [Thread-4 (]: 4 of 4 OK created sql table model public.unified_event ......................... [[32mSELECT 126160[0m in 3.88s]
+[0m18:25:16.468994 [debug] [Thread-4 (]: Finished running node model.planweave.unified_event
+[0m18:26:23.492512 [debug] [Thread-3 (]: SQL status: SELECT 151161 in 70.691 seconds
+[0m18:26:23.499433 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:26:23.500135 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+alter table "postgres"."public"."unified_document_text" rename to "unified_document_text__dbt_backup"
+[0m18:26:23.555409 [debug] [Thread-3 (]: SQL status: ALTER TABLE in 0.055 seconds
+[0m18:26:23.561710 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:26:23.562252 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+alter table "postgres"."public"."unified_document_text__dbt_tmp" rename to "unified_document_text"
+[0m18:26:23.580832 [debug] [Thread-3 (]: SQL status: ALTER TABLE in 0.018 seconds
+[0m18:26:23.584611 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:26:23.585017 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+
+    create  index if not exists
+  "e2071dfa493266e713b490970abad2ee"
+  on "postgres"."public"."unified_document_text" using gin
+  (event_date, to_tsvector('english', truncated_text))
+  
+[0m18:28:32.005849 [debug] [Thread-3 (]: SQL status: CREATE INDEX in 128.419 seconds
+[0m18:28:32.013622 [debug] [Thread-3 (]: On model.planweave.unified_document_text: COMMIT
+[0m18:28:32.014523 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:28:32.015112 [debug] [Thread-3 (]: On model.planweave.unified_document_text: COMMIT
+[0m18:28:32.052758 [debug] [Thread-3 (]: SQL status: COMMIT in 0.037 seconds
+[0m18:28:32.060569 [debug] [Thread-3 (]: Applying DROP to: "postgres"."public"."unified_document_text__dbt_backup"
+[0m18:28:32.062218 [debug] [Thread-3 (]: Using postgres connection "model.planweave.unified_document_text"
+[0m18:28:32.062950 [debug] [Thread-3 (]: On model.planweave.unified_document_text: /* {"app": "dbt", "dbt_version": "1.9.3", "profile_name": "planweave", "target_name": "prod", "node_id": "model.planweave.unified_document_text"} */
+drop table if exists "postgres"."public"."unified_document_text__dbt_backup" cascade
+[0m18:28:32.129804 [debug] [Thread-3 (]: SQL status: DROP TABLE in 0.066 seconds
+[0m18:28:32.133450 [debug] [Thread-3 (]: On model.planweave.unified_document_text: Close
+[0m18:28:32.135902 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '928625a6-c37b-436a-aee2-8b12ec63e87d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10838f850>]}
+[0m18:28:32.137753 [info ] [Thread-3 (]: 3 of 4 OK created sql table model public.unified_document_text ................. [[32mSELECT 151161[0m in 199.55s]
+[0m18:28:32.139069 [debug] [Thread-3 (]: Finished running node model.planweave.unified_document_text
+[0m18:28:32.143168 [debug] [MainThread]: Using postgres connection "master"
+[0m18:28:32.143663 [debug] [MainThread]: On master: BEGIN
+[0m18:28:32.144139 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m18:28:32.368864 [debug] [MainThread]: SQL status: BEGIN in 0.224 seconds
+[0m18:28:32.370026 [debug] [MainThread]: On master: COMMIT
+[0m18:28:32.370765 [debug] [MainThread]: Using postgres connection "master"
+[0m18:28:32.371382 [debug] [MainThread]: On master: COMMIT
+[0m18:28:32.390033 [debug] [MainThread]: SQL status: COMMIT in 0.018 seconds
+[0m18:28:32.391028 [debug] [MainThread]: On master: Close
+[0m18:28:32.392349 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m18:28:32.392964 [debug] [MainThread]: Connection 'model.planweave.stg_unified_document_text' was properly closed.
+[0m18:28:32.393492 [debug] [MainThread]: Connection 'model.planweave.stg_unified_event' was properly closed.
+[0m18:28:32.393992 [debug] [MainThread]: Connection 'model.planweave.unified_event' was properly closed.
+[0m18:28:32.394477 [debug] [MainThread]: Connection 'model.planweave.unified_document_text' was properly closed.
+[0m18:28:32.395532 [info ] [MainThread]: 
+[0m18:28:32.396245 [info ] [MainThread]: Finished running 2 table models, 2 view models in 0 hours 3 minutes and 21.07 seconds (201.07s).
+[0m18:28:32.398769 [debug] [MainThread]: Command end result
+[0m18:28:32.424713 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/manifest.json
+[0m18:28:32.428186 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/alexshadley/nextjs-boilerplate/dbt/target/semantic_manifest.json
+[0m18:28:32.433892 [debug] [MainThread]: Wrote artifact RunExecutionResult to /Users/alexshadley/nextjs-boilerplate/dbt/target/run_results.json
+[0m18:28:32.434137 [info ] [MainThread]: 
+[0m18:28:32.434422 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m18:28:32.434625 [info ] [MainThread]: 
+[0m18:28:32.434852 [info ] [MainThread]: Done. PASS=4 WARN=0 ERROR=0 SKIP=0 TOTAL=4
+[0m18:28:32.437469 [debug] [MainThread]: Resource report: {"command_name": "build", "command_success": true, "command_wall_clock_time": 201.44423, "process_in_blocks": "0", "process_kernel_time": 0.168546, "process_mem_max_rss": "134414336", "process_out_blocks": "0", "process_user_time": 1.118702}
+[0m18:28:32.437834 [debug] [MainThread]: Command `dbt build` succeeded at 18:28:32.437759 after 201.44 seconds
+[0m18:28:32.438229 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x106f08530>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108683ef0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108683890>]}
+[0m18:28:32.438470 [debug] [MainThread]: Flushing usage events
+[0m18:28:32.899941 [debug] [MainThread]: An error was encountered while trying to flush usage events

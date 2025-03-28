@@ -9,3 +9,5 @@ sources:
       - name: raw_prime_gov_meeting
       - name: event_agenda_text
       - name: prime_gov_document_text
+      - name: raw_civicplus_asset
+      - name: civic_plus_document_text
