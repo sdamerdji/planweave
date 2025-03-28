@@ -8,97 +8,97 @@ import {
 } from "@/src/db/schema";
 import { downloadAndParsePdf } from "@/src/DownloadAndParsePdf";
 import { program } from "commander";
-import { eq, and, isNull, or } from "drizzle-orm";
+import { eq, and, isNull, or, gt } from "drizzle-orm";
 import _ from "lodash";
 
 const NUM_COROUTINES = 10;
+const BATCH_SIZE = 1000;
 
 program.parse(process.argv);
 const options = program.opts();
 
 const main = async () => {
-  console.log("Querying missing texts...");
-  // TODO: this can be a ton of rows; we should paginate
-  const meetingsMissingTexts = await db
-    .select()
-    .from(rawPrimeGovMeeting)
-    .leftJoin(
-      primeGovDocumentText,
-      and(
-        eq(
-          rawPrimeGovMeeting.primeGovMeetingId,
-          primeGovDocumentText.primeGovMeetingId
-        ),
-        eq(
-          rawPrimeGovMeeting.primeGovClient,
-          primeGovDocumentText.primeGovClient
-        )
-      )
-    )
-    .where(isNull(primeGovDocumentText.documentUrl));
+  let lastProcessedId = 0;
+  let hasMore = true;
 
-  console.log(
-    `Found ${meetingsMissingTexts.length} events with missing agenda or minutes text`
-  );
+  while (hasMore) {
+    console.log(`Fetching batch of meetings after ID ${lastProcessedId}...`);
 
-  const downloadAndParsePdfCoroutine = async (coroNum: number) => {
-    while (meetingsMissingTexts.length > 0) {
-      try {
-        const meeting = meetingsMissingTexts.pop();
-        if (!meeting) {
-          break;
-        }
+    const meetings = await db
+      .select()
+      .from(rawPrimeGovMeeting)
+      .where(gt(rawPrimeGovMeeting.id, lastProcessedId))
+      .orderBy(rawPrimeGovMeeting.id)
+      .limit(BATCH_SIZE);
 
-        console.log(
-          `[downloadAndParsePdfCoroutine ${coroNum}] Processing event ${meeting.raw_prime_gov_meeting.primeGovMeetingId}`
-        );
-
-        // TODO: this is lazy; we should have a DBT step to transform json into a real schema
-        const rawMeetingJson = meeting.raw_prime_gov_meeting.json as any;
-
-        for (const document of rawMeetingJson["documentList"]) {
-          const url = `https://${meeting.raw_prime_gov_meeting.primeGovClient}.primegov.com/Public/CompiledDocument?meetingTemplateId=${document["templateId"]}&compileOutputType=1`;
-          const pdfText = await downloadAndParsePdf(url);
-          if (pdfText) {
-            await db
-              .insert(primeGovDocumentText)
-              .values({
-                primeGovClient: meeting.raw_prime_gov_meeting.primeGovClient,
-                primeGovMeetingId:
-                  meeting.raw_prime_gov_meeting.primeGovMeetingId,
-                primeGovDocumentId: document["id"],
-                primeGovTemplateName: document["templateName"],
-                text: pdfText,
-                documentUrl: url,
-              })
-              .onConflictDoUpdate({
-                target: [
-                  primeGovDocumentText.primeGovClient,
-                  primeGovDocumentText.primeGovMeetingId,
-                  primeGovDocumentText.primeGovDocumentId,
-                ],
-                set: {
-                  text: pdfText,
-                  documentUrl: url,
-                },
-              });
-          } else {
-            console.error(
-              `[downloadAndParsePdfCoroutine ${coroNum}] Error downloading document ${document["id"]} for event ${meeting.raw_prime_gov_meeting.primeGovMeetingId}`
-            );
-          }
-        }
-      } catch (e) {
-        console.error(`[downloadAndParsePdfCoroutine ${coroNum}] Error: ${e}`);
-      }
+    if (meetings.length === 0) {
+      hasMore = false;
+      break;
     }
 
-    console.log(`[downloadAndParsePdfCoroutine ${coroNum}] Done`);
-  };
+    console.log(`Processing ${meetings.length} meetings...`);
+    lastProcessedId = meetings[meetings.length - 1].id;
 
-  await Promise.all(
-    _.range(NUM_COROUTINES).map((i) => downloadAndParsePdfCoroutine(i))
-  );
+    const downloadAndParsePdfCoroutine = async (coroNum: number) => {
+      while (meetings.length > 0) {
+        try {
+          const meeting = meetings.pop();
+          if (!meeting) {
+            break;
+          }
+
+          console.log(
+            `[downloadAndParsePdfCoroutine ${coroNum}] Processing event ${meeting.primeGovMeetingId}`
+          );
+
+          const rawMeetingJson = meeting.json as any;
+
+          for (const document of rawMeetingJson["documentList"]) {
+            const url = `https://${meeting.primeGovClient}.primegov.com/Public/CompiledDocument?meetingTemplateId=${document["templateId"]}&compileOutputType=1`;
+            const pdfText = await downloadAndParsePdf(url, 1024 * 1024 * 2);
+            if (pdfText) {
+              await db
+                .insert(primeGovDocumentText)
+                .values({
+                  primeGovClient: meeting.primeGovClient,
+                  primeGovMeetingId: meeting.primeGovMeetingId,
+                  primeGovDocumentId: document["id"],
+                  primeGovTemplateName: document["templateName"],
+                  text: pdfText,
+                  documentUrl: url,
+                })
+                .onConflictDoUpdate({
+                  target: [
+                    primeGovDocumentText.primeGovClient,
+                    primeGovDocumentText.primeGovDocumentId,
+                  ],
+                  set: {
+                    text: pdfText,
+                    documentUrl: url,
+                  },
+                });
+            } else {
+              console.error(
+                `[downloadAndParsePdfCoroutine ${coroNum}] Error downloading document ${document["id"]} for event ${meeting.primeGovMeetingId}`
+              );
+            }
+          }
+        } catch (e) {
+          console.error(
+            `[downloadAndParsePdfCoroutine ${coroNum}] Error: ${e}`
+          );
+        }
+      }
+
+      console.log(`[downloadAndParsePdfCoroutine ${coroNum}] Done`);
+    };
+
+    await Promise.all(
+      _.range(NUM_COROUTINES).map((i) => downloadAndParsePdfCoroutine(i))
+    );
+  }
+
+  console.log("All meetings processed! 🤠");
 };
 
 main().catch(console.error);

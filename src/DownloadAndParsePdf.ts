@@ -20,11 +20,12 @@ async function downloadWithSizeLimit(url: string, maxSizeBytes: number) {
 }
 
 export const downloadAndParsePdf = async (
-  url: string
+  url: string,
+  sizeLimitBytes: number = 1024 * 1024 * 10
 ): Promise<string | null> => {
   let arrayBuffer: ArrayBuffer;
   try {
-    arrayBuffer = await downloadWithSizeLimit(url, 1024 * 1024 * 10);
+    arrayBuffer = await downloadWithSizeLimit(url, sizeLimitBytes);
   } catch (e) {
     console.error(`Error downloading ${url}: ${e}`);
     return null;

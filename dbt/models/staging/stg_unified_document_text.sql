@@ -11,7 +11,7 @@ select
   null as source_document_id,
   'legistar' || ':' || legistar_client || ':' || legistar_event_id as unified_event_id,
   substring(text, 1, 5000) as truncated_text,
-  agenda_url as document_url,
+  agenda_url as document_url
 from {{ source('raw', 'event_agenda_text') }}
 
 union all
@@ -34,5 +34,6 @@ select
   civicplus_meeting_id as source_event_id,
   document_id as source_document_id,
   'civic_plus' || ':' || city_name || ':' || civicplus_meeting_id as unified_event_id,
-  substring(text, 1, 5000) as truncated_text
+  substring(text, 1, 5000) as truncated_text,
+  document_url as document_url
 from {{ source('raw', 'civic_plus_document_text') }}

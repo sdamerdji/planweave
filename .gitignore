@@ -45,3 +45,4 @@ next-env.d.ts
 notebooks/.ipynb_checkpoints
 
 dbt/target
+dbt/logs
