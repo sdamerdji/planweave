@@ -99,7 +99,7 @@ const SearchDemo = () => {
   const defaultSearchQuery = "any updates on housing element program implementation? draw attention to any updates on programs to affirmatively further fair housing, to rezone the city per the housing element, anything to do with a \"site inventory\" from the housing element, or actions tied to 'constraints reduction'";
   
   const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
-  const [dateFilter, setDateFilter] = useState("30"); // Default to 30 days
+  const [dateFilter, setDateFilter] = useState("7"); // Default to 30 days
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchResults, setSearchResults] =
     useState<SearchLegistarResponse | null>(null);
