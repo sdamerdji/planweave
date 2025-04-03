@@ -8,7 +8,7 @@ import {
   index,
   jsonb,
   unique,
-  pgMaterializedView,
+  timestamp,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -132,10 +132,15 @@ export const rawCivicplusAsset = pgTable(
     civicplusMeetingId: text().notNull(),
     assetType: text().notNull(),
     json: jsonb().notNull(),
-  },
-  (table) => [
-    unique().on(table.cityName, table.civicplusMeetingId, table.assetType),
-  ]
+  }
+  // TODO: this constraint couldn't be enforced
+  // (table) => [
+  //   unique("raw_civicplus_asset_city_meeting_asset_type").on(
+  //     table.cityName,
+  //     table.civicplusMeetingId,
+  //     table.assetType
+  //   ),
+  // ]
 );
 
 export const civicPlusDocumentText = pgTable(
@@ -182,7 +187,8 @@ export const primeGovDocumentText = pgTable(
     primeGovDocumentId: integer().notNull(),
     primeGovTemplateName: text().notNull(),
     text: text().notNull(),
-    documentUrl: text().notNull(),
+    // TODO: this should be not null
+    documentUrl: text(),
   },
   // we actually have multiple documents per meeting
   (table) => [
@@ -206,4 +212,22 @@ export const granicusEvent = pgTable(
     date: date().notNull(),
   },
   (table) => [unique().on(table.granicusClient, table.granicusId)]
+);
+
+export const scrapedAgendaText = pgTable(
+  "scraped_agenda_text",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    createdAt: timestamp().notNull().defaultNow(),
+
+    // TODO: would be better if we had enums or table rows for every city
+    jurisdiction: text().notNull(),
+    agendaUrl: text().notNull(),
+    text: text().notNull(),
+
+    // Extracted by LLM
+    meetingTimestamp: timestamp(),
+    body: text(),
+  },
+  (table) => [unique().on(table.agendaUrl)]
 );
