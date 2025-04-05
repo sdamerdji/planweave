@@ -194,3 +194,165 @@ export const AllGranicusClients = [
   "windsor-ca",
   "yorbalinda",
 ];
+
+export const JocoCodePdfUrls = [
+  {
+    url: "https://jocogov.org/sites/default/files/files/2024-04/COVER.pdf",
+    title: "Cover Page",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2024-04/Table%20of%20Contents.pdf",
+    title: "Table of Contents",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-1.pdf",
+    title: "Article 1 - General Provisions",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%202.pdf",
+    title: "Article 2 - Definitions",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%203.pdf",
+    title: "Article 3 - Responsible Authorities & Administrative Duties",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%204.pdf",
+    title:
+      "Article 4 - Application Procedures for Rezoning, Conditional Use Permits, Development Plan Approvals, or Subdivision Approvals, and Amendments to the Zoning or Subdivision Regulations.",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-5.pdf",
+    title: "Article 5 - Permits",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%206.pdf",
+    title: "Article 6 - Enforcement, Violations, and Penalties",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-7.pdf",
+    title: "Article 7 - Establishment of Zoning Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-8.pdf",
+    title: "Article 8 - Provisions for Zoning Map",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-9.pdf",
+    title: "Article 9 - Rural Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-10.pdf",
+    title: "Article 10 - Residential Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-11.pdf",
+    title: "Article 11 - Planned Zoning Districts General Requirements",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-12.pdf",
+    title: "Article 12 - Planned Residential Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-13.pdf",
+    title: "Article 13 - Planned Retail Business Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%2014.pdf",
+    title: "Article 14 - Planned Employment Center Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-15.pdf",
+    title: "Article 15 - Development Plan Procedures",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-16.pdf",
+    title: "Article 16 - Supplementary Use Regulations",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%2017.pdf",
+    title: "Article 17 - Supplementary Height, Area, and Bulk Regulations",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-10/zoning%20regs%20article%2018.pdf",
+    title: "Article 18 - Accessory Structures, Buildings and Uses",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-19.pdf",
+    title: "Article 19 - Off-Street Parking Requirements",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-20.pdf",
+    title: "Article 20 - District Sign Regulations",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-21.pdf",
+    title: "Article 21 - Airport Vicinity Overlay Districts and Zones",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-22.pdf",
+    title: "Article 22 - Flood Plain Overlay Zoning Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2023-05/Article%2023.pdf",
+    title: "Article 23 - Conditional Use Permits",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2024-04/Article%2024.pdf",
+    title: "Article 24 - Non-Conforming Lots and Uses",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2024-04/Article%2025.pdf",
+    title: "Article 25 - General Subdivision Provisions",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-26.pdf",
+    title:
+      "Article 26 - Preliminary Plat Analysis Reports, General Guidelines and Plat Review Guidelines",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-27.pdf",
+    title: "Article 27 - Supplementary Subdivision Procedures and Requirements",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-28.pdf",
+    title: "Article 28 - Simultaneous Preliminary and Final Plats",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2024-04/Article%2029.pdf",
+    title: "Article 29 - Lot Split Provisions",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-30.pdf",
+    title: "Article 30 - Minimum Subdivision Standards",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-31.pdf",
+    title: "Article 31 - Minimum Infrastructure Requirements",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-article-32.pdf",
+    title: "Article 32 - Planned Adult Entertainment District",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2022-12/zoning-article-33_0.pdf",
+    title: "Article 33 - Special Permits",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-appendix-1.pdf",
+    title: "Appendix 1 - Kansas Statutes Annotated",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-appendix-2.pdf",
+    title:
+      "Appendix 2 - Guidelines for Interpretation of Uses in Planned Employment Center Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-appendix-3.pdf",
+    title: "Appendix 3 - Conditional Uses by Zoning Districts",
+  },
+  {
+    url: "https://jocogov.org/sites/default/files/files/2021-09/zoning-appendix-4.pdf",
+    title: "Appendix 4 - Uses Permitted by Zoning Districts",
+  },
+];

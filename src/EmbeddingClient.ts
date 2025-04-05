@@ -55,34 +55,44 @@ const getEmbeddingsFromOpenAI = async (
 const OPENAI_TOKEN_LIMIT = 5000;
 const CHARS_PER_TOKEN = 4;
 
-export const embedTexts = async (texts: string[]) => {
+export const embedTexts = async (texts: string[], verbose = false) => {
   // Deduplicate texts before processing
   const uniqueTexts = [...new Set(texts)];
-  console.log(`Embedding ${uniqueTexts.length} unique texts (from ${texts.length} total)`);
-  
+  if (verbose) {
+    console.log(
+      `Embedding ${uniqueTexts.length} unique texts (from ${texts.length} total)`
+    );
+  }
+
   // Get cached embeddings
   const cachedEmbeddingByText = await getEmbeddingsFromCache(uniqueTexts);
-  console.log(
-    `Found ${Object.keys(cachedEmbeddingByText).length} cached embeddings`
-  );
-  
+  if (verbose) {
+    console.log(
+      `Found ${Object.keys(cachedEmbeddingByText).length} cached embeddings`
+    );
+  }
+
   // Identify texts that need embeddings
-  const missingTexts = uniqueTexts.filter((text) => !(text in cachedEmbeddingByText));
-  
+  const missingTexts = uniqueTexts.filter(
+    (text) => !(text in cachedEmbeddingByText)
+  );
+
   if (missingTexts.length === 0) {
     console.log("All texts already have embeddings in the cache");
     return cachedEmbeddingByText;
   }
-  
-  console.log(`Requesting ${missingTexts.length} embeddings from OpenAI`);
+
+  if (verbose) {
+    console.log(`Requesting ${missingTexts.length} embeddings from OpenAI`);
+  }
 
   // Process in batches
   let openaiEmbeddingByText: Record<string, number[]> = {};
   let currentBatch = [...missingTexts];
-  
+
   while (currentBatch.length > 0) {
     const batch = [];
-    
+
     // Build batch within token limits
     while (
       currentBatch.length > 0 &&
@@ -90,7 +100,7 @@ export const embedTexts = async (texts: string[]) => {
     ) {
       batch.push(currentBatch.pop()!);
     }
-    
+
     // Ensure batch isn't too large
     if (
       batch.length > 1 &&
@@ -101,17 +111,19 @@ export const embedTexts = async (texts: string[]) => {
 
     if (batch.length === 0) break;
 
-    console.log(`Submitting batch of ${batch.length} texts to OpenAI`);
-    console.log(`Chars: ${_.sum(batch.map((t) => t.length))}`);
+    if (verbose) {
+      console.log(`Submitting batch of ${batch.length} texts to OpenAI`);
+      console.log(`Chars: ${_.sum(batch.map((t) => t.length))}`);
+    }
 
     try {
       const newEmbeddingsByText = await getEmbeddingsFromOpenAI(batch);
-      
+
       // Insert embeddings into database - one at a time to handle conflicts
       for (const text of batch) {
         const embedding = newEmbeddingsByText[text];
         if (!embedding) continue;
-        
+
         try {
           // Try inserting - if it fails due to duplicate, that's fine
           await db.insert(embeddingCache).values({
@@ -120,9 +132,11 @@ export const embedTexts = async (texts: string[]) => {
           });
         } catch (error) {
           // Likely a conflict error, which we can safely ignore
-          console.log(`Note: Embedding for "${text.substring(0, 20)}..." might already exist`);
+          console.log(
+            `Note: Embedding for "${text.substring(0, 20)}..." might already exist`
+          );
         }
-        
+
         // Add to our results regardless
         openaiEmbeddingByText[text] = embedding;
       }

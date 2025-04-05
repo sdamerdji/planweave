@@ -231,3 +231,36 @@ export const scrapedAgendaText = pgTable(
   },
   (table) => [unique().on(table.agendaUrl)]
 );
+
+export const codeDocument = pgTable("code_document", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  jurisdiction: text().notNull(),
+  pdfUrl: text().notNull().unique(),
+  pdfTitle: text().notNull(),
+  pdfContent: text().notNull(),
+});
+
+export const codeChunk = pgTable(
+  "code_chunk",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    jurisdiction: text().notNull(),
+    // pdfTitle + headingText + bodyText
+    text: text().notNull(),
+    pdfTitle: text().notNull(),
+    headingText: text().notNull(),
+    bodyText: text().notNull(),
+    embedding: vector("embedding", { dimensions: 1536 }).notNull(),
+    pdfUrl: text().notNull(),
+  },
+  (table) => [
+    index("code_chunk_tsvector_index").using(
+      "gin",
+      sql`to_tsvector('english', ${table.text})`
+    ),
+    index("code_chunk_embedding_index").using(
+      "hnsw",
+      table.embedding.op("vector_cosine_ops")
+    ),
+  ]
+);
