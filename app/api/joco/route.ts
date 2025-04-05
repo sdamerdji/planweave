@@ -83,31 +83,6 @@ export async function POST(request: Request) {
       )
       .limit(5);
 
-    process.stdout.write(
-      JSON.stringify(
-        db
-          .select({
-            id: codeChunk.id,
-            text: codeChunk.text,
-            pdfTitle: codeChunk.pdfTitle,
-            headingText: codeChunk.headingText,
-            bodyText: codeChunk.bodyText,
-            jurisdiction: codeChunk.jurisdiction,
-            pdfUrl: codeChunk.pdfUrl,
-          })
-          .from(codeChunk)
-          .where(eq(codeChunk.jurisdiction, "johnson_county_ks"))
-          .orderBy(
-            // // prioritize documents that contain the keywords
-            sql`to_tsquery('english', ${keywords.join(" & ")}) @@ to_tsvector('english', ${codeChunk.text}) desc`,
-            // then documents that are closer to the query embedding
-            cosineDistance(codeChunk.embedding, queryEmbedding)
-          )
-          .limit(5)
-          .toSQL()
-      )
-    );
-
     if (documents.length === 0) {
       return NextResponse.json(
         {
