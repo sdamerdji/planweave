@@ -4,9 +4,6 @@ import { cosineDistance, eq } from "drizzle-orm";
 import { embedTexts } from "@/src/EmbeddingClient";
 import { program } from "commander";
 
-let query: string = "";
-let jurisdiction: string = "johnson_county_ks";
-
 program
   .argument("<query>")
   .option(
@@ -14,16 +11,16 @@ program
     "Jurisdiction to search in",
     "johnson_county_ks"
   )
-  .action((q, options) => {
-    query = q;
-    jurisdiction = options.jurisdiction;
-  });
+  .option("-k, --top-k <top-k>", "Number of results to return", "5")
+  .option("-v, --verbose", "Verbose output");
 
-program.parse();
+program.parse(process.argv);
+const options = program.opts();
+const query = program.args[0];
 
 const searchCodeChunks = async () => {
   console.log(`Searching for code chunks similar to: "${query}"`);
-  console.log(`Jurisdiction: ${jurisdiction}`);
+  console.log(`Jurisdiction: ${options.jurisdiction}`);
 
   const queryEmbedding = Object.values(await embedTexts([query]))[0];
 
@@ -37,20 +34,24 @@ const searchCodeChunks = async () => {
       pdfUrl: codeChunk.pdfUrl,
     })
     .from(codeChunk)
-    .where(eq(codeChunk.jurisdiction, jurisdiction))
+    .where(eq(codeChunk.jurisdiction, options.jurisdiction))
     .orderBy(cosineDistance(codeChunk.embedding, queryEmbedding))
-    .limit(5);
+    .limit(parseInt(options.topK));
 
-  console.log("\nTop 5 most similar code chunks:");
+  console.log(`\nTop ${options.topK} most similar code chunks:`);
   console.log("--------------------------------");
 
   for (const result of topK) {
-    console.log(`\nPDF: ${result.pdfTitle}`);
-    console.log(`Heading: ${result.headingText}`);
-    console.log(`URL: ${result.pdfUrl}`);
-    console.log("\nContent:");
-    console.log(result.bodyText);
-    console.log("\n--------------------------------");
+    if (options.verbose) {
+      console.log(`\nPDF: ${result.pdfTitle}`);
+      console.log(`Heading: ${result.headingText}`);
+      console.log(`URL: ${result.pdfUrl}`);
+      console.log("\nContent:");
+      console.log(result.bodyText);
+      console.log("\n--------------------------------");
+    } else {
+      console.log(`${result.pdfTitle} - ${result.headingText}`);
+    }
   }
 };
 

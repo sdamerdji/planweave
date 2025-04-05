@@ -10,7 +10,7 @@ import { RequestBody, ResponseBody } from "./apiTypes";
 
 const USE_CRAG = true;
 
-const PRINT_QUERIES = true;
+const DEBUG = false;
 
 // Extract keywords from the query
 const getKeywords = async (query: string) => {
@@ -62,6 +62,14 @@ export async function POST(request: Request) {
     const queryEmbedding = Object.values(await embedTexts([searchQuery]))[0];
     const keywords = await getKeywords(searchQuery);
 
+    const orderBy = [cosineDistance(codeChunk.embedding, queryEmbedding)];
+
+    if (keywords.length > 0) {
+      orderBy.unshift(
+        sql`to_tsquery('english', ${keywords.join(" | ")}) @@ to_tsvector('english', ${codeChunk.text}) desc`
+      );
+    }
+
     // Execute the query
     const documents = await db
       .select({
@@ -75,13 +83,8 @@ export async function POST(request: Request) {
       })
       .from(codeChunk)
       .where(eq(codeChunk.jurisdiction, "johnson_county_ks"))
-      .orderBy(
-        // // prioritize documents that contain the keywords
-        sql`to_tsquery('english', ${keywords.join(" & ")}) @@ to_tsvector('english', ${codeChunk.text}) desc`,
-        // then documents that are closer to the query embedding
-        cosineDistance(codeChunk.embedding, queryEmbedding)
-      )
-      .limit(5);
+      .orderBy(...orderBy)
+      .limit(30);
 
     if (documents.length === 0) {
       return NextResponse.json(
@@ -113,6 +116,14 @@ export async function POST(request: Request) {
       }
     }
 
+    if (DEBUG) {
+      for (const doc of documents) {
+        console.log(
+          `[${relevantDocuments.map((d) => d.id).includes(doc.id) ? "X" : " "}] ${doc.pdfTitle} - ${doc.headingText}`
+        );
+      }
+    }
+
     // Return early if no relevant documents are found
     if (relevantDocuments.length === 0) {
       return NextResponse.json(
@@ -123,6 +134,8 @@ export async function POST(request: Request) {
         { status: 201 }
       );
     }
+
+    const topRelevantDocuments = relevantDocuments.slice(0, 5);
 
     const systemPrompt = `
       You will be provided with a USER QUERY as well as some SUPPORTING
@@ -139,7 +152,7 @@ export async function POST(request: Request) {
       ${searchQuery}
 
       SUPPORTING DOCUMENTS:
-      ${relevantDocuments.map((doc, i) => i + ") " + doc.pdfTitle + "\n\n" + doc.text).join("\n\n")}
+      ${topRelevantDocuments.map((doc) => doc.text).join("\n\n")}
       `;
 
     const response = await OpenAIClient.chat.completions.create({
@@ -161,7 +174,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         responseText: responseText,
-        documents: relevantDocuments,
+        documents: topRelevantDocuments,
       },
       { status: 201 }
     );
