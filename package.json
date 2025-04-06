@@ -33,6 +33,7 @@
     "node-postgres": "^0.6.2",
     "openai": "^4.85.4",
     "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^5.1.91",
     "pg": "^8.13.3",
     "prettier": "^3.5.2",
     "react": "^19.0.0",

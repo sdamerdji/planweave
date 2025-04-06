@@ -78,7 +78,9 @@ export const embedTexts = async (texts: string[], verbose = false) => {
   );
 
   if (missingTexts.length === 0) {
-    console.log("All texts already have embeddings in the cache");
+    if (verbose) {
+      console.log("All texts already have embeddings in the cache");
+    }
     return cachedEmbeddingByText;
   }
 
