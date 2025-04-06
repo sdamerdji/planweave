@@ -139,9 +139,10 @@ export default function JocoSearchPage() {
                             {doc.headingText}
                           </div>
                         </div>
-                        <p className="whitespace-pre-wrap line-clamp-[8]">
-                          {doc.bodyText}
-                        </p>
+                        <p 
+                          className="whitespace-pre-wrap line-clamp-[12]"
+                          dangerouslySetInnerHTML={{ __html: doc.bodyText }}
+                        />
                         <div>
                           <a
                             href={doc.pdfUrl}
