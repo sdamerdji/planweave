@@ -21,7 +21,7 @@ const splitCodeBySection = (code: string) => {
   const sections = [];
 
   // Regular expression to match section headers like "Section 1." or "SECTION 2."
-  const sectionRegex = /\b(?:Section|SECTION)\s+\d+\.[^\n]*\n/g;
+  const sectionRegex = /^##\s*section\s+\d+\..*$/igm;
 
   // Find all section headers
   const matches = [...code.matchAll(sectionRegex)];

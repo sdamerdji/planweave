@@ -1,68 +1,49 @@
-import pdf from "pdf-parse";
+import { Mistral } from '@mistralai/mistralai';
+import dotenv from 'dotenv';
 
-async function downloadWithSizeLimit(
-  url: string,
-  maxSizeBytes: number,
-  expectedContentType?: string
-): Promise<ArrayBuffer | null> {
-  // Create an AbortController
-  const controller = new AbortController();
-  const signal = controller.signal;
+// Load environment variables from .env file
+dotenv.config();
 
-  // Start the fetch with the abort signal
-  const response = await fetch(url, { signal });
-
-  if (expectedContentType) {
-    const contentType = response.headers.get("Content-Type");
-    if (contentType !== expectedContentType) {
-      console.error(
-        `Expected content type ${expectedContentType}, got ${contentType}`
-      );
-      controller.abort();
-      return null;
-    }
-  }
-
-  // Check Content-Length header (if available)
-  const contentLength = response.headers.get("Content-Length");
-  if (contentLength && parseInt(contentLength) > maxSizeBytes) {
-    controller.abort();
-    return null;
-  }
-
-  const arrayBuffer = await response.arrayBuffer();
-
-  return arrayBuffer;
+const apiKey = process.env.MISTRAL_API_KEY;
+if (!apiKey) {
+  throw new Error('MISTRAL_API_KEY environment variable is not set');
 }
+
+const client = new Mistral({apiKey: apiKey});
 
 export const downloadAndParsePdf = async (
   url: string,
   sizeLimitBytes: number = 1024 * 1024 * 10
 ): Promise<string | null> => {
-  let arrayBuffer: ArrayBuffer | null;
   try {
-    arrayBuffer = await downloadWithSizeLimit(
-      url,
-      sizeLimitBytes,
-      "application/pdf"
-    );
+    // Use Mistral's OCR API to process the PDF from the URL
+    const ocrResponse = await client.ocr.process({
+      model: "mistral-ocr-latest",
+      document: {
+        type: "document_url",
+        documentUrl: url
+      },
+      includeImageBase64: false // TODO: switch to true and add images to database
+    });
+
+    // Extract and combine text from all pages
+    if (!ocrResponse.pages || ocrResponse.pages.length === 0) {
+      console.error(`No pages extracted from ${url}`);
+      return null;
+    }
+
+    // Combine markdown content from all pages
+    const combinedText = ocrResponse.pages
+      .sort((a, b) => a.index - b.index) // Ensure pages are in order
+      .map(page => page.markdown)
+      .join('\n\n');
+    
+    // TODO: Add images to database
+
+    return combinedText;
   } catch (e) {
-    console.error(`Error downloading ${url}: ${e}`);
+    console.error(`Error processing ${url} with OCR: ${e}`);
     return null;
   }
-
-  if (!arrayBuffer) {
-    console.error(`Error downloading ${url}`);
-    return null;
-  }
-
-  let parsedPdf;
-  try {
-    parsedPdf = await pdf(Buffer.from(arrayBuffer));
-  } catch (e) {
-    console.error(`Error parsing ${url}: ${e}`);
-    return null;
-  }
-
-  return parsedPdf.text;
 };
+
