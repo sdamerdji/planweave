@@ -69,7 +69,7 @@ const LegistarClientToDisplayName = {
   sanpablo: "San Pablo, CA",
   santabarbara: "Santa Barbara, CA",
   santaclara: "Santa Clara, CA",
-  "santa-rosa": "Santa Rosa, CA"
+  "santa-rosa": "Santa Rosa, CA",
 };
 
 type LegistarClient = keyof typeof LegistarClientToDisplayName;

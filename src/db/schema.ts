@@ -264,3 +264,15 @@ export const codeChunk = pgTable(
     ),
   ]
 );
+
+export const userSearch = pgTable("user_search", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  createdAt: timestamp().notNull().defaultNow(),
+  firstSearchId: integer(),
+
+  query: text().notNull(),
+  responseText: text().notNull(),
+  documents: jsonb().notNull(),
+
+  feedback: text(),
+});

@@ -194,7 +194,10 @@ Development and Light Industrial Park District (PEC-3) and the Planned Industria
 export async function processRAGQuery(
   searchQuery: string,
   conversationHistory: { question: string; answer: string }[] = []
-): Promise<ResponseBody> {
+): Promise<{
+  responseText: string;
+  documents: Document[];
+}> {
   const queryEmbedding = Object.values(await embedTexts([searchQuery]))[0];
   const keywords = await getKeywords(searchQuery);
 

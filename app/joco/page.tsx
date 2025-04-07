@@ -4,14 +4,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
 import { asterisksToBold } from "@/src/utils";
 import { Document, ResponseBody } from "@/app/api/joco/apiTypes";
 
 type QuestionAnswer = {
+  searchId: number;
   question: string;
   answer: string;
   documents: Document[];
+  feedback: "positive" | "negative" | null;
 };
 
 export default function JocoSearchPage() {
@@ -40,6 +42,7 @@ export default function JocoSearchPage() {
           conversationHistory: conversationHistory.map((q) => ({
             question: q.question,
             answer: q.answer,
+            searchId: q.searchId,
           })),
         }),
       });
@@ -53,6 +56,8 @@ export default function JocoSearchPage() {
         question: query,
         answer: data.responseText,
         documents: data.documents,
+        searchId: data.searchId,
+        feedback: null,
       };
       setConversationHistory([...conversationHistory, newQuestionAnswer]);
       setQuery("");
@@ -68,6 +73,30 @@ export default function JocoSearchPage() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
+    }
+  };
+
+  const handleFeedback = async (
+    searchId: number,
+    feedback: "positive" | "negative"
+  ) => {
+    const updatedConversationHistory = conversationHistory.map((q) =>
+      q.searchId === searchId ? { ...q, feedback } : q
+    );
+    setConversationHistory(updatedConversationHistory);
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchId,
+          feedback,
+        }),
+      });
+    } catch (err) {
+      console.error("Error updating feedback:", err);
     }
   };
 
@@ -122,6 +151,26 @@ export default function JocoSearchPage() {
                   __html: asterisksToBold(questionAnswer.answer),
                 }}
               />
+              <div className="flex gap-4 mt-4">
+                <ThumbsUp
+                  className={`w-5 h-5 cursor-pointer hover:text-green-500 ${
+                    questionAnswer.feedback === "positive"
+                      ? "text-green-500"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    handleFeedback(questionAnswer.searchId, "positive")
+                  }
+                />
+                <ThumbsDown
+                  className={`w-5 h-5 cursor-pointer hover:text-red-500 ${
+                    questionAnswer.feedback === "negative" ? "text-red-500" : ""
+                  }`}
+                  onClick={() =>
+                    handleFeedback(questionAnswer.searchId, "negative")
+                  }
+                />
+              </div>
             </div>
 
             {questionAnswer.documents.length > 0 && (

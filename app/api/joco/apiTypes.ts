@@ -1,6 +1,7 @@
 export type RequestBody = {
   query: string;
   conversationHistory: {
+    searchId: number;
     question: string;
     answer: string;
   }[];
@@ -19,4 +20,5 @@ export type Document = {
 export type ResponseBody = {
   responseText: string;
   documents: Document[];
+  searchId: number;
 };
