@@ -64,6 +64,13 @@ export default function JocoSearchPage() {
       };
       setConversationHistory([...conversationHistory, newQuestionAnswer]);
       setQuery("");
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const lastQuestion = document.getElementById("last-question");
+      if (lastQuestion) {
+        lastQuestion.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
@@ -185,7 +192,10 @@ export default function JocoSearchPage() {
 
       {conversationHistory.map((questionAnswer, index) => (
         <div key={index}>
-          <h1 className="text-3xl font-semibold mb-12 mt-12">
+          <h1
+            className="text-3xl font-semibold mb-12 mt-12"
+            id={index === conversationHistory.length - 1 ? "last-question" : ""}
+          >
             {questionAnswer.question}
             {questionAnswer.question[questionAnswer.question.length - 1] === "?"
               ? ""
@@ -246,23 +256,17 @@ export default function JocoSearchPage() {
                           />
                           <div>
                             <a
-                              href={doc.pdfUrl}
+                              href={
+                                highlightedBodyText
+                                  ? `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`
+                                  : doc.pdfUrl
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline mr-4"
+                              className="text-blue-500 hover:underline"
                             >
                               View PDF
                             </a>
-                            {highlightedBodyText && (
-                              <a
-                                href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 hover:underline"
-                              >
-                                Highlight in PDF
-                              </a>
-                            )}
                           </div>
                         </div>
                       </Card>
