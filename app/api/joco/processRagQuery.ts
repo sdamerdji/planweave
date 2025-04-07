@@ -4,7 +4,7 @@ import { db } from "@/src/db";
 import { codeChunk } from "@/src/db/schema";
 import { cosineDistance, eq, sql, and, count } from "drizzle-orm";
 import { evaluateDocumentRelevance } from "@/src/EvaluateDocumentRelevance";
-import { ResponseBody } from "./apiTypes";
+import { Document } from "@/app/api/joco/apiTypes";
 const USE_CRAG = true;
 
 const DEBUG = false;
@@ -323,75 +323,108 @@ export async function processRAGQuery(
 
       // Instead of trying to create a complex regex pattern that might fail,
       // we'll perform a more direct approach to find the text in the document
-      
+
       // Simple text-based approach - normalize both texts for comparison
-      const normalizedBody = escapedBody.replace(/\s+/g, ' ');
-      const normalizedHighlight = validatedHighlight.replace(/\s+/g, ' ');
-      
+      const normalizedBody = escapedBody.replace(/\s+/g, " ");
+      const normalizedHighlight = validatedHighlight.replace(/\s+/g, " ");
+
       // Find the position of the highlight in the normalized body
       const highlightIndex = normalizedBody.indexOf(normalizedHighlight);
-      
+
       debugLog("\nDirect text search approach:");
       debugLog("Normalized highlight:", normalizedHighlight);
       debugLog("Highlight found at index:", highlightIndex);
-      
+
       if (highlightIndex !== -1) {
         // We found the text directly
         // Now provide context around the matched text
         const contextBefore = 250; // Characters of context before highlight
-        const contextAfter = 250;  // Characters of context after highlight
-        
+        const contextAfter = 250; // Characters of context after highlight
+
         const startPos = Math.max(0, highlightIndex - contextBefore);
-        const endPos = Math.min(normalizedBody.length, highlightIndex + normalizedHighlight.length + contextAfter);
-        
+        const endPos = Math.min(
+          normalizedBody.length,
+          highlightIndex + normalizedHighlight.length + contextAfter
+        );
+
         // Extract the text with context
         const beforeText = normalizedBody.substring(startPos, highlightIndex);
-        const matchedText = normalizedBody.substring(highlightIndex, highlightIndex + normalizedHighlight.length);
-        const afterText = normalizedBody.substring(highlightIndex + normalizedHighlight.length, endPos);
-        
+        const matchedText = normalizedBody.substring(
+          highlightIndex,
+          highlightIndex + normalizedHighlight.length
+        );
+        const afterText = normalizedBody.substring(
+          highlightIndex + normalizedHighlight.length,
+          endPos
+        );
+
         debugLog("\nContext analysis:");
-        debugLog("Text BEFORE highlight (last 50 chars):", beforeText.slice(-50));
+        debugLog(
+          "Text BEFORE highlight (last 50 chars):",
+          beforeText.slice(-50)
+        );
         debugLog("Text being highlighted:", matchedText);
-        debugLog("Text AFTER highlight (first 50 chars):", afterText.slice(0, 50));
+        debugLog(
+          "Text AFTER highlight (first 50 chars):",
+          afterText.slice(0, 50)
+        );
         debugLog("\nContext lengths:");
         debugLog("Before text length:", beforeText.length);
         debugLog("Highlighted text length:", matchedText.length);
         debugLog("After text length:", afterText.length);
-        
+
         // Combine with highlighting
-        const highlightedBodyText = beforeText + "<mark>" + matchedText + "</mark>" + afterText;
-        
+        const highlightedBodyText =
+          beforeText + "<mark>" + matchedText + "</mark>" + afterText;
+
         debugLog("\nFinal highlighted text:", highlightedBodyText);
         debugLog("Final text total length:", highlightedBodyText.length);
-        
+
         return {
           id: doc.id,
           highlightedBodyText: highlightedBodyText,
         };
       } else {
         debugLog("\nFailed to find text in body using direct text search");
-        
+
         // Fallback - try to find just the first sentence of the highlight
         // This handles cases where the highlight spans multiple paragraphs
         const firstSentence = normalizedHighlight.split(/[.!?](\s|$)/)[0];
-        if (firstSentence && firstSentence.length > 20) { // Only if substantial
+        if (firstSentence && firstSentence.length > 20) {
+          // Only if substantial
           const firstSentenceIndex = normalizedBody.indexOf(firstSentence);
           debugLog("Trying with first sentence:", firstSentence);
           debugLog("First sentence found at index:", firstSentenceIndex);
-          
+
           if (firstSentenceIndex !== -1) {
             // Return highlighted first sentence with context
             const startPos = Math.max(0, firstSentenceIndex - 150);
-            const endPos = Math.min(normalizedBody.length, firstSentenceIndex + firstSentence.length + 150);
-            
-            const beforeText = normalizedBody.substring(startPos, firstSentenceIndex);
-            const matchedText = normalizedBody.substring(firstSentenceIndex, firstSentenceIndex + firstSentence.length);
-            const afterText = normalizedBody.substring(firstSentenceIndex + firstSentence.length, endPos);
-            
-            const highlightedBodyText = beforeText + "<mark>" + matchedText + "</mark>" + afterText;
-            
-            debugLog("\nHighlighting first sentence with context:", highlightedBodyText);
-            
+            const endPos = Math.min(
+              normalizedBody.length,
+              firstSentenceIndex + firstSentence.length + 150
+            );
+
+            const beforeText = normalizedBody.substring(
+              startPos,
+              firstSentenceIndex
+            );
+            const matchedText = normalizedBody.substring(
+              firstSentenceIndex,
+              firstSentenceIndex + firstSentence.length
+            );
+            const afterText = normalizedBody.substring(
+              firstSentenceIndex + firstSentence.length,
+              endPos
+            );
+
+            const highlightedBodyText =
+              beforeText + "<mark>" + matchedText + "</mark>" + afterText;
+
+            debugLog(
+              "\nHighlighting first sentence with context:",
+              highlightedBodyText
+            );
+
             return {
               id: doc.id,
               highlightedBodyText: highlightedBodyText,
@@ -411,12 +444,12 @@ export async function processRAGQuery(
     // If no specific highlight, fall back to keyword highlighting
     debugLog("No validated highlight, falling back to keyword highlighting");
     debugLog("Using keywords:", keywords);
-    
+
     // Create a regex that matches any of the keywords (case insensitive)
     const keywordRegex = new RegExp(`(${keywords.join("|")})`, "gi");
     const keywordHighlightedText = doc.bodyText.replace(
       keywordRegex,
-      '<mark>$1</mark>'
+      "<mark>$1</mark>"
     );
 
     return {

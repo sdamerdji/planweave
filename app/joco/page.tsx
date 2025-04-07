@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Loader2, ThumbsUp, ThumbsDown, ExternalLink } from "lucide-react";
 import { asterisksToBold } from "@/src/utils";
 import { Document, ResponseBody } from "@/app/api/joco/apiTypes";
+import { twMerge } from "tailwind-merge";
 
 type QuestionAnswer = {
   searchId: number;
@@ -20,13 +21,15 @@ export default function JocoSearchPage() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchIsFocused, setSearchIsFocused] = useState(false);
 
   const [conversationHistory, setConversationHistory] = useState<
     QuestionAnswer[]
   >([]);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const handleSearch = async (searchQuery?: string) => {
+    const queryToUse = searchQuery ?? query;
+    if (!queryToUse.trim()) return;
 
     setIsLoading(true);
     setError(null);
@@ -38,7 +41,7 @@ export default function JocoSearchPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          query,
+          query: queryToUse,
           conversationHistory: conversationHistory.map((q) => ({
             question: q.question,
             answer: q.answer,
@@ -53,7 +56,7 @@ export default function JocoSearchPage() {
 
       const data = (await res.json()) as ResponseBody;
       const newQuestionAnswer: QuestionAnswer = {
-        question: query,
+        question: queryToUse,
         answer: data.responseText,
         documents: data.documents,
         searchId: data.searchId,
@@ -117,24 +120,60 @@ export default function JocoSearchPage() {
       </div>
 
       {conversationHistory.length === 0 && (
-        <div className="flex gap-2 mb-8">
-          <Input
-            placeholder="Search Johnson Zoning Regulations..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1"
-          />
-          <Button onClick={handleSearch} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Searching...
-              </>
-            ) : (
-              "Search"
-            )}
-          </Button>
+        <div className="flex flex-col gap-2 mb-8">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Input
+                placeholder="Search Johnson Zoning Regulations..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1"
+                onFocus={() => setSearchIsFocused(true)}
+                onBlur={() => setSearchIsFocused(false)}
+              />
+              <div
+                className={twMerge(
+                  "absolute left-0 right-0 top-full mt-1 bg-white shadow-lg rounded-md border border-slate-200 z-10",
+                  query.length === 0 && searchIsFocused ? "block" : "hidden"
+                )}
+              >
+                <div className="p-2 border-b border-slate-100">
+                  <p className="text-sm font-medium text-slate-500">
+                    Suggested Searches
+                  </p>
+                </div>
+                <ul onMouseDown={(e) => e.preventDefault()}>
+                  {[
+                    "What are the key differences between RN-1 and RN-2 zoning?",
+                    "What is the insurance rate map?",
+                    "What are the requirements for home-based businesses?",
+                  ].map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-slate-50 cursor-pointer"
+                      onMouseDown={() => {
+                        setQuery(suggestion);
+                        handleSearch(suggestion);
+                      }}
+                    >
+                      <span>{suggestion}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <Button onClick={() => handleSearch()} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                "Search"
+              )}
+            </Button>
+          </div>
         </div>
       )}
 
@@ -238,7 +277,7 @@ export default function JocoSearchPage() {
               onKeyDown={handleKeyDown}
               className="flex-1"
             />
-            <Button onClick={handleSearch} disabled={isLoading}>
+            <Button onClick={() => handleSearch()} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
