@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Loader2, ThumbsUp, ThumbsDown, ExternalLink } from "lucide-react";
 import { asterisksToBold } from "@/src/utils";
 import { Document, ResponseBody } from "@/app/api/joco/apiTypes";
 
@@ -103,9 +103,18 @@ export default function JocoSearchPage() {
   return (
     // large padding here to allow for absolute-positioned search bar
     <div className="container mx-auto py-20">
-      <h1 className="text-xl font-bold mb-6">
-        Johnson County Zoning Regulation Search
-      </h1>
+      <div className="flex justify-between mb-8">
+        <h1 className="text-xl font-bold">
+          Johnson County Zoning Regulation Search
+        </h1>
+        {conversationHistory.length > 0 && (
+          <a href="/joco" target="_blank">
+            <Button>
+              New search <ExternalLink className="w-4 h-4" />
+            </Button>
+          </a>
+        )}
+      </div>
 
       {conversationHistory.length === 0 && (
         <div className="flex gap-2 mb-8">
@@ -239,9 +248,6 @@ export default function JocoSearchPage() {
                 "Ask"
               )}
             </Button>
-            <a href="/joco" target="_blank">
-              <Button>New search</Button>
-            </a>
           </div>
         </div>
       )}
