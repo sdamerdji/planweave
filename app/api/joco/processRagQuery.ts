@@ -69,7 +69,7 @@ Your answer will be rejected if you do not provide an exact substring of the pla
 
 The examples below (deliminated with XML tags) show how you should and should not
 respond to the user's question. Do not return the XML tags in your response. Do not fix broken
-white space in the text.
+white space in the text. Do not highlight excessively.
 
 EXAMPLE 1:
 <query>where can i dig a quarry?<planning-code-text>In any district   f
@@ -96,7 +96,17 @@ the Planned Research and Development Park District (PEC-1) or the Planned Adult 
 District (PAE)</correct-output>
 
 <incorrect-output>In any district except the Residential Districts, Planned Residential Districts, the Planned Research and Development Park District (PEC-1) or the Planned Adult Entertainment District (PAE), conditional uses, such as the following, may be approved by the Board:
-1. Quarrying</incorrect-output>
+1. Quarrying , mining, or earthen materials excavation or filling operations,
+including but not limited to:
+a. The delivery and placement of greater than 1,200 cubic yards of earth fill material or the
+excavation and removal of greater than 1,200 cubic yards of any earth excavated from
+any property, unless, however, such earth excavation or filling operations are necessary
+for the construction of a building or structure on the subject property, or
+b. The screening, crushing, washing or storage of clay, gravel, ore, sand, stone, top soil, fill
+dirt or similar materials, or
+c. An asphalt or concrete plant, and
+d. subject to the standards and conditions in Section 6, (B)(3) of this Article.</planning-code-text></query>
+</incorrect-output>
 
 EXAMPLE 2:
 <query>where can i dig a quarry?<planning-code-text>3. Quarrying or mining operations:
@@ -154,7 +164,7 @@ lines, as measured on the surface shall be provided and maintained free of any s
 quarrying or mining activity unless other setbacks are verified in writing to be 
 Zoning & Subdivision Regulations Johnson County, Kansas</planning-code-text></query>
 
-<correct-output>nearby or adjacent to major or minor arterial
+<correct-output>adjacent to major or minor arterial
 streets</correct-output>
 
 <incorrect-output> Quarrying or mining operations:
@@ -268,7 +278,6 @@ export async function processRAGQuery(
 
   const highlightPromises = topRelevantDocuments.map(async (doc) => {
     debugLog("\n=== Starting highlight process for document ===");
-    debugLog("Document ID:", doc.id);
 
     const highlightedText = await highlightKeyText(searchQuery, doc.text);
     debugLog("Highlighted text from keyText:", highlightedText);
@@ -308,128 +317,87 @@ export async function processRAGQuery(
         .replace(/>/g, "&gt;");
 
       debugLog(
-        "Escaped body text (first 100 chars):",
+        "\nEscaped body text (first 100 chars):",
         escapedBody.substring(0, 100)
       );
 
-      // Find the position of the highlighted text in the body text, ignoring whitespace differences
-      const normalizedHighlight = validatedHighlight
-        .replace(/\s+/g, "\\s+")
-        // Escape special regex characters
-        .replace(/([+.*?^${}()|[\]\\])/g, "\\$1");
-      debugLog("Regex pattern:", normalizedHighlight);
-
-      const regex = new RegExp(normalizedHighlight, "i");
-      const match = escapedBody.match(regex);
-      debugLog("Regex match found?", !!match);
-      debugLog("Match index:", match?.index);
-      debugLog("Matched text:", match?.[0]);
-
-      if (match && match.index !== undefined) {
-        // Find sentence boundaries - use a more precise sentence splitter
-        const sentences = escapedBody.split(/(?<=[.!?])\s*(?=(?:[A-Z]|\n|$))/);
-        debugLog("Number of sentences found:", sentences.length);
-        debugLog("First few sentences:", sentences.slice(0, 3));
-
-        let highlightStartPos = match.index;
-        let highlightEndPos = match.index + match[0].length;
-        debugLog("Highlight positions:", {
-          highlightStartPos,
-          highlightEndPos,
-        });
-
-        // Find which sentence contains the highlight
-        let currentPos = 0;
-        let sentenceIndex = -1;
-        let beforeSentence = "";
-        let afterSentence = "";
-        let highlightSentence = "";
-
-        // First pass: find which sentence contains the start of the highlight
-        for (let i = 0; i < sentences.length; i++) {
-          const sentence = sentences[i];
-          const sentenceEndPos = currentPos + sentence.length;
-
-          debugLog(`Checking sentence ${i}:`, {
-            sentenceStart: currentPos,
-            sentenceEnd: sentenceEndPos,
-            sentence: sentence.substring(0, 50) + "...",
-            highlightStartPos,
-            highlightEndPos,
-          });
-
-          if (
-            currentPos <= highlightStartPos &&
-            highlightStartPos <= sentenceEndPos
-          ) {
-            debugLog("Found containing sentence at index:", i);
-            sentenceIndex = i;
-            highlightSentence = sentence;
-
-            // Get sentence before (if exists)
-            if (i > 0) {
-              beforeSentence = sentences[i - 1];
-              debugLog("Before sentence:", beforeSentence);
-            }
-
-            // Get sentence after (if exists)
-            if (i < sentences.length - 1) {
-              afterSentence = sentences[i + 1];
-              debugLog("After sentence:", afterSentence);
-            }
-
-            break;
-          }
-
-          currentPos = sentenceEndPos;
-        }
-
-        debugLog("Final sentence positions:", {
-          sentenceIndex,
-          currentPos,
-          highlightSentenceLength: highlightSentence.length,
-          matchedText: match[0],
-        });
-
-        if (sentenceIndex !== -1) {
-          // If the highlight text is in the after sentence, adjust our target
-          if (afterSentence && match[0].trim() === afterSentence.trim()) {
-            debugLog("Highlight is actually in the after sentence");
-            highlightSentence = afterSentence;
-            beforeSentence = highlightSentence;
-            afterSentence =
-              sentenceIndex + 2 < sentences.length
-                ? sentences[sentenceIndex + 2]
-                : "";
-
-            // Adjust positions to be relative to the actual sentence containing the highlight
-            highlightStartPos = 0;
-            highlightEndPos = highlightSentence.length;
-          }
-
-          // Insert mark tags
-          const markedSentence = "<mark>" + highlightSentence + "</mark>";
-          debugLog("Marked sentence:", markedSentence);
-
-          // Construct final text with proper spacing
-          let truncatedBodyWithHighlight = "";
-          if (beforeSentence) {
-            truncatedBodyWithHighlight += beforeSentence + " ";
-          }
-          truncatedBodyWithHighlight += markedSentence;
-          if (afterSentence) {
-            truncatedBodyWithHighlight += " " + afterSentence;
-          }
-
-          debugLog("Final highlighted text:", truncatedBodyWithHighlight);
-
-          return {
-            id: doc.id,
-            highlightedBodyText: truncatedBodyWithHighlight,
-          };
-        }
+      // Instead of trying to create a complex regex pattern that might fail,
+      // we'll perform a more direct approach to find the text in the document
+      
+      // Simple text-based approach - normalize both texts for comparison
+      const normalizedBody = escapedBody.replace(/\s+/g, ' ');
+      const normalizedHighlight = validatedHighlight.replace(/\s+/g, ' ');
+      
+      // Find the position of the highlight in the normalized body
+      const highlightIndex = normalizedBody.indexOf(normalizedHighlight);
+      
+      debugLog("\nDirect text search approach:");
+      debugLog("Normalized highlight:", normalizedHighlight);
+      debugLog("Highlight found at index:", highlightIndex);
+      
+      if (highlightIndex !== -1) {
+        // We found the text directly
+        // Now provide context around the matched text
+        const contextBefore = 250; // Characters of context before highlight
+        const contextAfter = 250;  // Characters of context after highlight
+        
+        const startPos = Math.max(0, highlightIndex - contextBefore);
+        const endPos = Math.min(normalizedBody.length, highlightIndex + normalizedHighlight.length + contextAfter);
+        
+        // Extract the text with context
+        const beforeText = normalizedBody.substring(startPos, highlightIndex);
+        const matchedText = normalizedBody.substring(highlightIndex, highlightIndex + normalizedHighlight.length);
+        const afterText = normalizedBody.substring(highlightIndex + normalizedHighlight.length, endPos);
+        
+        debugLog("\nContext analysis:");
+        debugLog("Text BEFORE highlight (last 50 chars):", beforeText.slice(-50));
+        debugLog("Text being highlighted:", matchedText);
+        debugLog("Text AFTER highlight (first 50 chars):", afterText.slice(0, 50));
+        debugLog("\nContext lengths:");
+        debugLog("Before text length:", beforeText.length);
+        debugLog("Highlighted text length:", matchedText.length);
+        debugLog("After text length:", afterText.length);
+        
+        // Combine with highlighting
+        const highlightedBodyText = beforeText + "<mark>" + matchedText + "</mark>" + afterText;
+        
+        debugLog("\nFinal highlighted text:", highlightedBodyText);
+        debugLog("Final text total length:", highlightedBodyText.length);
+        
+        return {
+          id: doc.id,
+          highlightedBodyText: highlightedBodyText,
+        };
       } else {
-        debugLog("Failed to find regex match in body text");
+        debugLog("\nFailed to find text in body using direct text search");
+        
+        // Fallback - try to find just the first sentence of the highlight
+        // This handles cases where the highlight spans multiple paragraphs
+        const firstSentence = normalizedHighlight.split(/[.!?](\s|$)/)[0];
+        if (firstSentence && firstSentence.length > 20) { // Only if substantial
+          const firstSentenceIndex = normalizedBody.indexOf(firstSentence);
+          debugLog("Trying with first sentence:", firstSentence);
+          debugLog("First sentence found at index:", firstSentenceIndex);
+          
+          if (firstSentenceIndex !== -1) {
+            // Return highlighted first sentence with context
+            const startPos = Math.max(0, firstSentenceIndex - 150);
+            const endPos = Math.min(normalizedBody.length, firstSentenceIndex + firstSentence.length + 150);
+            
+            const beforeText = normalizedBody.substring(startPos, firstSentenceIndex);
+            const matchedText = normalizedBody.substring(firstSentenceIndex, firstSentenceIndex + firstSentence.length);
+            const afterText = normalizedBody.substring(firstSentenceIndex + firstSentence.length, endPos);
+            
+            const highlightedBodyText = beforeText + "<mark>" + matchedText + "</mark>" + afterText;
+            
+            debugLog("\nHighlighting first sentence with context:", highlightedBodyText);
+            
+            return {
+              id: doc.id,
+              highlightedBodyText: highlightedBodyText,
+            };
+          }
+        }
       }
 
       // Fallback if regex match fails
@@ -442,15 +410,14 @@ export async function processRAGQuery(
 
     // If no specific highlight, fall back to keyword highlighting
     debugLog("No validated highlight, falling back to keyword highlighting");
-    const keywordHighlightedText = doc.bodyText
-      .split(". ")
-      .map((sentence) => {
-        const containsKeyword = keywords.some((keyword) =>
-          sentence.toLowerCase().includes(keyword.toLowerCase())
-        );
-        return containsKeyword ? `<mark>${sentence}</mark>` : sentence;
-      })
-      .join(". ");
+    debugLog("Using keywords:", keywords);
+    
+    // Create a regex that matches any of the keywords (case insensitive)
+    const keywordRegex = new RegExp(`(${keywords.join("|")})`, "gi");
+    const keywordHighlightedText = doc.bodyText.replace(
+      keywordRegex,
+      '<mark>$1</mark>'
+    );
 
     return {
       id: doc.id,
