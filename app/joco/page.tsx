@@ -225,42 +225,49 @@ export default function JocoSearchPage() {
               <div className="basis-1/2">
                 <h2 className="text-xl font-semibold mb-4">Code citations</h2>
                 <div className="space-y-4">
-                  {questionAnswer.documents.map((doc, index) => (
-                    <Card key={doc.id}>
-                      <div className="p-4 space-y-4">
-                        <div>
-                          <div className="text-lg font-semibold">
-                            {doc.pdfTitle}
+                  {questionAnswer.documents.map((doc, index) => {
+                    const highlightedBodyText =
+                      doc.bodyText.match(/<mark>(.*?)<\/mark>/)?.[1];
+                    console.log(highlightedBodyText);
+                    return (
+                      <Card key={doc.id}>
+                        <div className="p-4 space-y-4">
+                          <div>
+                            <div className="text-lg font-semibold">
+                              {doc.pdfTitle}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {doc.headingText}
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-500">
-                            {doc.headingText}
+                          <p
+                            className="whitespace-pre-wrap line-clamp-[12]"
+                            dangerouslySetInnerHTML={{ __html: doc.bodyText }}
+                          />
+                          <div>
+                            <a
+                              href={doc.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline mr-4"
+                            >
+                              View PDF
+                            </a>
+                            {highlightedBodyText && (
+                              <a
+                                href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline"
+                              >
+                                Highlight in PDF
+                              </a>
+                            )}
                           </div>
                         </div>
-                        <p
-                          className="whitespace-pre-wrap line-clamp-[12]"
-                          dangerouslySetInnerHTML={{ __html: doc.bodyText }}
-                        />
-                        <div>
-                          <a
-                            href={doc.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline mr-4"
-                          >
-                            View PDF
-                          </a>
-                          <a
-                            href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(doc.bodyText)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
-                          >
-                            Highlight in PDF
-                          </a>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -3,7 +3,7 @@
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
 
@@ -21,6 +21,7 @@ export default function PDFViewer() {
   }, []);
 
   const [numPages, setNumPages] = useState(0);
+  const [numPagesLoaded, setNumPagesLoaded] = useState(0);
   const [highlightedSpans, setHighlightedSpans] = useState<
     {
       pageIndex: number;
@@ -30,8 +31,12 @@ export default function PDFViewer() {
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
+  };
 
-    setTimeout(() => {
+  useEffect(() => {
+    const searchForHighlight = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const allSpans = document.querySelectorAll("span.text-item");
 
       let allText = "";
@@ -75,11 +80,37 @@ export default function PDFViewer() {
         }
       }
 
-      const highlight = document.querySelector("#highlight");
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
+      const highlight = document.querySelector("#highlight");
       highlight?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  };
+    };
+
+    if (numPagesLoaded === numPages) {
+      searchForHighlight();
+    }
+  }, [numPagesLoaded, numPages]);
+
+  const handlePageRenderSuccess = useCallback(() => {
+    setNumPagesLoaded((old) => old + 1);
+  }, []);
+
+  const customTextRenderer = useCallback(
+    (textItem: any) => {
+      if (
+        highlightedSpans.some(
+          (span) =>
+            span.pageIndex === textItem.pageIndex &&
+            span.itemIndex === textItem.itemIndex
+        )
+      ) {
+        return `<span style="font-weight: bold; background-color: yellow; color: black" id="highlight" page-index="${textItem.pageIndex}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
+      }
+
+      return `<span page-index="${textItem.pageIndex}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
+    },
+    [highlightedSpans]
+  );
 
   return (
     <div className="mx-auto">
@@ -95,22 +126,11 @@ export default function PDFViewer() {
       >
         {Array.from({ length: numPages }, (_, index) => (
           <Page
+            onRenderSuccess={handlePageRenderSuccess}
             key={index}
             pageNumber={index + 1}
             scale={2}
-            customTextRenderer={(textItem) => {
-              if (
-                highlightedSpans.some(
-                  (span) =>
-                    span.pageIndex === textItem.pageIndex &&
-                    span.itemIndex === textItem.itemIndex
-                )
-              ) {
-                return `<span style="font-weight: bold; background-color: yellow; color: black" id="highlight" page-index="${index}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
-              }
-
-              return `<span page-index="${index}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
-            }}
+            customTextRenderer={customTextRenderer}
           />
         ))}
       </Document>
