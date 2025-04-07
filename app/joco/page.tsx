@@ -153,7 +153,7 @@ export default function JocoSearchPage() {
                             View PDF
                           </a>
                           <a
-                            href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(doc.headingText)}`}
+                            href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(doc.bodyText)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"

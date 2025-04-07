@@ -21,18 +21,65 @@ export default function PDFViewer() {
   }, []);
 
   const [numPages, setNumPages] = useState(0);
+  const [highlightedSpans, setHighlightedSpans] = useState<
+    {
+      pageIndex: number;
+      itemIndex: number;
+    }[]
+  >([]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
 
     setTimeout(() => {
+      const allSpans = document.querySelectorAll("span.text-item");
+
+      let allText = "";
+      const charRanges = [];
+      for (const span of allSpans) {
+        const text = span.textContent?.replace(/\W+/g, "");
+        if (text) {
+          allText += text;
+          charRanges.push({
+            start: allText.length - text.length,
+            end: allText.length,
+            pageIndex: parseInt(span.getAttribute("page-index")!),
+            itemIndex: parseInt(span.getAttribute("item-index")!),
+          });
+        }
+      }
+
+      // Get the search term and prepare it for matching
+      const searchTerm = searchParams?.get("s");
+      if (searchTerm) {
+        const searchTermNoWhitespace = searchTerm.replace(/\W+/g, "");
+
+        // Find the search term within allText
+        const searchIndex = allText.indexOf(searchTermNoWhitespace);
+
+        if (searchIndex !== -1) {
+          // Find all char ranges that overlap with the search term
+          const matchingRanges = charRanges.filter((range) => {
+            // Check if this range overlaps with the search term
+            return (
+              (range.start <= searchIndex && range.end > searchIndex) || // Range starts before and ends after search start
+              (range.start >= searchIndex &&
+                range.start < searchIndex + searchTermNoWhitespace.length) // Range starts within search term
+            );
+          });
+
+          setHighlightedSpans(matchingRanges);
+          console.log(`Found ${matchingRanges.length} matches`);
+        } else {
+          console.error("Search term not found in document text");
+        }
+      }
+
       const highlight = document.querySelector("#highlight");
 
-      highlight?.scrollIntoView({ behavior: "smooth" });
+      highlight?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
   };
-
-  console.log(searchParams?.get("s"));
 
   return (
     <div className="mx-auto">
@@ -53,14 +100,16 @@ export default function PDFViewer() {
             scale={2}
             customTextRenderer={(textItem) => {
               if (
-                textItem.str
-                  .replace(/ /g, "")
-                  .includes(searchParams?.get("s")?.replace(/ /g, "") ?? "")
+                highlightedSpans.some(
+                  (span) =>
+                    span.pageIndex === textItem.pageIndex &&
+                    span.itemIndex === textItem.itemIndex
+                )
               ) {
-                return `<span style="font-weight: bold; background-color: yellow; color: black" id="highlight">${textItem.str}</span>`;
+                return `<span style="font-weight: bold; background-color: yellow; color: black" id="highlight" page-index="${index}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
               }
 
-              return textItem.str;
+              return `<span page-index="${index}" item-index="${textItem.itemIndex}" class="text-item">${textItem.str}</span>`;
             }}
           />
         ))}

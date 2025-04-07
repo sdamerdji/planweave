@@ -58,7 +58,7 @@ const main = async () => {
     .from(codeDocument)
     .where(eq(codeDocument.jurisdiction, "johnson_county_ks"));
 
-  for (const codeDocument of codeDocuments) {
+  for (const codeDocument of codeDocuments.slice(0, 3)) {
     const sections = splitCodeBySection(codeDocument.pdfContent);
     const chunks: {
       text: string;
