@@ -139,7 +139,7 @@ export default function JocoSearchPage() {
                             {doc.headingText}
                           </div>
                         </div>
-                        <p 
+                        <p
                           className="whitespace-pre-wrap line-clamp-[12]"
                           dangerouslySetInnerHTML={{ __html: doc.bodyText }}
                         />
@@ -148,9 +148,17 @@ export default function JocoSearchPage() {
                             href={doc.pdfUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
+                            className="text-blue-500 hover:underline mr-4"
                           >
                             View PDF
+                          </a>
+                          <a
+                            href={`/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(doc.headingText)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            Highlight in PDF
                           </a>
                         </div>
                       </div>

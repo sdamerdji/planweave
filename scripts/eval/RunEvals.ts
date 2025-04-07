@@ -1,4 +1,4 @@
-import { processRAGQuery } from "../../app/api/joco/route";
+import { processRAGQuery } from "../../app/api/joco/processRagQuery";
 import { evalCases } from "./EvalCases";
 import { OpenAIClient } from "../../src/OpenaiClient";
 
