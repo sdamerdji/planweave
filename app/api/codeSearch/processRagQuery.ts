@@ -4,7 +4,12 @@ import { db } from "@/src/db";
 import { codeChunk } from "@/src/db/schema";
 import { cosineDistance, eq, sql, and, count } from "drizzle-orm";
 import { evaluateDocumentRelevance } from "@/src/EvaluateDocumentRelevance";
-import { Document } from "@/app/api/joco/apiTypes";
+import { Document } from "@/app/api/codeSearch/apiTypes";
+import {
+  PlanningSearchJurisdiction,
+  PlanningSearchJurisdictionNames,
+} from "@/src/constants";
+
 const USE_CRAG = true;
 
 const DEBUG = false;
@@ -201,9 +206,11 @@ Development and Light Industrial Park District (PEC-3) and the Planned Industria
   // Don't return a list of keywords - return the actual highlighted text
   return responseText !== "None" ? responseText : null;
 };
+
 export async function processRAGQuery(
   searchQuery: string,
-  conversationHistory: { question: string; answer: string }[] = []
+  conversationHistory: { question: string; answer: string }[] = [],
+  jurisdiction: PlanningSearchJurisdiction
 ): Promise<{
   responseText: string;
   documents: Document[];
@@ -231,7 +238,7 @@ export async function processRAGQuery(
       pdfUrl: codeChunk.pdfUrl,
     })
     .from(codeChunk)
-    .where(eq(codeChunk.jurisdiction, "johnson_county_ks"))
+    .where(eq(codeChunk.jurisdiction, jurisdiction))
     .orderBy(...orderBy)
     .limit(30);
 
@@ -474,7 +481,7 @@ export async function processRAGQuery(
       You will be provided with a USER QUERY as well as some SUPPORTING
       DOCUMENTS. Use the supporting documents to answer the user's question.
 
-      The SUPPORTING DOCUMENTS are snippets of Johnson County, Kansas code.
+      The SUPPORTING DOCUMENTS are snippets of ${PlanningSearchJurisdictionNames[jurisdiction]} code.
       It's possible that the SUPPORTING DOCUMENTS do not contain the answer,
       and in those cases it's ok to say that you don't have enough information
       to answer the question.

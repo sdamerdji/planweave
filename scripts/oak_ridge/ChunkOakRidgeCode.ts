@@ -144,12 +144,15 @@ const main = async () => {
   console.log(`Inserting ${chunks.length} total chunks`);
   for (const chunkBatch of _.chunk(chunks, 100)) {
     const embeddings = await embedTexts(chunkBatch.map((c) => c.text));
-    const values = chunkBatch.map((chunk, index) => ({
-      ...chunk,
-      embedding: embeddings[chunk.text],
-      jurisdiction: "oak_ridge_tn",
-      pdfUrl: oakRidgeCodeDocument[0].pdfUrl,
-    }));
+    const values = chunkBatch.map(
+      (chunk, index) =>
+        ({
+          ...chunk,
+          embedding: embeddings[chunk.text],
+          jurisdiction: "oak_ridge_tn",
+          pdfUrl: oakRidgeCodeDocument[0].pdfUrl,
+        }) as const
+    );
     await db.insert(codeChunk).values(values);
     console.log(`Inserted ${values.length} chunks`);
   }

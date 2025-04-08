@@ -6,10 +6,17 @@ import { db } from "@/src/db";
 import { userSearch } from "@/src/db/schema";
 export async function POST(request: Request) {
   try {
-    const { query: searchQuery, conversationHistory } =
-      (await request.json()) as RequestBody;
+    const {
+      query: searchQuery,
+      conversationHistory,
+      jurisdiction,
+    } = (await request.json()) as RequestBody;
 
-    const result = await processRAGQuery(searchQuery, conversationHistory);
+    const result = await processRAGQuery(
+      searchQuery,
+      conversationHistory,
+      jurisdiction
+    );
 
     const savedSearch = await db
       .insert(userSearch)
@@ -18,6 +25,7 @@ export async function POST(request: Request) {
         responseText: result.responseText,
         documents: result.documents,
         firstSearchId: conversationHistory[0]?.searchId,
+        jurisdiction,
       })
       .returning();
 

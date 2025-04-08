@@ -11,6 +11,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { PlanningSearchJurisdiction } from "@/src/constants";
 
 export const matter = pgTable("matter", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -244,7 +245,7 @@ export const codeChunk = pgTable(
   "code_chunk",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    jurisdiction: text().notNull(),
+    jurisdiction: text().$type<PlanningSearchJurisdiction>().notNull(),
     // pdfTitle + headingText + bodyText
     text: text().notNull(),
     pdfTitle: text().notNull(),
@@ -269,6 +270,7 @@ export const userSearch = pgTable("user_search", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   createdAt: timestamp().notNull().defaultNow(),
   firstSearchId: integer(),
+  jurisdiction: text().$type<PlanningSearchJurisdiction>(),
 
   query: text().notNull(),
   responseText: text().notNull(),

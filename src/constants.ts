@@ -356,3 +356,13 @@ export const JocoCodePdfUrls = [
     title: "Appendix 4 - Uses Permitted by Zoning Districts",
   },
 ];
+
+export type PlanningSearchJurisdiction = "johnson_county_ks" | "oak_ridge_tn";
+
+export const PlanningSearchJurisdictionNames: Record<
+  PlanningSearchJurisdiction,
+  string
+> = {
+  johnson_county_ks: "Johnson County, Kansas",
+  oak_ridge_tn: "Oak Ridge, Tennessee",
+};

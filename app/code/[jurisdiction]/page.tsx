@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Loader2, ThumbsUp, ThumbsDown, ExternalLink } from "lucide-react";
 import { asterisksToBold } from "@/src/utils";
-import { Document, ResponseBody } from "@/app/api/joco/apiTypes";
+import { Document, ResponseBody } from "@/app/api/codeSearch/apiTypes";
 import { twMerge } from "tailwind-merge";
+import { PlanningSearchJurisdiction } from "@/src/constants";
 
 type QuestionAnswer = {
   searchId: number;
@@ -17,7 +18,36 @@ type QuestionAnswer = {
   feedback: "positive" | "negative" | null;
 };
 
-export default function JocoSearchPage() {
+const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
+  joco: "johnson_county_ks",
+  oakridge: "oak_ridge_tn",
+};
+
+const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
+  johnson_county_ks: "Johnson County Zoning Regulation",
+  oak_ridge_tn: "Oak Ridge Zoning Ordinance",
+};
+
+const ExampleQueriesByJurisdiction: Record<
+  PlanningSearchJurisdiction,
+  string[]
+> = {
+  johnson_county_ks: [
+    "What are the key differences between RN-1 and RN-2 zoning?",
+    "What is the insurance rate map?",
+    "What are the requirements for home-based businesses?",
+  ],
+  oak_ridge_tn: [
+    "What is O-1 zoning?",
+    "With Bed and Breakfasts, what's the difference between a Residence Establishment and an Inn?",
+  ],
+};
+
+export default function CodeSearchPage({
+  params,
+}: {
+  params: Promise<{ jurisdiction: string }>;
+}) {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +57,11 @@ export default function JocoSearchPage() {
     QuestionAnswer[]
   >([]);
 
+  const urlParams = use(params);
+  const jurisdiction =
+    JurisdictionUrlAliases[urlParams.jurisdiction] ??
+    (urlParams.jurisdiction as PlanningSearchJurisdiction);
+
   const handleSearch = async (searchQuery?: string) => {
     const queryToUse = searchQuery ?? query;
     if (!queryToUse.trim()) return;
@@ -35,7 +70,7 @@ export default function JocoSearchPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/joco", {
+      const res = await fetch("/api/codeSearch", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,6 +82,7 @@ export default function JocoSearchPage() {
             answer: q.answer,
             searchId: q.searchId,
           })),
+          jurisdiction,
         }),
       });
 
@@ -115,10 +151,10 @@ export default function JocoSearchPage() {
     <div className="container mx-auto py-20">
       <div className="flex justify-between mb-8">
         <h1 className="text-xl font-bold">
-          Johnson County Zoning Regulation Search
+          {JurisdictionCodeNames[jurisdiction]} Search
         </h1>
         {conversationHistory.length > 0 && (
-          <a href="/joco" target="_blank">
+          <a href={`/code/${urlParams.jurisdiction}`} target="_blank">
             <Button>
               New search <ExternalLink className="w-4 h-4" />
             </Button>
@@ -131,7 +167,7 @@ export default function JocoSearchPage() {
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Input
-                placeholder="Search Johnson Zoning Regulations..."
+                placeholder={`Search ${JurisdictionCodeNames[jurisdiction]}...`}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -151,22 +187,20 @@ export default function JocoSearchPage() {
                   </p>
                 </div>
                 <ul onMouseDown={(e) => e.preventDefault()}>
-                  {[
-                    "What are the key differences between RN-1 and RN-2 zoning?",
-                    "What is the insurance rate map?",
-                    "What are the requirements for home-based businesses?",
-                  ].map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-slate-50 cursor-pointer"
-                      onMouseDown={() => {
-                        setQuery(suggestion);
-                        handleSearch(suggestion);
-                      }}
-                    >
-                      <span>{suggestion}</span>
-                    </li>
-                  ))}
+                  {ExampleQueriesByJurisdiction[jurisdiction].map(
+                    (suggestion, index) => (
+                      <li
+                        key={index}
+                        className="px-4 py-2 hover:bg-slate-50 cursor-pointer"
+                        onMouseDown={() => {
+                          setQuery(suggestion);
+                          handleSearch(suggestion);
+                        }}
+                      >
+                        <span>{suggestion}</span>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
             </div>
@@ -254,20 +288,23 @@ export default function JocoSearchPage() {
                             className="whitespace-pre-wrap line-clamp-[12]"
                             dangerouslySetInnerHTML={{ __html: doc.bodyText }}
                           />
-                          <div>
-                            <a
-                              href={
-                                highlightedBodyText
-                                  ? `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`
-                                  : doc.pdfUrl
-                              }
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline"
-                            >
-                              View PDF
-                            </a>
-                          </div>
+                          {/* Johnson County has a PDF viewer, but Oak Ridge does not */}
+                          {jurisdiction === "johnson_county_ks" && (
+                            <div>
+                              <a
+                                href={
+                                  highlightedBodyText
+                                    ? `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`
+                                    : doc.pdfUrl
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline"
+                              >
+                                View PDF
+                              </a>
+                            </div>
+                          )}
                         </div>
                       </Card>
                     );

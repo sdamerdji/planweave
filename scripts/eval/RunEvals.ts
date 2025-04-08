@@ -1,4 +1,4 @@
-import { processRAGQuery } from "../../app/api/joco/processRagQuery";
+import { processRAGQuery } from "../../app/api/codeSearch/processRagQuery";
 import { evalCases } from "./EvalCases";
 import { OpenAIClient } from "../../src/OpenaiClient";
 
@@ -51,7 +51,11 @@ async function runTests() {
   for (const testCase of evalCases) {
     try {
       process.stdout.write(`${testCase.query} `);
-      const result = await processRAGQuery(testCase.query);
+      const result = await processRAGQuery(
+        testCase.query,
+        [],
+        "johnson_county_ks"
+      );
       const passed = await evaluateResponse(
         testCase.query,
         testCase.answerContent,

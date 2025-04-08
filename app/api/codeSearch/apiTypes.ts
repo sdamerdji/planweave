@@ -1,3 +1,5 @@
+import { PlanningSearchJurisdiction } from "@/src/constants";
+
 export type RequestBody = {
   query: string;
   conversationHistory: {
@@ -5,6 +7,7 @@ export type RequestBody = {
     question: string;
     answer: string;
   }[];
+  jurisdiction: PlanningSearchJurisdiction;
 };
 
 export type Document = {
@@ -14,7 +17,7 @@ export type Document = {
   pdfTitle: string;
   headingText: string;
   bodyText: string;
-  jurisdiction: string;
+  jurisdiction: PlanningSearchJurisdiction;
 };
 
 export type ResponseBody = {

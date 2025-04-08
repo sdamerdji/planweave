@@ -21,7 +21,7 @@ const splitCodeBySection = (code: string) => {
   const sections = [];
 
   // Regular expression to match section headers like "Section 1." or "SECTION 2."
-  const sectionRegex = /^##\s*section\s+\d+\..*$/igm;
+  const sectionRegex = /^##\s*section\s+\d+\..*$/gim;
 
   // Find all section headers
   const matches = [...code.matchAll(sectionRegex)];
@@ -82,15 +82,18 @@ const main = async () => {
     console.log(`${codeDocument.pdfTitle} has ${chunks.length} chunks`);
 
     const embeddings = await embedTexts(chunks.map((c) => c.text));
-    const values = chunks.map((chunk) => ({
-      text: chunk.text,
-      pdfTitle: chunk.pdfTitle,
-      headingText: chunk.headingText,
-      bodyText: chunk.bodyText,
-      embedding: embeddings[chunk.text],
-      jurisdiction: "johnson_county_ks",
-      pdfUrl: codeDocument.pdfUrl,
-    }));
+    const values = chunks.map(
+      (chunk) =>
+        ({
+          text: chunk.text,
+          pdfTitle: chunk.pdfTitle,
+          headingText: chunk.headingText,
+          bodyText: chunk.bodyText,
+          embedding: embeddings[chunk.text],
+          jurisdiction: "johnson_county_ks",
+          pdfUrl: codeDocument.pdfUrl,
+        }) as const
+    );
 
     await db.insert(codeChunk).values(values);
 
