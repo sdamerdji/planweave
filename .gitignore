@@ -46,3 +46,5 @@ notebooks/.ipynb_checkpoints
 
 dbt/target
 dbt/logs
+
+code_documents/
