@@ -453,16 +453,23 @@ export async function processRAGQuery(
     debugLog("Using keywords:", keywords);
 
     // Create a regex that matches any of the keywords (case insensitive)
-    const keywordRegex = new RegExp(`(${keywords.join("|")})`, "gi");
-    const keywordHighlightedText = doc.bodyText.replace(
-      keywordRegex,
-      "<mark>$1</mark>"
-    );
+    if (keywords.length > 0) {
+      const keywordRegex = new RegExp(`(${keywords.join("|")})`, "gi");
+      const keywordHighlightedText = doc.bodyText.replace(
+        keywordRegex,
+        "<mark>$1</mark>"
+      );
 
-    return {
-      id: doc.id,
-      highlightedBodyText: keywordHighlightedText,
-    };
+      return {
+        id: doc.id,
+        highlightedBodyText: keywordHighlightedText,
+      };
+    } else {
+      return {
+        id: doc.id,
+        highlightedBodyText: doc.bodyText,
+      };
+    }
   });
 
   // Wait for all highlights to be processed

@@ -44,7 +44,10 @@ const ExampleQueriesByJurisdiction: Record<
     "With Bed and Breakfasts, what's the difference between a Residence Establishment and an Inn?",
   ],
   // TODO
-  cupertino_ca: [],
+  cupertino_ca: [
+    "How high can I build a coffee shop?",
+    "How large can my ADU be?",
+  ],
 };
 
 export default function CodeSearchPage({
