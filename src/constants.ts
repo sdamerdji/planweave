@@ -357,7 +357,10 @@ export const JocoCodePdfUrls = [
   },
 ];
 
-export type PlanningSearchJurisdiction = "johnson_county_ks" | "oak_ridge_tn";
+export type PlanningSearchJurisdiction =
+  | "johnson_county_ks"
+  | "oak_ridge_tn"
+  | "cupertino_ca";
 
 export const PlanningSearchJurisdictionNames: Record<
   PlanningSearchJurisdiction,
@@ -365,4 +368,5 @@ export const PlanningSearchJurisdictionNames: Record<
 > = {
   johnson_county_ks: "Johnson County, Kansas",
   oak_ridge_tn: "Oak Ridge, Tennessee",
+  cupertino_ca: "Cupertino, California",
 };

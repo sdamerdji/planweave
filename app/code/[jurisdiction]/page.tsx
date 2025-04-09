@@ -21,11 +21,13 @@ type QuestionAnswer = {
 const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   joco: "johnson_county_ks",
   oakridge: "oak_ridge_tn",
+  cupertino: "cupertino_ca",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   johnson_county_ks: "Johnson County Zoning Regulation",
   oak_ridge_tn: "Oak Ridge Zoning Ordinance",
+  cupertino_ca: "Cupertino Zoning Code",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -41,6 +43,8 @@ const ExampleQueriesByJurisdiction: Record<
     "What is O-1 zoning?",
     "With Bed and Breakfasts, what's the difference between a Residence Establishment and an Inn?",
   ],
+  // TODO
+  cupertino_ca: [],
 };
 
 export default function CodeSearchPage({
@@ -272,7 +276,17 @@ export default function CodeSearchPage({
                   {questionAnswer.documents.map((doc, index) => {
                     const highlightedBodyText =
                       doc.bodyText.match(/<mark>(.*?)<\/mark>/)?.[1];
-                    console.log(highlightedBodyText);
+
+                    let documentLink = null;
+                    if (jurisdiction === "cupertino_ca") {
+                      documentLink = doc.pdfUrl;
+                    } else if (
+                      jurisdiction === "johnson_county_ks" &&
+                      highlightedBodyText
+                    ) {
+                      documentLink = `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`;
+                    }
+
                     return (
                       <Card key={doc.id}>
                         <div className="p-4 space-y-4">
@@ -288,20 +302,15 @@ export default function CodeSearchPage({
                             className="whitespace-pre-wrap line-clamp-[12]"
                             dangerouslySetInnerHTML={{ __html: doc.bodyText }}
                           />
-                          {/* Johnson County has a PDF viewer, but Oak Ridge does not */}
-                          {jurisdiction === "johnson_county_ks" && (
+                          {documentLink && (
                             <div>
                               <a
-                                href={
-                                  highlightedBodyText
-                                    ? `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`
-                                    : doc.pdfUrl
-                                }
+                                href={documentLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-500 hover:underline"
                               >
-                                View PDF
+                                View code
                               </a>
                             </div>
                           )}
