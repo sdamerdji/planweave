@@ -22,12 +22,14 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   joco: "johnson_county_ks",
   oakridge: "oak_ridge_tn",
   cupertino: "cupertino_ca",
+  kcmo: "kansas_city_mo",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   johnson_county_ks: "Johnson County Zoning Regulation",
   oak_ridge_tn: "Oak Ridge Zoning Ordinance",
   cupertino_ca: "Cupertino Zoning Code",
+  kansas_city_mo: "Kansas City Zoning and Development Code",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -47,6 +49,10 @@ const ExampleQueriesByJurisdiction: Record<
   cupertino_ca: [
     "How high can I build a coffee shop?",
     "How large can my ADU be?",
+  ],
+  kansas_city_mo: [
+    "What regulations exist on ground-mounted solar?",
+    "How are carriage houses regulated differently from other accessory structures?",
   ],
 };
 
@@ -281,13 +287,15 @@ export default function CodeSearchPage({
                       doc.bodyText.match(/<mark>(.*?)<\/mark>/)?.[1];
 
                     let documentLink = null;
-                    if (jurisdiction === "cupertino_ca") {
-                      documentLink = doc.pdfUrl;
+                    if (jurisdiction === "oak_ridge_tn") {
+                      // TODO
                     } else if (
                       jurisdiction === "johnson_county_ks" &&
                       highlightedBodyText
                     ) {
                       documentLink = `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`;
+                    } else {
+                      documentLink = doc.pdfUrl;
                     }
 
                     return (
