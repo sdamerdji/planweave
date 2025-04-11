@@ -57,6 +57,8 @@ const ExampleQueriesByJurisdiction: Record<
     "How are carriage houses regulated differently from other accessory structures?",
   ],
   los_altos_ca: [
+    "There's a new apartment going up near me. What will this do to my privacy?",
+    "What are the setbacks required for a new single family home?",
     // TODO
   ],
 };
