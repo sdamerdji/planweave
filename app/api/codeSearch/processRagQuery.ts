@@ -12,7 +12,7 @@ import {
 
 const USE_CRAG = true;
 
-const DEBUG = false;
+const DEBUG = true;
 
 // Debug logging utility
 const debugLog = (...args: any[]) => {

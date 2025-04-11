@@ -361,7 +361,8 @@ export type PlanningSearchJurisdiction =
   | "johnson_county_ks"
   | "oak_ridge_tn"
   | "cupertino_ca"
-  | "kansas_city_mo";
+  | "kansas_city_mo"
+  | "los_altos_ca";
 
 export const PlanningSearchJurisdictionNames: Record<
   PlanningSearchJurisdiction,
@@ -371,4 +372,5 @@ export const PlanningSearchJurisdictionNames: Record<
   oak_ridge_tn: "Oak Ridge, Tennessee",
   cupertino_ca: "Cupertino, California",
   kansas_city_mo: "Kansas City, Missouri",
+  los_altos_ca: "Los Altos, California",
 };

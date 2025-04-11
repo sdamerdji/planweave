@@ -23,6 +23,7 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   oakridge: "oak_ridge_tn",
   cupertino: "cupertino_ca",
   kcmo: "kansas_city_mo",
+  losaltos: "los_altos_ca",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
@@ -30,6 +31,7 @@ const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   oak_ridge_tn: "Oak Ridge Zoning Ordinance",
   cupertino_ca: "Cupertino Zoning Code",
   kansas_city_mo: "Kansas City Zoning and Development Code",
+  los_altos_ca: "Los Altos Zoning Code",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -53,6 +55,9 @@ const ExampleQueriesByJurisdiction: Record<
   kansas_city_mo: [
     "What regulations exist on ground-mounted solar?",
     "How are carriage houses regulated differently from other accessory structures?",
+  ],
+  los_altos_ca: [
+    // TODO
   ],
 };
 
