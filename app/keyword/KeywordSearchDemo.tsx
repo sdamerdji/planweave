@@ -52,12 +52,7 @@ const KeywordSearchDemo = () => {
   const [processingSummaries, setProcessingSummaries] = useState(false);
   const { toast } = useToast();
 
-  const exampleQueries = [
-    "Housing Element",
-    "Annual Progress Report",
-    "AFFH",
-    "RHNA",
-  ];
+  const exampleQueries = ["CAPER", "Annual Action Plan", "Consolidated Plan"];
 
   // Format and create Airtable URL
   const createAirtableUrl = (dateStr: string, description: string): string => {
@@ -160,14 +155,12 @@ const KeywordSearchDemo = () => {
         <header className="py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-slate-900">
-            Housing Element Watchbot
-
+              CAPER Watchbot
             </h1>
           </div>
           <p className="mt-2 text-slate-600">
-          AI-powered search for tracking housing element implementation
-
-</p>
+            AI-powered search for tracking CAPERs and Annual Action Plans
+          </p>
         </header>
 
         <div className="flex mt-6">
