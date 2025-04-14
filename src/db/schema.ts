@@ -278,3 +278,11 @@ export const userSearch = pgTable("user_search", {
 
   feedback: text(),
 });
+
+export const hudDocument = pgTable("hud_document", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  createdAt: timestamp().notNull().defaultNow(),
+  jurisdiction: text().notNull(),
+  documentUrl: text().notNull().unique(),
+  text: text().notNull(),
+});
