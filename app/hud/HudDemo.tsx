@@ -460,8 +460,17 @@ export default function HudDemo() {
   // Determine if we have any issues to show the call button
   const hasIssues = issues.length > 0 || matrixCodeIssuesCount > 0;
 
+  const activitiesAndResults = results.map((result) => {
+    return {
+      activity: activities.find(
+        (activity) => activity.idisActivity === result.idisActivity
+      ),
+      result,
+    };
+  });
+
   let totalSuspectFunding = 0;
-  for (const result of results) {
+  for (const { result, activity } of activitiesAndResults) {
     if (
       result.matrixCodeExplanation ||
       // TODO: we should just have a LLM classify the results, along with the explanation
@@ -472,12 +481,17 @@ export default function HudDemo() {
             !np.evaluation.toLowerCase().includes("no clear evidence"))
       )
     ) {
-      totalSuspectFunding +=
-        activities.find(
-          (activity) => activity.idisActivity === result.idisActivity
-        )?.fundingTotal ?? 0;
+      totalSuspectFunding += activity?.fundingTotal ?? 0;
     }
   }
+
+  const matrixCodeResults = _.orderBy(
+    activitiesAndResults.filter(
+      ({ result }) => result.matrixCodeExplanation !== null
+    ),
+    ({ activity }) => activity?.fundingTotal ?? 0,
+    "desc"
+  );
 
   return (
     <>
@@ -657,7 +671,7 @@ export default function HudDemo() {
             </CardHeader>
             <CardContent>
               {isLoading && completedActivities > 0 && totalActivities > 0 && (
-                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-4">
                   <div
                     className="bg-blue-600 h-2.5 rounded-full"
                     style={{
@@ -705,22 +719,27 @@ export default function HudDemo() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {results
-                    .filter((result) => result.matrixCodeExplanation !== null)
-                    .map((result, index) => (
-                      <Card key={index}>
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            {result.idisActivity}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
-                            {result.matrixCodeExplanation}
+                  {matrixCodeResults.map(({ result, activity }, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">
+                          <div className="flex gap-4">
+                            <div>{activity?.idisActivity}</div>
+                            {activity?.fundingTotal && (
+                              <div className="text-green-600 italic">
+                                ${activity?.fundingTotal?.toLocaleString()}
+                              </div>
+                            )}
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
+                          {result.matrixCodeExplanation}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               )}
             </CardContent>
