@@ -175,7 +175,7 @@ export default function HudDemo() {
 
       // Log matrix code audit if available
       if (data.result.matrixCode && data.result.matrixCodeExplanation) {
-        addProgressMessage(`Matrix code audit: ${data.result.matrixCode} - ${data.result.matrixCodeExplanation}`);
+        addProgressMessage(`<span class="font-bold">Matrix code audit: ${data.result.matrixCode} - ${data.result.matrixCodeExplanation}</span>`);
       }
       
       // Log non-profits
@@ -185,14 +185,14 @@ export default function HudDemo() {
         addProgressMessage(`Found ${data.result.nonProfits.length} non-profit(s).`);
         
         for (const np of data.result.nonProfits) {
-          addProgressMessage(`→ ${np.name}: ${np.evaluation}`);
+          const isHighRisk = np.evaluation.toLowerCase().includes("yes") ||
+            (np.evaluation.toLowerCase().includes("evidence") &&
+              !np.evaluation.toLowerCase().includes("no clear evidence"));
+          
+          addProgressMessage(`→ ${np.name}: ${isHighRisk ? `<span class="font-bold">${np.evaluation}</span>` : np.evaluation}`);
           
           // Check if this non-profit has issues
-          if (
-            np.evaluation.toLowerCase().includes("yes") ||
-            (np.evaluation.toLowerCase().includes("evidence") &&
-              !np.evaluation.toLowerCase().includes("no clear evidence"))
-          ) {
+          if (isHighRisk) {
             // Add to issues if not already present
             setIssues(prev => {
               const exists = prev.some(existingNp => existingNp.name === np.name);
@@ -270,7 +270,7 @@ export default function HudDemo() {
     setActivities([]);
     setResults([]);
     setError(null);
-    setProgress(["Starting HUD document audit..."]);
+    setProgress(["Starting CAPER audit..."]);
     setIssues([]);
     setActiveTab("progress");
     setCurrentActivityIndex(-1);
@@ -425,10 +425,10 @@ export default function HudDemo() {
     <div className="container mx-auto p-4">
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>HUD Document Audit Tool</CardTitle>
+          <CardTitle>CAPER Audit</CardTitle>
           <CardDescription>
-            Analyze HUD CDBG fund reports to identify non-profit organizations
-            and evaluate them based on news coverage.
+            Analyze a Consolidated Annual Performance and Evaluation Report (CAPER) to identify misclassfied activities 
+            and high-risk subrecipients of federal funds.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -443,7 +443,7 @@ export default function HudDemo() {
               />
             </div>
             <div className="w-32">
-              <div className="font-medium mb-2">Project Limit</div>
+              <div className="font-medium mb-2">Activity Limit</div>
               <Input
                 placeholder="10"
                 value={limit}
@@ -499,7 +499,7 @@ export default function HudDemo() {
           }`}
           onClick={() => setActiveTab("issues")}
         >
-          Issues Found
+          High-Risk Subrecipients
           {issues.length > 0 && (
             <Badge variant="destructive" className="ml-2">
               {issues.length}
@@ -540,7 +540,7 @@ export default function HudDemo() {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
               <div className="flex-grow">
                 <p className="text-orange-800 font-medium">
-                  It looks like concerns and/or findings have been flagged. Relay tentative findings via phone and request additional clarification.
+                  It looks like concerns and/or findings have been flagged. Relay tentative findings via phone and request additional clarification from the participating jurisdiction.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -589,9 +589,7 @@ export default function HudDemo() {
           <CardContent>
             <div id="progress-log" className="h-[400px] w-full rounded-md border p-4 overflow-y-auto font-mono text-sm">
               {progress.map((message, index) => (
-                <div key={index} className="mb-2">
-                  {message}
-                </div>
+                <div key={index} className="mb-2" dangerouslySetInnerHTML={{ __html: message }}></div>
               ))}
               {isLoading && (
                 <div className="flex items-center">
@@ -640,7 +638,7 @@ export default function HudDemo() {
       {activeTab === "matrix" && (
         <Card>
           <CardHeader>
-            <CardTitle>Potentially Ineligible Activities</CardTitle>
+            <CardTitle>Misclassified Activities</CardTitle>
             <CardDescription>
               The following activities are filed under a matrix code that does
               not match the activity. These could be misclassified or possibly
