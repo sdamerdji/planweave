@@ -746,6 +746,41 @@ export default function HudDemo() {
           </Card>
         )}
 
+        {activeTab === "issues" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>High-Risk Subrecipients</CardTitle>
+              <CardDescription>
+                The following non-profit organizations have been flagged as
+                high-risk based on their evaluation.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {issues.length === 0 ? (
+                <div className="text-center p-4 text-gray-500">
+                  No high-risk subrecipients found.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {issues.map((np, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">{np.name}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="bg-red-50 p-3 rounded-md border border-red-200">
+                          <div className="font-medium">Evaluation:</div>
+                          <div className="mt-1">{np.evaluation}</div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {activeTab === "results" && (
           <Card>
             <CardHeader>
