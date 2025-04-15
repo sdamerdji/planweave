@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 interface NonProfit {
   name: string;
@@ -25,12 +24,24 @@ interface AuditResult {
   nonProfits: NonProfit[];
 }
 
-interface AuditResponse {
+interface CDBGActivity {
+  id: string;
+  idisActivity: string;
+  content: string;
+}
+
+interface ActivitiesResponse {
   success: boolean;
   jurisdiction: string;
   limit: number | string;
-  total: number;
-  results: AuditResult[];
+  totalActivities: number;
+  activities: CDBGActivity[];
+  error?: string;
+}
+
+interface AnalyzeResponse {
+  success: boolean;
+  result: AuditResult;
   error?: string;
 }
 
@@ -38,7 +49,8 @@ export default function HudDemo() {
   const [jurisdiction, setJurisdiction] = useState<string>("san_diego_ca");
   const [limit, setLimit] = useState<string>("10");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [results, setResults] = useState<AuditResponse | null>(null);
+  const [activities, setActivities] = useState<CDBGActivity[]>([]);
+  const [results, setResults] = useState<AuditResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<
     Record<number, boolean>
@@ -46,14 +58,21 @@ export default function HudDemo() {
   const [progress, setProgress] = useState<string[]>([]);
   const [issues, setIssues] = useState<NonProfit[]>([]);
   const [activeTab, setActiveTab] = useState<string>("progress");
+  const [currentActivityIndex, setCurrentActivityIndex] = useState<number>(-1);
+  const [totalActivities, setTotalActivities] = useState<number>(0);
+  const [completedActivities, setCompletedActivities] = useState<number>(0);
   const processingTimeRef = useRef<number>(0);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Cleanup polling interval on unmount
+  // Cleanup polling interval and abort controller on unmount
   useEffect(() => {
     return () => {
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);
@@ -65,112 +84,219 @@ export default function HudDemo() {
     }));
   };
 
-  const startAudit = async () => {
-    // Clean up any existing polling
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
+  const addProgressMessage = (message: string) => {
+    setProgress((prev) => [...prev, message]);
+    // Scroll to bottom of progress log
+    const progressElement = document.getElementById('progress-log');
+    if (progressElement) {
+      progressElement.scrollTop = progressElement.scrollHeight;
     }
+  };
 
-    setIsLoading(true);
-    setResults(null);
-    setError(null);
-    setProgress(["Starting HUD document audit..."]);
-    setIssues([]);
-    setActiveTab("progress");
-    processingTimeRef.current = 0;
+  const updateProcessingTime = () => {
+    const elapsedSeconds = Math.floor((Date.now() - processingTimeRef.current) / 1000);
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    
+    setProgress((prev) => {
+      const withoutLastTime = prev.filter(msg => !msg.startsWith("Processing time:"));
+      return [...withoutLastTime, `Processing time: ${minutes}m ${seconds}s (${completedActivities}/${totalActivities} activities completed)`];
+    });
+  };
 
+  const fetchActivities = async () => {
     try {
       const limitVal = parseInt(limit);
-      const url = `/api/audit?jurisdiction=${encodeURIComponent(jurisdiction)}${
+      const url = `/api/audit/activities?jurisdiction=${encodeURIComponent(jurisdiction)}${
         !isNaN(limitVal) ? `&limit=${limitVal}` : ""
       }`;
 
-      setProgress((prev) => [...prev, `Sending request to: ${url}`]);
-
-      // Start a timer to track processing time
-      const startTime = Date.now();
-      processingTimeRef.current = startTime;
-
-      // Start a polling interval to update processing time
-      pollingIntervalRef.current = setInterval(() => {
-        const elapsedSeconds = Math.floor(
-          (Date.now() - processingTimeRef.current) / 1000
-        );
-        const minutes = Math.floor(elapsedSeconds / 60);
-        const seconds = elapsedSeconds % 60;
-        setProgress((prev) => {
-          const withoutLastTime = prev.filter(
-            (msg) => !msg.startsWith("Processing time:")
-          );
-          return [
-            ...withoutLastTime,
-            `Processing time: ${minutes}m ${seconds}s`,
-          ];
-        });
-      }, 1000);
-
+      addProgressMessage(`Fetching CDBG activities from: ${url}`);
+      
       const response = await fetch(url);
-
-      // Clear the polling interval
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-        pollingIntervalRef.current = null;
-      }
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      setResults(data);
+      const data = await response.json() as ActivitiesResponse;
+      
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fetch activities");
+      }
+      
+      setActivities(data.activities);
+      setTotalActivities(data.activities.length);
+      
+      addProgressMessage(`Found ${data.activities.length} CDBG activities to analyze.`);
+      
+      return data.activities;
+    } catch (err) {
+      console.error("Error fetching activities:", err);
+      const errMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      addProgressMessage(`Error: ${errMessage}`);
+      setError(errMessage);
+      throw err;
+    }
+  };
 
-      // Find organizations with issues
-      if (data.results) {
-        const nonProfitsWithIssues = data.results
-          .flatMap((result: AuditResult) => result.nonProfits)
-          .filter(
-            (np: NonProfit) =>
-              np.evaluation.toLowerCase().includes("yes") ||
-              (np.evaluation.toLowerCase().includes("evidence") &&
-                !np.evaluation.toLowerCase().includes("no clear evidence"))
-          );
-
-        setIssues(nonProfitsWithIssues);
-
-        if (nonProfitsWithIssues.length > 0) {
-          setActiveTab("issues");
+  const analyzeActivity = async (activity: CDBGActivity, index: number) => {
+    try {
+      setCurrentActivityIndex(index);
+      
+      addProgressMessage(`\nAnalyzing activity ${index + 1}/${totalActivities}: ${activity.idisActivity}`);
+      
+      const response = await fetch('/api/audit/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          activityContent: activity.content,
+          idisActivity: activity.idisActivity,
+          jurisdiction: jurisdiction
+        }),
+        signal: abortControllerRef.current?.signal
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json() as AnalyzeResponse;
+      
+      if (!data.success) {
+        throw new Error(data.error || "Failed to analyze activity");
+      }
+      
+      // Log non-profits
+      if (data.result.nonProfits.length === 0) {
+        addProgressMessage(`No non-profits found in this activity.`);
+      } else {
+        addProgressMessage(`Found ${data.result.nonProfits.length} non-profit(s).`);
+        
+        for (const np of data.result.nonProfits) {
+          addProgressMessage(`→ ${np.name}: ${np.evaluation}`);
+          
+          // Check if this non-profit has issues
+          if (
+            np.evaluation.toLowerCase().includes("yes") ||
+            (np.evaluation.toLowerCase().includes("evidence") &&
+              !np.evaluation.toLowerCase().includes("no clear evidence"))
+          ) {
+            // Add to issues if not already present
+            setIssues(prev => {
+              const exists = prev.some(existingNp => existingNp.name === np.name);
+              if (!exists) {
+                return [...prev, np];
+              }
+              return prev;
+            });
+          }
         }
       }
-
-      // Calculate total time
-      const totalTime = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = Math.floor(totalTime / 60);
-      const seconds = totalTime % 60;
-
-      setProgress((prev) => [
-        ...prev.filter((msg) => !msg.startsWith("Processing time:")),
-        `Audit completed in ${minutes}m ${seconds}s! Processed ${data.total} project sections.`,
-      ]);
+      
+      // Add the result to our results array
+      setResults(prev => [...prev, data.result]);
+      
+      // Mark as completed
+      setCompletedActivities(prev => prev + 1);
+      
+      return data.result;
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        addProgressMessage(`Analysis of activity ${index + 1} was cancelled.`);
+        return null;
+      }
+      
+      console.error(`Error analyzing activity ${index + 1}:`, err);
+      const errMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      addProgressMessage(`Error analyzing activity ${index + 1}: ${errMessage}`);
+      return null;
+    }
+  };
+
+  const processActivitiesSequentially = async (activities: CDBGActivity[]) => {
+    for (let i = 0; i < activities.length; i++) {
+      if (abortControllerRef.current?.signal.aborted) {
+        addProgressMessage("Analysis cancelled by user.");
+        break;
+      }
+      
+      await analyzeActivity(activities[i], i);
+      updateProcessingTime();
+    }
+    
+    // Analysis completed
+    const elapsedSeconds = Math.floor((Date.now() - processingTimeRef.current) / 1000);
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    
+    addProgressMessage(`\nAnalysis completed in ${minutes}m ${seconds}s! Processed ${completedActivities}/${totalActivities} activities.`);
+    
+    // If issues found, switch to issues tab
+    if (issues.length > 0) {
+      setActiveTab("issues");
+    }
+  };
+
+  const startAudit = async () => {
+    // Clean up any existing polling and abort controllers
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Create new abort controller
+    abortControllerRef.current = new AbortController();
+
+    setIsLoading(true);
+    setActivities([]);
+    setResults([]);
+    setError(null);
+    setProgress(["Starting HUD document audit..."]);
+    setIssues([]);
+    setActiveTab("progress");
+    setCurrentActivityIndex(-1);
+    setTotalActivities(0);
+    setCompletedActivities(0);
+    processingTimeRef.current = Date.now();
+
+    try {
+      // Start polling for processing time updates
+      pollingIntervalRef.current = setInterval(() => {
+        updateProcessingTime();
+      }, 1000);
+      
+      // Step 1: Fetch activities
+      const activitiesList = await fetchActivities();
+      
+      // Step 2: Process activities one by one
+      await processActivitiesSequentially(activitiesList);
+      
+    } catch (err) {
+      // Most errors are already handled in the individual functions
+      console.error("Error during audit:", err);
+    } finally {
+      setIsLoading(false);
+      setCurrentActivityIndex(-1);
+      
       // Clear the polling interval
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
         pollingIntervalRef.current = null;
       }
+    }
+  };
 
-      console.error("Error during audit:", err);
-      setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
-      );
-      setProgress((prev) => [
-        ...prev.filter((msg) => !msg.startsWith("Processing time:")),
-        `Error: ${
-          err instanceof Error ? err.message : "An unknown error occurred"
-        }`,
-      ]);
-    } finally {
-      setIsLoading(false);
+  const cancelAudit = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      addProgressMessage("Cancelling audit... (waiting for current activity to complete)");
     }
   };
 
@@ -205,13 +331,22 @@ export default function HudDemo() {
               />
             </div>
             <div className="flex items-end">
-              <Button
-                className="w-full sm:w-auto"
-                onClick={startAudit}
-                disabled={isLoading}
-              >
-                {isLoading ? "Processing..." : "Start Audit"}
-              </Button>
+              {isLoading ? (
+                <Button
+                  className="w-full sm:w-auto bg-red-500 hover:bg-red-600"
+                  onClick={cancelAudit}
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={startAudit}
+                  disabled={isLoading}
+                >
+                  Start Audit
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -286,9 +421,17 @@ export default function HudDemo() {
         <Card>
           <CardHeader>
             <CardTitle>Audit Progress</CardTitle>
+            {isLoading && completedActivities > 0 && totalActivities > 0 && (
+              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div 
+                  className="bg-blue-600 h-2.5 rounded-full" 
+                  style={{ width: `${(completedActivities / totalActivities) * 100}%` }}
+                ></div>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
-            <div className="h-[400px] w-full rounded-md border p-4 overflow-y-auto">
+            <div id="progress-log" className="h-[400px] w-full rounded-md border p-4 overflow-y-auto font-mono text-sm">
               {progress.map((message, index) => (
                 <div key={index} className="mb-2">
                   {message}
@@ -387,12 +530,14 @@ export default function HudDemo() {
         </Card>
       )}
 
-      {activeTab === "results" && (
+      {activeTab === "matrix" && (
         <Card>
           <CardHeader>
-            <CardTitle>All Results</CardTitle>
+            <CardTitle>Potentially Ineligible Activities</CardTitle>
             <CardDescription>
-              Found {results?.total || 0} project sections.
+              The following activities are filed under a matrix code that does
+              not match the activity. These could be misclassified or possibly
+              totally ineligible.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -401,8 +546,55 @@ export default function HudDemo() {
                 No results to display.
               </div>
             ) : (
+              <div className="space-y-4">
+                {results.results
+                  .filter((result) => result.matrixCodeExplanation)
+                  .map((result, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">
+                          {result.idisActivity}
+                        </CardTitle>
+                        <div className="text-sm text-gray-500">
+                          Matrix Code: {result.matrixCode}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
+                          {result.matrixCodeExplanation}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                {results.results.filter(
+                  (result) => result.matrixCodeExplanation
+                ).length === 0 && (
+                  <div className="text-center p-4 text-gray-500">
+                    No matrix code issues found.
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === "results" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>All Results</CardTitle>
+            <CardDescription>
+              Found {results.length} activity results.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {results.length === 0 ? (
+              <div className="text-center p-4 text-gray-500">
+                No results to display.
+              </div>
+            ) : (
               <div className="space-y-2">
-                {results.results.map((result, index) => (
+                {results.map((result, index) => (
                   <Card key={index}>
                     <CardHeader
                       className="cursor-pointer flex flex-row items-center justify-between"
