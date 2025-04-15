@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   try {
     // Extract phone number and text from request body
     const { phoneNumber, text } = await request.json();
-    
+
     // Validate inputs
     if (!phoneNumber || !text) {
       return NextResponse.json(
@@ -27,29 +27,31 @@ export async function POST(request: Request) {
 
     // Create a TwiML document with the text to say
     const twimlText = `<Response><Say>${text}</Say></Response>`;
-    
+
     // Or you can use Twilio's built-in TwiML capability:
     const call = await client.calls.create({
       from: twilioPhoneNumber,
       to: phoneNumber,
-      twiml: twimlText
+      twiml: twimlText,
     });
 
     return NextResponse.json(
-      { 
-        success: true, 
+      {
+        success: true,
         callSid: call.sid,
-        message: "Call initiated successfully. Note: You need valid Twilio credentials for this to work." 
+        message:
+          "Call initiated successfully. Note: You need valid Twilio credentials for this to work.",
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error making Twilio call:", error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: "Unable to make call. Make sure you have valid Twilio credentials.",
-        details: error instanceof Error ? error.message : String(error)
+      {
+        success: false,
+        error:
+          "Unable to make call. Make sure you have valid Twilio credentials.",
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     );
