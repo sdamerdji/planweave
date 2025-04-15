@@ -480,424 +480,338 @@ export default function HudDemo() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>CAPER Audit</CardTitle>
-          <CardDescription>
-            Analyze a Consolidated Annual Performance and Evaluation Report
-            (CAPER) to identify misclassfied activities and high-risk
-            subrecipients of federal funds.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <div className="flex-1">
-              <div className="font-medium mb-2">Jurisdiction</div>
-              <Input
-                placeholder="san_diego_ca"
-                value={jurisdiction}
-                onChange={(e) => setJurisdiction(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            <div className="w-32">
-              <div className="font-medium mb-2">Activity Limit</div>
-              <Input
-                placeholder="10"
-                value={limit}
-                onChange={(e) => setLimit(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            <div className="flex items-end">
-              {isLoading ? (
-                <Button
-                  className="w-full sm:w-auto bg-red-500 hover:bg-red-600"
-                  onClick={cancelAudit}
-                >
-                  Cancel
-                </Button>
-              ) : (
-                <Button
-                  className="w-full sm:w-auto"
-                  onClick={startAudit}
-                  disabled={isLoading}
-                >
-                  Start Audit
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md mb-6">
-          <div className="font-bold">Error</div>
-          <div>{error}</div>
+    <>
+      <div className="flex justify-between mb-8">
+        <h1 className="text-3xl font-bold">Automated CDBG Audit</h1>
+        <div>
+          <h1 className="text-5xl font-bold text-green-600">
+            ${totalSuspectFunding.toLocaleString()}
+          </h1>
+          <p className="text-right text-lg">Suspicious Spending to Audit</p>
         </div>
-      )}
-
-      <div className="flex border-b mb-4">
-        <button
-          className={`px-4 py-2 ${
-            activeTab === "progress"
-              ? "border-b-2 border-blue-500 font-medium"
-              : "text-gray-500"
-          }`}
-          onClick={() => setActiveTab("progress")}
-        >
-          Progress Log
-        </button>
-        <button
-          className={`px-4 py-2 flex items-center ${
-            activeTab === "issues"
-              ? "border-b-2 border-blue-500 font-medium"
-              : "text-gray-500"
-          }`}
-          onClick={() => setActiveTab("issues")}
-        >
-          High-Risk Subrecipients
-          {issues.length > 0 && (
-            <Badge variant="destructive" className="ml-2">
-              {issues.length}
-            </Badge>
-          )}
-        </button>
-        <button
-          className={`px-4 py-2 flex items-center ${
-            activeTab === "matrix"
-              ? "border-b-2 border-blue-500 font-medium"
-              : "text-gray-500"
-          }`}
-          onClick={() => setActiveTab("matrix")}
-        >
-          Ineligible Activities
-          {matrixCodeIssuesCount > 0 && (
-            <Badge variant="destructive" className="ml-2">
-              {matrixCodeIssuesCount}
-            </Badge>
-          )}
-        </button>
-        <button
-          className={`px-4 py-2 ${
-            activeTab === "results"
-              ? "border-b-2 border-blue-500 font-medium"
-              : "text-gray-500"
-          }`}
-          onClick={() => setActiveTab("results")}
-        >
-          All Results
-        </button>
       </div>
-
-      {/* Calling UI - Show after audit completes and there are issues */}
-      {auditCompleted && hasIssues && (
-        <Card className="mb-6 border-orange-300 bg-orange-50">
-          <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <div className="flex-grow">
-                <p className="text-orange-800 font-medium">
-                  It looks like concerns and/or findings have been flagged.
-                  Relay tentative findings via phone and request additional
-                  clarification from the participating jurisdiction.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+      <div className="container mx-auto p-4">
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>CAPER Audit</CardTitle>
+            <CardDescription>
+              Analyze a Consolidated Annual Performance and Evaluation Report
+              (CAPER) to identify misclassfied activities and high-risk
+              subrecipients of federal funds.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+              <div className="flex-1">
+                <div className="font-medium mb-2">Jurisdiction</div>
                 <Input
-                  className="w-full sm:w-48"
-                  placeholder="Phone Number"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  disabled={isCallLoading}
+                  placeholder="san_diego_ca"
+                  value={jurisdiction}
+                  onChange={(e) => setJurisdiction(e.target.value)}
+                  disabled={isLoading}
                 />
-                <Button
-                  onClick={makeCall}
-                  disabled={isCallLoading}
-                  className="bg-orange-600 hover:bg-orange-700"
+              </div>
+              <div className="w-32">
+                <div className="font-medium mb-2">Activity Limit</div>
+                <Input
+                  placeholder="10"
+                  value={limit}
+                  onChange={(e) => setLimit(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="flex items-end">
+                {isLoading ? (
+                  <Button
+                    className="w-full sm:w-auto bg-red-500 hover:bg-red-600"
+                    onClick={cancelAudit}
+                  >
+                    Cancel
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full sm:w-auto"
+                    onClick={startAudit}
+                    disabled={isLoading}
+                  >
+                    Start Audit
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md mb-6">
+            <div className="font-bold">Error</div>
+            <div>{error}</div>
+          </div>
+        )}
+
+        <div className="flex border-b mb-4">
+          <button
+            className={`px-4 py-2 ${
+              activeTab === "progress"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("progress")}
+          >
+            Progress Log
+          </button>
+          <button
+            className={`px-4 py-2 flex items-center ${
+              activeTab === "issues"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("issues")}
+          >
+            High-Risk Subrecipients
+            {issues.length > 0 && (
+              <Badge variant="destructive" className="ml-2">
+                {issues.length}
+              </Badge>
+            )}
+          </button>
+          <button
+            className={`px-4 py-2 flex items-center ${
+              activeTab === "matrix"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("matrix")}
+          >
+            Ineligible Activities
+            {matrixCodeIssuesCount > 0 && (
+              <Badge variant="destructive" className="ml-2">
+                {matrixCodeIssuesCount}
+              </Badge>
+            )}
+          </button>
+          <button
+            className={`px-4 py-2 ${
+              activeTab === "results"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("results")}
+          >
+            All Results
+          </button>
+        </div>
+
+        {/* Calling UI - Show after audit completes and there are issues */}
+        {auditCompleted && hasIssues && (
+          <Card className="mb-6 border-orange-300 bg-orange-50">
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div className="flex-grow">
+                  <p className="text-orange-800 font-medium">
+                    It looks like concerns and/or findings have been flagged.
+                    Relay tentative findings via phone and request additional
+                    clarification from the participating jurisdiction.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                  <Input
+                    className="w-full sm:w-48"
+                    placeholder="Phone Number"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    disabled={isCallLoading}
+                  />
+                  <Button
+                    onClick={makeCall}
+                    disabled={isCallLoading}
+                    className="bg-orange-600 hover:bg-orange-700"
+                  >
+                    {isCallLoading ? "Calling..." : "Call Now"}
+                  </Button>
+                </div>
+              </div>
+              {callResult && (
+                <div
+                  className={`mt-3 p-2 rounded text-sm ${
+                    callResult.includes("successfully")
+                      ? "bg-green-50 text-green-800 border border-green-200"
+                      : "bg-red-50 text-red-800 border border-red-200"
+                  }`}
                 >
-                  {isCallLoading ? "Calling..." : "Call Now"}
-                </Button>
-              </div>
-            </div>
-            {callResult && (
+                  {callResult}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === "progress" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>HUD Document Audit Tool</CardTitle>
+              <CardDescription>
+                Analyze HUD CDBG fund reports to identify non-profit
+                organizations and evaluate them based on news coverage.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoading && completedActivities > 0 && totalActivities > 0 && (
+                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                  <div
+                    className="bg-blue-600 h-2.5 rounded-full"
+                    style={{
+                      width: `${(completedActivities / totalActivities) * 100}%`,
+                    }}
+                  ></div>
+                </div>
+              )}
               <div
-                className={`mt-3 p-2 rounded text-sm ${
-                  callResult.includes("successfully")
-                    ? "bg-green-50 text-green-800 border border-green-200"
-                    : "bg-red-50 text-red-800 border border-red-200"
-                }`}
+                id="progress-log"
+                className="h-[400px] w-full rounded-md border p-4 overflow-y-auto font-mono text-sm"
               >
-                {callResult}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "progress" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>HUD Document Audit Tool</CardTitle>
-            <CardDescription>
-              Analyze HUD CDBG fund reports to identify non-profit organizations
-              and evaluate them based on news coverage.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              id="progress-log"
-              className="h-[400px] w-full rounded-md border p-4 overflow-y-auto font-mono text-sm"
-            >
-              {progress.map((message, index) => (
-                <div
-                  key={index}
-                  className="mb-2"
-                  dangerouslySetInnerHTML={{ __html: message }}
-                ></div>
-              ))}
-              {isLoading && (
-                <div className="flex items-center">
-                  <div className="animate-spin mr-2 h-4 w-4 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
-                  Processing...
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "progress" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Audit Progress</CardTitle>
-            {isLoading && completedActivities > 0 && totalActivities > 0 && (
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full"
-                  style={{
-                    width: `${(completedActivities / totalActivities) * 100}%`,
-                  }}
-                ></div>
-              </div>
-            )}
-          </CardHeader>
-          <CardContent>
-            <div
-              id="progress-log"
-              className="h-[400px] w-full rounded-md border p-4 overflow-y-auto font-mono text-sm"
-            >
-              {progress.map((message, index) => (
-                <div key={index} className="mb-2">
-                  {message}
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex items-center">
-                  <div className="animate-spin mr-2 h-4 w-4 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
-                  Processing...
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "matrix" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Misclassified Activities</CardTitle>
-            <CardDescription>
-              The following activities are filed under a matrix code that does
-              not match the activity. These could be misclassified or possibly
-              totally ineligible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {results.length === 0 ? (
-              <div className="text-center p-4 text-gray-500">
-                No results to display.
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {results
-                  .filter((result) => result.matrixCodeExplanation !== null)
-                  .map((result, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">
-                          {result.idisActivity}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
-                          {result.matrixCodeExplanation}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "matrix" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Potentially Ineligible Activities</CardTitle>
-            <CardDescription>
-              The following activities are filed under a matrix code that does
-              not match the activity. These could be misclassified or possibly
-              totally ineligible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {results.length === 0 ? (
-              <div className="text-center p-4 text-gray-500">
-                No results to display.
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {_.orderBy(
-                  results.filter(
-                    (auditResult) => auditResult.matrixCodeExplanation
-                  ),
-                  (auditResult) =>
-                    activities.find(
-                      (activity) =>
-                        activity.idisActivity === auditResult.idisActivity
-                    )?.fundingTotal ?? 0,
-                  "desc"
-                ).map((auditResult, index) => {
-                  const fundingTotal = activities.find(
-                    (activity) =>
-                      activity.idisActivity === auditResult.idisActivity
-                  )?.fundingTotal;
-                  return (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">
-                          <div className="flex gap-3">
-                            <span>{auditResult.idisActivity}</span>
-                            {fundingTotal && (
-                              <>
-                                <span>•</span>
-                                <span className="italic text-green-600">
-                                  ${fundingTotal.toLocaleString()}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </CardTitle>
-                        <div className="text-sm text-gray-500">
-                          Matrix Code: {auditResult.matrixCode}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
-                          {auditResult.matrixCodeExplanation}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-                {results.filter(
-                  (result) => result.matrixCodeExplanation !== null
-                ).length === 0 && (
-                  <div className="text-center p-4 text-gray-500">
-                    No matrix code issues found.
+                {progress.map((message, index) => (
+                  <div
+                    key={index}
+                    className="mb-2"
+                    dangerouslySetInnerHTML={{ __html: message }}
+                  ></div>
+                ))}
+                {isLoading && (
+                  <div className="flex items-center">
+                    <div className="animate-spin mr-2 h-4 w-4 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
+                    Processing...
                   </div>
                 )}
               </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        )}
 
-      {activeTab === "results" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>All Results</CardTitle>
-            <CardDescription>
-              Found {results.length} activity results.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {results.length === 0 ? (
-              <div className="text-center p-4 text-gray-500">
-                No results to display.
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {results.map((result, index) => (
-                  <Card key={index}>
-                    <CardHeader
-                      className="cursor-pointer flex flex-row items-center justify-between"
-                      onClick={() => toggleSection(index)}
-                    >
-                      <CardTitle className="text-sm">
-                        {result.idisActivity}
-                      </CardTitle>
-                      <div className="flex items-center">
-                        {result.nonProfits.length > 0 && (
-                          <Badge className="mr-2">
-                            {result.nonProfits.length} org
-                            {result.nonProfits.length !== 1 ? "s" : ""}
-                          </Badge>
-                        )}
-                        <span className="text-xs">
-                          {expandedSections[index] ? "▲" : "▼"}
-                        </span>
-                      </div>
-                    </CardHeader>
-                    {expandedSections[index] && (
-                      <CardContent>
-                        {result.matrixCodeExplanation && (
-                          <div className="mb-3 p-2 rounded-md bg-amber-50 border border-amber-200">
-                            <div className="font-medium">
-                              Matrix Code Issue: {result.matrixCode}
-                            </div>
-                            <div className="text-sm mt-1">
-                              {result.matrixCodeExplanation}
-                            </div>
+        {activeTab === "matrix" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Misclassified Activities</CardTitle>
+              <CardDescription>
+                The following activities are filed under a matrix code that does
+                not match the activity. These could be misclassified or possibly
+                totally ineligible.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {results.length === 0 ? (
+                <div className="text-center p-4 text-gray-500">
+                  No results to display.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {results
+                    .filter((result) => result.matrixCodeExplanation !== null)
+                    .map((result, index) => (
+                      <Card key={index}>
+                        <CardHeader>
+                          <CardTitle className="text-lg">
+                            {result.idisActivity}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
+                            {result.matrixCodeExplanation}
                           </div>
-                        )}
-                        {result.nonProfits.length === 0 ? (
-                          <div className="text-gray-500">
-                            No non-profits identified
-                          </div>
-                        ) : (
-                          <div className="space-y-2">
-                            {result.nonProfits.map((np, npIndex) => (
-                              <div
-                                key={npIndex}
-                                className="p-2 rounded-md bg-gray-50"
-                              >
-                                <div className="font-medium">{np.name}</div>
-                                <div
-                                  className={`mt-1 p-2 rounded text-sm ${
-                                    np.evaluation.toLowerCase().includes("yes")
-                                      ? "bg-red-50 border border-red-200"
-                                      : "bg-gray-100"
-                                  }`}
-                                >
-                                  {np.evaluation}
-                                </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === "results" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>All Results</CardTitle>
+              <CardDescription>
+                Found {results.length} activity results.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {results.length === 0 ? (
+                <div className="text-center p-4 text-gray-500">
+                  No results to display.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {results.map((result, index) => (
+                    <Card key={index}>
+                      <CardHeader
+                        className="cursor-pointer flex flex-row items-center justify-between"
+                        onClick={() => toggleSection(index)}
+                      >
+                        <CardTitle className="text-sm">
+                          {result.idisActivity}
+                        </CardTitle>
+                        <div className="flex items-center">
+                          {result.nonProfits.length > 0 && (
+                            <Badge className="mr-2">
+                              {result.nonProfits.length} org
+                              {result.nonProfits.length !== 1 ? "s" : ""}
+                            </Badge>
+                          )}
+                          <span className="text-xs">
+                            {expandedSections[index] ? "▲" : "▼"}
+                          </span>
+                        </div>
+                      </CardHeader>
+                      {expandedSections[index] && (
+                        <CardContent>
+                          {result.matrixCodeExplanation && (
+                            <div className="mb-3 p-2 rounded-md bg-amber-50 border border-amber-200">
+                              <div className="font-medium">
+                                Matrix Code Issue: {result.matrixCode}
                               </div>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    )}
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-    </div>
+                              <div className="text-sm mt-1">
+                                {result.matrixCodeExplanation}
+                              </div>
+                            </div>
+                          )}
+                          {result.nonProfits.length === 0 ? (
+                            <div className="text-gray-500">
+                              No non-profits identified
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              {result.nonProfits.map((np, npIndex) => (
+                                <div
+                                  key={npIndex}
+                                  className="p-2 rounded-md bg-gray-50"
+                                >
+                                  <div className="font-medium">{np.name}</div>
+                                  <div
+                                    className={`mt-1 p-2 rounded text-sm ${
+                                      np.evaluation
+                                        .toLowerCase()
+                                        .includes("yes")
+                                        ? "bg-red-50 border border-red-200"
+                                        : "bg-gray-100"
+                                    }`}
+                                  >
+                                    {np.evaluation}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </CardContent>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </>
   );
 }
