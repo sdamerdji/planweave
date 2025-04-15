@@ -16,8 +16,14 @@ interface NewsResult {
   pageAge: string | null;
   pageFetched: string | null;
   breaking: boolean;
-  thumbnail: { src: string; original: string; } | null;
-  metaUrl: { scheme: string; netloc: string; hostname: string; favicon: string; path: string; } | null;
+  thumbnail: { src: string; original: string } | null;
+  metaUrl: {
+    scheme: string;
+    netloc: string;
+    hostname: string;
+    favicon: string;
+    path: string;
+  } | null;
   extraSnippets: string[];
 }
 
@@ -65,30 +71,33 @@ function validateSearchResult(result: RawNewsResult): NewsResult | null {
     breaking: result.breaking || false,
     thumbnail: result.thumbnail || null,
     metaUrl: result.meta_url || null,
-    extraSnippets: result.extra_snippets || []
+    extraSnippets: result.extra_snippets || [],
   };
 }
 
 // Function to get search results from Brave Search API
-async function getSearchResults(query: string, freshness?: string): Promise<NewsResult[]> {
+async function getSearchResults(
+  query: string,
+  freshness?: string
+): Promise<NewsResult[]> {
   if (!BRAVE_API_KEY) {
     throw new Error("BRAVE_API_KEY is not set in environment variables");
   }
 
   try {
     const response = await axios.get<{ results: RawNewsResult[] }>(
-      'https://api.search.brave.com/res/v1/news/search',
+      "https://api.search.brave.com/res/v1/news/search",
       {
         params: {
           q: query,
-          count: 20,
-          ...(freshness && { freshness })
+          count: 10,
+          ...(freshness && { freshness }),
         },
         headers: {
-          'Accept': 'application/json',
-          'X-Subscription-Token': BRAVE_API_KEY
+          Accept: "application/json",
+          "X-Subscription-Token": BRAVE_API_KEY,
         },
-        timeout: 60000
+        timeout: 60000,
       }
     );
 
@@ -108,8 +117,8 @@ async function getSearchResults(query: string, freshness?: string): Promise<News
 // Function to clean and format content
 function cleanContent(content: string): string {
   return content
-    .replace(/\s+/g, ' ')
-    .replace(/[^\x20-\x7E]/g, '') // Remove non-printable characters
+    .replace(/\s+/g, " ")
+    .replace(/[^\x20-\x7E]/g, "") // Remove non-printable characters
     .trim()
     .substring(0, MAX_CONTENT_LENGTH);
 }
@@ -117,19 +126,19 @@ function cleanContent(content: string): string {
 // Function to check if a site is likely to block scraping
 function isLikelyToBlock(url: string): boolean {
   const blockedDomains = [
-    'nytimes.com',
-    'bloomberg.com',
-    'wsj.com',
-    'ft.com',
-    'sammyfans.com',
-    'reuters.com',
-    'forbes.com',
-    'medium.com'
+    "nytimes.com",
+    "bloomberg.com",
+    "wsj.com",
+    "ft.com",
+    "sammyfans.com",
+    "reuters.com",
+    "forbes.com",
+    "medium.com",
   ];
-  
+
   try {
     const hostname = new URL(url).hostname;
-    return blockedDomains.some(domain => hostname.includes(domain));
+    return blockedDomains.some((domain) => hostname.includes(domain));
   } catch {
     return false;
   }
@@ -138,66 +147,73 @@ function isLikelyToBlock(url: string): boolean {
 // Function to extract page content using Cheerio
 async function getPageContent(url: string): Promise<string> {
   if (isLikelyToBlock(url)) {
-    return '[Content not available - Site requires subscription or blocks automated access]';
+    return "[Content not available - Site requires subscription or blocks automated access]";
   }
 
   try {
     const response = await axios.get(url, {
       timeout: 30000,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
     });
-    
+
     if (response.status === 403) {
-      return '[Content not available - Access denied by the website]';
+      return "[Content not available - Access denied by the website]";
     }
-    
+
     const $ = cheerio.load(response.data);
-    
+
     // Remove unwanted elements
-    $('script, style, nav, header, footer, iframe, .ads, #ads, .advertisement').remove();
-    
+    $(
+      "script, style, nav, header, footer, iframe, .ads, #ads, .advertisement"
+    ).remove();
+
     // Extract main content
-    let content = '';
-    $('article, main, .content, .article-content, .post-content').each((_, elem) => {
-      content += $(elem).text() + ' ';
-    });
-    
+    let content = "";
+    $("article, main, .content, .article-content, .post-content").each(
+      (_, elem) => {
+        content += $(elem).text() + " ";
+      }
+    );
+
     // If no main content found, fall back to body
     if (!content.trim()) {
-      content = $('body').text();
+      content = $("body").text();
     }
-    
+
     const cleanedContent = cleanContent(content);
-    
+
     if (cleanedContent.length < 100) {
-      return '[Content appears to be blocked or restricted]';
+      return "[Content appears to be blocked or restricted]";
     }
-    
+
     return cleanedContent;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 403) {
-        return '[Content not available - Access denied by the website]';
+        return "[Content not available - Access denied by the website]";
       }
-      if (error.code === 'ECONNABORTED') {
-        return '[Content not available - Request timed out]';
+      if (error.code === "ECONNABORTED") {
+        return "[Content not available - Request timed out]";
       }
     }
-    
+
     const errorMessage = error instanceof Error ? error.message : String(error);
     return `[Error fetching content: ${errorMessage}]`;
   }
 }
 
-function isEnhancedNewsResult(result: NewsResult | EnhancedNewsResult): result is EnhancedNewsResult {
+function isEnhancedNewsResult(
+  result: NewsResult | EnhancedNewsResult
+): result is EnhancedNewsResult {
   return (
     result !== null &&
-    'content' in result &&
+    "content" in result &&
     result.content !== null &&
     result.content !== undefined &&
-    'source_domain' in result &&
+    "source_domain" in result &&
     result.source_domain !== null &&
     result.source_domain !== undefined
   );
@@ -206,8 +222,8 @@ function isEnhancedNewsResult(result: NewsResult | EnhancedNewsResult): result i
 export async function POST(request: Request) {
   try {
     const { keywords, freshness } = await request.json();
-    
-    if (!keywords || keywords.trim() === '') {
+
+    if (!keywords || keywords.trim() === "") {
       return NextResponse.json(
         { error: "Keywords are required" },
         { status: 400 }
@@ -223,25 +239,25 @@ export async function POST(request: Request) {
 
     const searchResults = await getSearchResults(keywords, freshness);
     const processedUrls = new Set<string>();
-    
+
     const enhancedResults = await Promise.all(
       searchResults.map(async (result: NewsResult) => {
         const url = result.url;
-        
+
         if (!url || processedUrls.has(url)) {
           return null;
         }
-        
+
         processedUrls.add(url);
-        
+
         try {
           const domain = new URL(url).hostname;
           const pageContent = await getPageContent(url);
-          
+
           return {
             ...result,
             content: pageContent,
-            source_domain: domain
+            source_domain: domain,
           };
         } catch (error) {
           console.error(`Error processing result for ${url}:`, error);
@@ -249,23 +265,32 @@ export async function POST(request: Request) {
         }
       })
     );
-    
-    const filteredResults = enhancedResults.filter((result): result is EnhancedNewsResult => result !== null);
-    
-    return NextResponse.json({
-      success: true,
-      query: keywords,
-      freshness: freshness || "all",
-      total_results: filteredResults.length,
-      results: filteredResults
-    }, { status: 200 });
+
+    const filteredResults = enhancedResults.filter(
+      (result): result is EnhancedNewsResult => result !== null
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        query: keywords,
+        freshness: freshness || "all",
+        total_results: filteredResults.length,
+        results: filteredResults,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error processing news request:", error);
-    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
-    
-    return NextResponse.json({
-      success: false,
-      error: errorMessage
-    }, { status: 500 });
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: errorMessage,
+      },
+      { status: 500 }
+    );
   }
 }

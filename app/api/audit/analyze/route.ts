@@ -214,7 +214,7 @@ async function getPageContent(url: string): Promise<string> {
 // Function to extract non-profit beneficiaries from CDBG fund reports
 async function extractNonProfit(text: string): Promise<string[]> {
   try {
-    const systemPrompt = `You are analyzing HUD CDBG fund reports. Extract only the name of the non-profit organization that is the beneficiary of CDBG funds, if any exist. If multiple non-profits are mentioned, list each one on a separate line. If no non-profit is mentioned, respond with "None". Be succinct and direct.`;
+    const systemPrompt = `You are analyzing HUD CDBG fund reports. Extract only the name of the non-profit organization that is the beneficiary of CDBG funds, if any exist. If multiple non-profits are mentioned, list only the first one. If no non-profit is mentioned, respond with "None". Be succinct and direct. Do not extract non-profits with names that are not organizations.`;
 
     const userPrompt = `What non-profit(s), if any, is mentioned as being the beneficiary of the CDBG funds? Use the information on the 'Accomplishment Narrative', the 'description', and any hint in 'IDIS Activity'.
 
@@ -222,11 +222,12 @@ Here is the document section:
 ${text}`;
 
     const response = await OpenAIClient.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
+      temperature: 0,
     });
 
     const content = response.choices[0].message.content?.trim() || "None";
@@ -310,11 +311,12 @@ async function evaluateNonProfit(
     // Extract content from news results
     const newsContent = newsResults.results
       .map(
-        (result: any) => `Title: ${result.title}\nContent: ${result.content}\n`
+        (result: any) =>
+          `News Article Title: ${result.title}\nNews Article Body: ${result.content}\n`
       )
       .join("\n---\n");
 
-    const systemPrompt = `You are evaluating a non-profit organization based on news reports. Be objective and factual. Only identify clear evidence of waste, fraud, or incompetence. If there's no clear evidence, say "No clear evidence of issues found."`;
+    const systemPrompt = `Based on news reports, you must evaluate whether there is evidence that the non-profit has engaged in waste, fraud, abuse, or fails at its mission. If there's no clear evidence, you should say "Found no clear evidence of waste, fraud or abuse", without further explanation. If there is clear evidence, explain why. Be factual and objective.`;
 
     const userPrompt = `Based on the following news results about "${nonProfit}", is there evidence that this non-profit appears to be wasteful, fraudulent, or incompetent? Only answer "Yes" if there is clear evidence in these results.
 
@@ -322,11 +324,12 @@ News Results:
 ${newsContent}`;
 
     const response = await OpenAIClient.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
+      temperature: 0,
     });
 
     return (
