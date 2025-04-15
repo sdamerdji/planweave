@@ -70,7 +70,7 @@ description is eligible for the matrix code.
 
 The provided activity has already been found to be inappropriately classified.
 
-Provide a one-sentence explanation for why the activity is not a good fit for the matrix code.
+Provide a one-sentence explanation for why the activity is ineligible for the matrix code.
 `;
 
   const userPrompt = `

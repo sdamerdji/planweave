@@ -19,10 +19,20 @@ function extractIDISActivity(text: string): string {
   return "Unknown IDIS Activity";
 }
 
+function extractFundingTotal(text: string): number | null {
+  const match = text.match(/Total.*Total.*?\\\$\s?([\d\,\.]+)/);
+  if (match && match[1]) {
+    console.log(match[1]);
+    return parseInt(match[1].replace(/,/g, ""), 10);
+  }
+  return null;
+}
+
 export interface CDBGActivity {
   id: string;
   idisActivity: string;
   content: string;
+  fundingTotal: number | null;
 }
 
 export async function GET(request: Request) {
@@ -80,10 +90,13 @@ export async function GET(request: Request) {
         const part = "PGM Year" + partsToProcess[i]; // Add back the "PGM Year" that was removed in the split
         const idisActivity = extractIDISActivity(part);
 
+        const fundingTotal = extractFundingTotal(part);
+
         activities.push({
           id: `${doc.id}_${i}`,
           idisActivity,
           content: part,
+          fundingTotal,
         });
       }
     }
