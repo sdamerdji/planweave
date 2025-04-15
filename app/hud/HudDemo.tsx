@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +20,8 @@ interface NonProfit {
 
 interface AuditResult {
   idisActivity: string;
+  matrixCode: string | null;
+  matrixCodeExplanation: string | null;
   nonProfits: NonProfit[];
 }
 
@@ -32,7 +40,9 @@ export default function HudDemo() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [results, setResults] = useState<AuditResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>({});
+  const [expandedSections, setExpandedSections] = useState<
+    Record<number, boolean>
+  >({});
   const [progress, setProgress] = useState<string[]>([]);
   const [issues, setIssues] = useState<NonProfit[]>([]);
   const [activeTab, setActiveTab] = useState<string>("progress");
@@ -77,37 +87,44 @@ export default function HudDemo() {
       }`;
 
       setProgress((prev) => [...prev, `Sending request to: ${url}`]);
-      
+
       // Start a timer to track processing time
       const startTime = Date.now();
       processingTimeRef.current = startTime;
-      
+
       // Start a polling interval to update processing time
       pollingIntervalRef.current = setInterval(() => {
-        const elapsedSeconds = Math.floor((Date.now() - processingTimeRef.current) / 1000);
+        const elapsedSeconds = Math.floor(
+          (Date.now() - processingTimeRef.current) / 1000
+        );
         const minutes = Math.floor(elapsedSeconds / 60);
         const seconds = elapsedSeconds % 60;
         setProgress((prev) => {
-          const withoutLastTime = prev.filter(msg => !msg.startsWith("Processing time:"));
-          return [...withoutLastTime, `Processing time: ${minutes}m ${seconds}s`];
+          const withoutLastTime = prev.filter(
+            (msg) => !msg.startsWith("Processing time:")
+          );
+          return [
+            ...withoutLastTime,
+            `Processing time: ${minutes}m ${seconds}s`,
+          ];
         });
       }, 1000);
 
       const response = await fetch(url);
-      
+
       // Clear the polling interval
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
         pollingIntervalRef.current = null;
       }
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       setResults(data);
-      
+
       // Find organizations with issues
       if (data.results) {
         const nonProfitsWithIssues = data.results
@@ -125,14 +142,14 @@ export default function HudDemo() {
           setActiveTab("issues");
         }
       }
-      
+
       // Calculate total time
       const totalTime = Math.floor((Date.now() - startTime) / 1000);
       const minutes = Math.floor(totalTime / 60);
       const seconds = totalTime % 60;
-      
+
       setProgress((prev) => [
-        ...prev.filter(msg => !msg.startsWith("Processing time:")),
+        ...prev.filter((msg) => !msg.startsWith("Processing time:")),
         `Audit completed in ${minutes}m ${seconds}s! Processed ${data.total} project sections.`,
       ]);
     } catch (err) {
@@ -141,13 +158,13 @@ export default function HudDemo() {
         clearInterval(pollingIntervalRef.current);
         pollingIntervalRef.current = null;
       }
-      
+
       console.error("Error during audit:", err);
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
       setProgress((prev) => [
-        ...prev.filter(msg => !msg.startsWith("Processing time:")),
+        ...prev.filter((msg) => !msg.startsWith("Processing time:")),
         `Error: ${
           err instanceof Error ? err.message : "An unknown error occurred"
         }`,
@@ -235,6 +252,26 @@ export default function HudDemo() {
         </button>
         <button
           className={`px-4 py-2 ${
+            activeTab === "matrix"
+              ? "border-b-2 border-blue-500 font-medium"
+              : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("matrix")}
+        >
+          Ineligible Activities
+          {results?.results.filter((result) => result.matrixCodeExplanation)
+            .length && (
+            <Badge variant="destructive" className="ml-2">
+              {
+                results?.results.filter(
+                  (result) => result.matrixCodeExplanation
+                ).length
+              }
+            </Badge>
+          )}
+        </button>
+        <button
+          className={`px-4 py-2 ${
             activeTab === "results"
               ? "border-b-2 border-blue-500 font-medium"
               : "text-gray-500"
@@ -295,6 +332,55 @@ export default function HudDemo() {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === "matrix" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Potentially Ineligible Activities</CardTitle>
+            <CardDescription>
+              The following activities are filed under a matrix code that does
+              not match the activity. These could be misclassified or possibly
+              totally ineligible.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!results ? (
+              <div className="text-center p-4 text-gray-500">
+                No results to display.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {results.results
+                  .filter((result) => result.matrixCodeExplanation)
+                  .map((result, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">
+                          {result.idisActivity}
+                        </CardTitle>
+                        <div className="text-sm text-gray-500">
+                          Matrix Code: {result.matrixCode}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
+                          {result.matrixCodeExplanation}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                {results.results.filter(
+                  (result) => result.matrixCodeExplanation
+                ).length === 0 && (
+                  <div className="text-center p-4 text-gray-500">
+                    No matrix code issues found.
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
