@@ -168,6 +168,11 @@ export default function HudDemo() {
       if (!data.success) {
         throw new Error(data.error || "Failed to analyze activity");
       }
+
+      // Log matrix code audit if available
+      if (data.result.matrixCode && data.result.matrixCodeExplanation) {
+        addProgressMessage(`Matrix code audit: ${data.result.matrixCode} - ${data.result.matrixCodeExplanation}`);
+      }
       
       // Log non-profits
       if (data.result.nonProfits.length === 0) {
@@ -300,6 +305,11 @@ export default function HudDemo() {
     }
   };
 
+  // Count activities with matrix code issues
+  const matrixCodeIssuesCount = results.filter(
+    result => result.matrixCodeExplanation !== null
+  ).length;
+
   return (
     <div className="container mx-auto p-4">
       <Card className="mb-6">
@@ -386,7 +396,7 @@ export default function HudDemo() {
           )}
         </button>
         <button
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 flex items-center ${
             activeTab === "matrix"
               ? "border-b-2 border-blue-500 font-medium"
               : "text-gray-500"
@@ -394,14 +404,9 @@ export default function HudDemo() {
           onClick={() => setActiveTab("matrix")}
         >
           Ineligible Activities
-          {results?.results.filter((result) => result.matrixCodeExplanation)
-            .length && (
+          {matrixCodeIssuesCount > 0 && (
             <Badge variant="destructive" className="ml-2">
-              {
-                results?.results.filter(
-                  (result) => result.matrixCodeExplanation
-                ).length
-              }
+              {matrixCodeIssuesCount}
             </Badge>
           )}
         </button>
@@ -492,14 +497,14 @@ export default function HudDemo() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!results ? (
+            {results.length === 0 ? (
               <div className="text-center p-4 text-gray-500">
                 No results to display.
               </div>
             ) : (
               <div className="space-y-4">
-                {results.results
-                  .filter((result) => result.matrixCodeExplanation)
+                {results
+                  .filter((result) => result.matrixCodeExplanation !== null)
                   .map((result, index) => (
                     <Card key={index}>
                       <CardHeader>
@@ -517,57 +522,8 @@ export default function HudDemo() {
                       </CardContent>
                     </Card>
                   ))}
-                {results.results.filter(
-                  (result) => result.matrixCodeExplanation
-                ).length === 0 && (
-                  <div className="text-center p-4 text-gray-500">
-                    No matrix code issues found.
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "matrix" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Potentially Ineligible Activities</CardTitle>
-            <CardDescription>
-              The following activities are filed under a matrix code that does
-              not match the activity. These could be misclassified or possibly
-              totally ineligible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!results ? (
-              <div className="text-center p-4 text-gray-500">
-                No results to display.
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {results.results
-                  .filter((result) => result.matrixCodeExplanation)
-                  .map((result, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">
-                          {result.idisActivity}
-                        </CardTitle>
-                        <div className="text-sm text-gray-500">
-                          Matrix Code: {result.matrixCode}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
-                          {result.matrixCodeExplanation}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                {results.results.filter(
-                  (result) => result.matrixCodeExplanation
+                {results.filter(
+                  (result) => result.matrixCodeExplanation !== null
                 ).length === 0 && (
                   <div className="text-center p-4 text-gray-500">
                     No matrix code issues found.
@@ -617,6 +573,12 @@ export default function HudDemo() {
                     </CardHeader>
                     {expandedSections[index] && (
                       <CardContent>
+                        {result.matrixCodeExplanation && (
+                          <div className="mb-3 p-2 rounded-md bg-amber-50 border border-amber-200">
+                            <div className="font-medium">Matrix Code Issue: {result.matrixCode}</div>
+                            <div className="text-sm mt-1">{result.matrixCodeExplanation}</div>
+                          </div>
+                        )}
                         {result.nonProfits.length === 0 ? (
                           <div className="text-gray-500">
                             No non-profits identified

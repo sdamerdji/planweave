@@ -361,10 +361,16 @@ export async function POST(request: Request) {
     console.log(`Extracting non-profits from section...`);
     const nonProfits = await extractNonProfit(activityContent);
 
+    // Check matrix code eligibility
+    console.log(`Auditing matrix code...`);
+    const matrixCodeResult = await auditActivityMatrixCode(activityContent);
+    console.log(`Matrix code audit result:`, matrixCodeResult);
+
     const result = {
       idisActivity,
-      matrixCodeAudit: [] as Array<{ matrixCode: string, matrixCodeExplanation: string }>,
-      nonProfits: [] as Array<{ name: string; evaluation: string }>
+      matrixCode: matrixCodeResult.matrixCode,
+      matrixCodeExplanation: matrixCodeResult.explanation,
+      nonProfits: [] as Array<{ name: string; evaluation: string }>,
     };
 
     // Process each non-profit
