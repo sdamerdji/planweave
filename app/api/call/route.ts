@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     // Or you can use Twilio's built-in TwiML capability:
     const call = await client.calls.create({
-      from: twilioPhoneNumber,
+      from: twilioPhoneNumber || "+16504959357",
       to: phoneNumber,
       twiml: twimlText,
     });
