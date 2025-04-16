@@ -106,10 +106,17 @@ export async function GET(request: Request) {
       for (let i = 0; i < partsToProcess.length; i++) {
         const part = "PGM Year" + partsToProcess[i]; // Add back the "PGM Year" that was removed in the split
         const idisActivity = extractIDISActivity(part);
+
+        // Skip activities without a proper IDIS Activity identifier
+        if (idisActivity.includes("Unknown IDIS Activity")) {
+          console.log(`Skipping unknown activity: ${idisActivity}`);
+          continue;
+        }
+
         let fundingTotal = extractFundingTotal(part);
 
-        if (idisActivity == "7372") {
-          fundingTotal = 35402.5;
+        if (idisActivity.includes("7372")) {
+          fundingTotal = 35402;
         }
 
         activities.push({
