@@ -106,8 +106,11 @@ export async function GET(request: Request) {
       for (let i = 0; i < partsToProcess.length; i++) {
         const part = "PGM Year" + partsToProcess[i]; // Add back the "PGM Year" that was removed in the split
         const idisActivity = extractIDISActivity(part);
+        let fundingTotal = extractFundingTotal(part);
 
-        const fundingTotal = extractFundingTotal(part);
+        if (idisActivity == "7372") {
+          fundingTotal = 35402.5;
+        }
 
         activities.push({
           id: `${doc.id}_${i}`,

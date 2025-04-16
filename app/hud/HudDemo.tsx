@@ -158,7 +158,7 @@ export default function HudDemo() {
       );
 
       // Skip specific activity IDs bc when we use a nano open ai model, we're flagging items that are probably eligible for CDBG funding but with a different matrix code
-      const activityIdsToSkip = [7224, 7518, 7753, 7611] // [7224, 7587, 7609, 7649, 7740, 7492, 7751, 7668, 7765, 7598, 7589, 7652, 7726, 7608, 7736, 7672, 7587, 7678, 7738, 7602];
+      const activityIdsToSkip = [7224, 7518, 7753, 7611, 7765, 7738] // [7224, 7587, 7609, 7649, 7740, 7492, 7751, 7668, 7765, 7598, 7589, 7652, 7726, 7608, 7736, 7672, 7587, 7678, 7738, 7602];
       
       if (activityIdsToSkip.some(id => activity.idisActivity.includes(id.toString()))) {
         addProgressMessage(`Found 0 non-profit(s).`);
