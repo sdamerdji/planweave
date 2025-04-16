@@ -188,9 +188,7 @@ export default function HudDemo() {
 
         for (const np of data.result.nonProfits) {
           const isHighRisk =
-            np.evaluation.toLowerCase().includes("yes") ||
-            (np.evaluation.toLowerCase().includes("evidence") &&
-              !np.evaluation.toLowerCase().includes("no clear evidence"));
+            !np.evaluation.toLowerCase().includes("no clear evidence");
 
           addProgressMessage(
             `→ ${np.name}: ${isHighRisk ? `<span class="font-bold">${np.evaluation}</span>` : np.evaluation}`
@@ -362,9 +360,7 @@ export default function HudDemo() {
         result.matrixCodeExplanation !== null ||
         result.nonProfits.some(
           (np) =>
-            np.evaluation.toLowerCase().includes("yes") ||
-            (np.evaluation.toLowerCase().includes("evidence") &&
-              !np.evaluation.toLowerCase().includes("no clear evidence"))
+            !np.evaluation.toLowerCase().includes("no clear evidence")
         )
     );
 
