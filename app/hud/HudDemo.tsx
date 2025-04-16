@@ -100,24 +100,6 @@ export default function HudDemo() {
     }
   };
 
-  const updateProcessingTime = () => {
-    const elapsedSeconds = Math.floor(
-      (Date.now() - processingTimeRef.current) / 1000
-    );
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-
-    setProgress((prev) => {
-      const withoutLastTime = prev.filter(
-        (msg) => !msg.startsWith("Processing time:")
-      );
-      return [
-        ...withoutLastTime,
-        `Processing time: ${minutes}m ${seconds}s (${completedActivities}/${totalActivities} activities completed)`,
-      ];
-    });
-  };
-
   const fetchActivities = async () => {
     try {
       const limitVal = parseInt(limit);
@@ -139,14 +121,15 @@ export default function HudDemo() {
         throw new Error(data.error || "Failed to fetch activities");
       }
 
-      setActivities(data.activities);
-      setTotalActivities(data.activities.length);
+      const activitiesList = data.activities;
+      setActivities(activitiesList);
+      setTotalActivities(activitiesList.length);
 
       addProgressMessage(
-        `Found ${data.activities.length} CDBG activities to analyze.`
+        `Found ${activitiesList.length} CDBG activities to analyze.`
       );
 
-      return data.activities;
+      return activitiesList;
     } catch (err) {
       console.error("Error fetching activities:", err);
       const errMessage =
@@ -232,8 +215,11 @@ export default function HudDemo() {
       // Add the result to our results array
       setResults((prev) => [...prev, data.result]);
 
-      // Mark as completed
+      // Increment completed activities count
       setCompletedActivities((prev) => prev + 1);
+      
+      // Log the updated count for debugging
+      console.log(`Activity ${index + 1} completed. Total completed: ${completedActivities + 1}`);
 
       return data.result;
     } catch (err) {
@@ -253,6 +239,14 @@ export default function HudDemo() {
   };
 
   const processActivitiesSequentially = async (activities: CDBGActivity[]) => {
+    // Local tracking for activity processing
+    let localCompleted = 0;
+    const totalToProcess = activities.length;
+    
+    // Set total activities explicitly 
+    setTotalActivities(totalToProcess);
+    console.log(`Starting to process ${totalToProcess} activities`);
+    
     for (let i = 0; i < activities.length; i++) {
       if (abortControllerRef.current?.signal.aborted) {
         addProgressMessage("Analysis cancelled by user.");
@@ -260,7 +254,23 @@ export default function HudDemo() {
       }
 
       await analyzeActivity(activities[i], i);
-      updateProcessingTime();
+      
+      // Update our local counter
+      localCompleted++;
+      
+      // Force update progress message for reliable tracking
+      setProgress(prev => {
+        // Replace any processing time message with an updated one
+        const withoutProcessingTime = prev.filter(msg => !msg.startsWith("Processing time:"));
+        const elapsedSeconds = Math.floor((Date.now() - processingTimeRef.current) / 1000);
+        const minutes = Math.floor(elapsedSeconds / 60);
+        const seconds = elapsedSeconds % 60;
+        
+        return [
+          ...withoutProcessingTime,
+          `Processing time: ${minutes}m ${seconds}s (${localCompleted}/${totalToProcess} activities completed)`
+        ];
+      });
     }
 
     // Analysis completed
@@ -271,8 +281,11 @@ export default function HudDemo() {
     const seconds = elapsedSeconds % 60;
 
     addProgressMessage(
-      `\nAnalysis completed in ${minutes}m ${seconds}s! Processed ${completedActivities}/${totalActivities} activities.`
+      `\nAnalysis completed in ${minutes}m ${seconds}s! Processed ${localCompleted}/${totalToProcess} activities.`
     );
+
+    // Make sure the final completed count is synced with the state
+    setCompletedActivities(localCompleted);
 
     // Mark audit as completed and set appropriate tab
     setAuditCompleted(true);
@@ -308,18 +321,18 @@ export default function HudDemo() {
     setIssues([]);
     setActiveTab("progress");
     setCurrentActivityIndex(-1);
-    setTotalActivities(0);
+    setTotalActivities(0); 
     setCompletedActivities(0);
+    setAuditCompleted(false);
     processingTimeRef.current = Date.now();
 
     try {
-      // Start polling for processing time updates
-      pollingIntervalRef.current = setInterval(() => {
-        updateProcessingTime();
-      }, 1000);
-
       // Step 1: Fetch activities
       const activitiesList = await fetchActivities();
+      console.log(`Fetched ${activitiesList.length} activities, setting totalActivities`);
+      
+      // We set totalActivities again here in case the state update in fetchActivities hasn't processed yet
+      setTotalActivities(activitiesList.length);
 
       // Step 2: Process activities one by one
       await processActivitiesSequentially(activitiesList);
@@ -329,12 +342,6 @@ export default function HudDemo() {
     } finally {
       setIsLoading(false);
       setCurrentActivityIndex(-1);
-
-      // Clear the polling interval
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-        pollingIntervalRef.current = null;
-      }
     }
   };
 
