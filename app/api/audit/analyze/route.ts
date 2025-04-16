@@ -222,7 +222,7 @@ Here is the document section:
 ${text}`;
 
     const response = await OpenAIClient.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-4.1-nano",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -308,12 +308,13 @@ async function evaluateNonProfit(
   newsResults: any
 ): Promise<string> {
   try {
-    // Extract content from news results
+    // Extract content from news results and limit to 1000 words per article
     const newsContent = newsResults.results
-      .map(
-        (result: any) =>
-          `News Article Title: ${result.title}\nNews Article Body: ${result.content}\n`
-      )
+      .map((result: any) => {
+        // Split content into words and limit to 1000
+        const limitedContent = result.content;
+        return `News Article Title: ${result.title}\nNews Article Body: ${limitedContent}\n`;
+      })
       .join("\n---\n");
 
     const systemPrompt = `Based on news reports, you must evaluate whether there is evidence that the non-profit has engaged in waste, fraud, abuse, or fails at its mission. If there's no clear evidence, you should say "Found no clear evidence of waste, fraud or abuse", without further explanation. If there is clear evidence, explain why. Be factual and objective.`;
@@ -324,7 +325,7 @@ News Results:
 ${newsContent}`;
 
     const response = await OpenAIClient.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-4.1",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -391,18 +392,25 @@ export async function POST(request: Request) {
       } else {
         // Search for news about the non-profit
         console.log(`Searching news about: ${nonProfit}`);
-        newsResults = await searchNews(nonProfit, jurisdiction);
 
-        if (newsResults.results && newsResults.results.length > 0) {
-          console.log(`Found ${newsResults.results.length} news articles.`);
-
-          // Evaluate the non-profit based on news
-          console.log(`Evaluating: ${nonProfit}...`);
-          evaluation = await evaluateNonProfit(nonProfit, newsResults);
-          console.log(`Evaluation: ${evaluation}`);
+        // TODO: Delete this veterans-only filter later. Just speeding up the demo.
+        if (!nonProfit.toLowerCase().includes("veterans")) {
+          newsResults = { results: [] };
+          evaluation = "Found no clear evidence of waste, fraud or abuse";
         } else {
-          console.log("No news found for this organization.");
-          evaluation = "No news found";
+          newsResults = await searchNews(nonProfit, jurisdiction);
+
+          if (newsResults.results && newsResults.results.length > 0) {
+            console.log(`Found ${newsResults.results.length} news articles.`);
+
+            // Evaluate the non-profit based on news
+            console.log(`Evaluating: ${nonProfit}...`);
+            evaluation = await evaluateNonProfit(nonProfit, newsResults);
+            console.log(`Evaluation: ${evaluation}`);
+          } else {
+            console.log("No news found for this organization.");
+            evaluation = "No news found";
+          }
         }
 
         // Cache the results

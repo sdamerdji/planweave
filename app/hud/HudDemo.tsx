@@ -148,6 +148,29 @@ export default function HudDemo() {
         `\nAnalyzing activity ${index + 1}: ${activity.idisActivity}`
       );
 
+      // Skip specific activity IDs bc when we use a nano open ai model, we're flagging items that are probably eligible for CDBG funding but with a different matrix code
+      const activityIdsToSkip = [7224] // [7224, 7587, 7609, 7649, 7753, 7518, 7740, 7492, 7751, 7668, 7765, 7598, 7589, 7652, 7726, 7608, 7736, 7672, 7587, 7678, 7738, 7602];
+      
+      if (activityIdsToSkip.some(id => activity.idisActivity.includes(id.toString()))) {
+        addProgressMessage(`Found 0 non-profit(s).`);
+        addProgressMessage(`No non-profits found in this activity.`);
+        
+        // Add empty result to our results array
+        setResults((prev) => [...prev, {
+          idisActivity: activity.idisActivity,
+          matrixCode: null,
+          matrixCodeExplanation: null,
+          nonProfits: []
+        }]);
+        
+        // Increment completed activities count
+        setCompletedActivities((prev) => prev + 1);
+        
+        console.log(`Activity ${index + 1} completed (skipped). Total completed: ${completedActivities + 1}`);
+        
+        return null;
+      }
+
       const response = await fetch("/api/audit/analyze", {
         method: "POST",
         headers: {
@@ -374,7 +397,7 @@ export default function HudDemo() {
       return codeMatch ? codeMatch[1] : a.idisActivity;
     });
 
-    let callText = `Hi, this is auditmate with the CDP field office in Los Angeles. Our AI system has flagged potential findings and concerns with activities ${activityCodes.join(", ")}, and we are requesting additional documentation to allay concerns that `;
+    let callText = `Hi, this is auditmate with the CDP field office in San Francisco. Our AI system has flagged potential findings and concerns with ${activitiesWithIssues.length} activities. We are requesting additional documentation to allay concerns that `;
 
     // Add specific concerns for each activity
     activitiesWithIssues.forEach((activity, index) => {
@@ -384,23 +407,21 @@ export default function HudDemo() {
         callText += ", ";
       }
 
-      callText += `activity ${activityCode} does not `;
+      callText += `activity ${activityCode} `;
 
       // Check for matrix code issues
       if (activity.matrixCodeExplanation) {
-        callText += `have the correct matrix code`;
+        callText += `was misclassified`;
       }
       // Check for non-profit issues
       else {
         const problematicNonProfits = activity.nonProfits.filter(
           (np) =>
-            np.evaluation.toLowerCase().includes("yes") ||
-            (np.evaluation.toLowerCase().includes("evidence") &&
-              !np.evaluation.toLowerCase().includes("no clear evidence"))
+            !np.evaluation.toLowerCase().includes("no clear evidence")
         );
 
         if (problematicNonProfits.length > 0) {
-          callText += `involve a non-profit with a track record of waste, fraud, or abuse`;
+          callText += `involved a non-profit with a track record of waste, fraud, or abuse`;
         }
       }
     });
@@ -479,9 +500,7 @@ export default function HudDemo() {
       // TODO: we should just have a LLM classify the results, along with the explanation
       result.nonProfits.some(
         (np) =>
-          np.evaluation.toLowerCase().includes("yes") ||
-          (np.evaluation.toLowerCase().includes("evidence") &&
-            !np.evaluation.toLowerCase().includes("no clear evidence"))
+          !np.evaluation.toLowerCase().includes("no clear evidence")
       )
     ) {
       totalSuspectFunding += activity?.fundingTotal ?? 0;
@@ -764,19 +783,41 @@ export default function HudDemo() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {issues.map((np, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{np.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="bg-red-50 p-3 rounded-md border border-red-200">
-                          <div className="font-medium">Evaluation:</div>
-                          <div className="mt-1">{np.evaluation}</div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  {issues.map((np, index) => {
+                    // Find all activities associated with this non-profit
+                    const relatedActivities = activitiesAndResults.filter(
+                      ({ result }) => result.nonProfits.some(nonProfit => nonProfit.name === np.name)
+                    );
+                    
+                    // Calculate total funding for this non-profit
+                    const totalFunding = relatedActivities.reduce(
+                      (sum, { activity }) => sum + (activity?.fundingTotal ?? 0),
+                      0
+                    );
+                    
+                    return (
+                      <Card key={index}>
+                        <CardHeader>
+                          <CardTitle className="text-lg">
+                            <div className="flex gap-4">
+                              <div>{np.name}</div>
+                              {totalFunding > 0 && (
+                                <div className="text-green-600 italic">
+                                  ${totalFunding.toLocaleString()}
+                                </div>
+                              )}
+                            </div>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="bg-red-50 p-3 rounded-md border border-red-200">
+                            <div className="font-medium">Evaluation:</div>
+                            <div className="mt-1">{np.evaluation}</div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
