@@ -676,8 +676,7 @@ export default function HudDemo() {
             <CardHeader>
               <CardTitle>HUD Document Audit Tool</CardTitle>
               <CardDescription>
-                Analyze HUD CDBG fund reports to identify non-profit
-                organizations and evaluate them based on news coverage.
+                Analyze CAPER for flagged high-risk activities and subrecipients.
               </CardDescription>
             </CardHeader>
             <CardContent>
