@@ -13,6 +13,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import _ from "lodash";
+import dynamic from "next/dynamic";
+// import Odometer from "react-odometerjs";
+
+import "@/styles/odometer-theme-default.css";
+
+const Odometer = dynamic(() => import("react-odometerjs"), {
+  ssr: false,
+  loading: () => <>0</>,
+});
 
 interface NonProfit {
   name: string;
@@ -498,10 +507,12 @@ export default function HudDemo() {
       <div className="flex justify-between mb-8">
         <h1 className="text-3xl font-bold">Automated CDBG Audit</h1>
         <div>
-          <h1 className="text-5xl font-bold text-green-600">
-            ${totalSuspectFunding.toLocaleString()}
+          <h1 className="text-5xl font-bold text-green-600 flex items-center">
+            $<Odometer value={totalSuspectFunding} theme="default" />
           </h1>
-          <p className="text-right text-lg">Suspicious Spending to Audit</p>
+          <p className="text-right text-lg">
+            Suspicious Spending to Investigate
+          </p>
         </div>
       </div>
       <div className="container mx-auto p-4">
