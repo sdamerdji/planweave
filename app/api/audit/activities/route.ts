@@ -20,11 +20,28 @@ function extractIDISActivity(text: string): string {
 }
 
 function extractFundingTotal(text: string): number | null {
-  const match = text.match(/Total.*Total.*?\\\$\s?([\d\,\.]+)/);
-  if (match && match[1]) {
-    console.log(match[1]);
-    return parseInt(match[1].replace(/,/g, ""), 10);
+  // Looking for funding patterns in the text
+  const totalMatch = text.match(/Total.*Total.*?\\\$\s?([\d\,\.]+)/);
+  if (totalMatch && totalMatch[1]) {
+    console.log(`Found funding via Total pattern: ${totalMatch[1]}`);
+    return parseInt(totalMatch[1].replace(/,/g, ""), 10);
   }
+
+  // Alternative pattern for activities that don't have the standard format
+  const fundingMatch = text.match(/(?:Funding|Amount).*?\$\s?([\d\,\.]+)/i);
+  if (fundingMatch && fundingMatch[1]) {
+    console.log(`Found funding via alternative pattern: ${fundingMatch[1]}`);
+    return parseInt(fundingMatch[1].replace(/,/g, ""), 10);
+  }
+
+  // Try to find any dollar amount in the text as last resort
+  const dollarMatch = text.match(/\$\s?([\d\,\.]+)/);
+  if (dollarMatch && dollarMatch[1]) {
+    console.log(`Found funding via dollar sign pattern: ${dollarMatch[1]}`);
+    return parseInt(dollarMatch[1].replace(/,/g, ""), 10);
+  }
+
+  console.log(`Cant find funding in ${text}`);
   return null;
 }
 
