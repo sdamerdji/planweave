@@ -59,7 +59,7 @@ interface AnalyzeResponse {
 
 export default function HudDemo() {
   const [jurisdiction, setJurisdiction] = useState<string>("san_diego_ca");
-  const [limit, setLimit] = useState<string>("10");
+  const [limit, setLimit] = useState<string>("30");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activities, setActivities] = useState<CDBGActivity[]>([]);
   const [results, setResults] = useState<AuditResult[]>([]);
@@ -559,7 +559,7 @@ export default function HudDemo() {
               <div className="w-32">
                 <div className="font-medium mb-2">Activity Limit</div>
                 <Input
-                  placeholder="10"
+                  placeholder="30"
                   value={limit}
                   onChange={(e) => setLimit(e.target.value)}
                   disabled={isLoading}
