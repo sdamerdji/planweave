@@ -511,7 +511,7 @@ export default function HudDemo() {
             $<Odometer value={totalSuspectFunding} theme="default" />
           </h1>
           <p className="text-right text-lg">
-            Suspicious Spending to Investigate
+            Flagged Spending
           </p>
         </div>
       </div>
