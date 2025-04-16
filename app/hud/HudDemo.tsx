@@ -713,9 +713,9 @@ export default function HudDemo() {
             <CardHeader>
               <CardTitle>Misclassified Activities</CardTitle>
               <CardDescription>
-                The following activities are filed under a matrix code that does
-                not match the activity. These could be misclassified or possibly
-                totally ineligible.
+                The following activities are falsely filed under a matrix code that does
+                not match the activity. These misclassified expenditures may be
+                ineligible for CDBG funding.
               </CardDescription>
             </CardHeader>
             <CardContent>
