@@ -24,6 +24,7 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   cupertino: "cupertino_ca",
   kcmo: "kansas_city_mo",
   losaltos: "los_altos_ca",
+  leessummit: "lees_summit_mo",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
@@ -32,6 +33,7 @@ const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   cupertino_ca: "Cupertino Zoning Code",
   kansas_city_mo: "Kansas City Zoning and Development Code",
   los_altos_ca: "Los Altos Zoning Code",
+  lees_summit_mo: "Lee's Summit Unified Development Ordinance",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -59,7 +61,10 @@ const ExampleQueriesByJurisdiction: Record<
   los_altos_ca: [
     "There's a new apartment going up near me. What will this do to my privacy?",
     "What are the setbacks required for a new single family home?",
-    // TODO
+  ],
+  lees_summit_mo: [
+    "What is PO zoning?",
+    "What restrictions apply in airport hazard overlay districts?",
   ],
 };
 
