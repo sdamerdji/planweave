@@ -48,3 +48,4 @@ dbt/target
 dbt/logs
 
 code_documents/
+data/
