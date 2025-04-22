@@ -514,6 +514,7 @@ export async function processRAGQuery(
         .flat(),
       { role: "user", content: userPrompt },
     ],
+    temperature: 0,
   });
 
   const responseText = response.choices[0].message.content ?? "";
