@@ -69,7 +69,8 @@ const ExampleQueriesByJurisdiction: Record<
     "What restrictions apply in airport hazard overlay districts?",
   ],
   canyon_county_id: [
-    // TODO
+    'Can I have a neon sign for my business?',
+    'Can I have chickens in my backyard?',
   ],
 };
 
