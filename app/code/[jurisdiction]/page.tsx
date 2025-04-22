@@ -25,6 +25,7 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   kcmo: "kansas_city_mo",
   losaltos: "los_altos_ca",
   leessummit: "lees_summit_mo",
+  canyoncounty: "canyon_county_id",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
@@ -34,6 +35,7 @@ const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   kansas_city_mo: "Kansas City Zoning and Development Code",
   los_altos_ca: "Los Altos Zoning Code",
   lees_summit_mo: "Lee's Summit Unified Development Ordinance",
+  canyon_county_id: "Canyon County Zoning Regulation",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -65,6 +67,9 @@ const ExampleQueriesByJurisdiction: Record<
   lees_summit_mo: [
     "What is PO zoning?",
     "What restrictions apply in airport hazard overlay districts?",
+  ],
+  canyon_county_id: [
+    // TODO
   ],
 };
 
