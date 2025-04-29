@@ -10,11 +10,8 @@
   }
 } */
 
-
-
 @layer base {
   :root {
-
     --background: 0 0% 100%;
 
     --foreground: 0 0% 3.9%;
@@ -63,10 +60,9 @@
 
     --chart-5: 27 87% 67%;
 
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
-
     --background: 0 0% 3.9%;
 
     --foreground: 0 0% 98%;
@@ -113,11 +109,9 @@
 
     --chart-4: 280 65% 60%;
 
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
@@ -125,5 +119,42 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.rainbow-border-hover:hover {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  padding: 12px;
+  background: linear-gradient(45deg, violet, #ff0000, #ff7f00, #ff0000, violet);
+  background-size: 200% 200%;
+  background-position: 50% 50%;
+  border-radius: 12px;
+  animation: rainbow-border 3s ease infinite;
+  /* transition: all 0.3s ease; */
+  box-shadow:
+    inset 0 0 10px 10px white,
+    inset 0 0 3px 2px white;
+  border: none;
+}
+
+/* .rainbow-border-hover > * {
+  opacity: 1;
+}
+
+.rainbow-border-hover:hover {
+  opacity: 1;
+} */
+
+@keyframes rainbow-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
