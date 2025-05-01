@@ -43,6 +43,7 @@
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.1.91",
     "pg": "^8.13.3",
+    "playwright": "^1.52.0",
     "prettier": "^3.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

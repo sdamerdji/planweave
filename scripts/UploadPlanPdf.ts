@@ -1,4 +1,4 @@
-import { readFile, writeFile, readdir } from "fs/promises";
+import { readFile, writeFile, readdir, unlink } from "fs/promises";
 import { program } from "commander";
 import { pdfToSvgs } from "@/src/PdfToSvg";
 import { createClient } from "@supabase/supabase-js";
@@ -25,20 +25,30 @@ program.parse(process.argv);
 const pdfPath = program.args[0];
 const bucketPath = program.opts().bucketPath;
 
-const convertPdfToSvg = async () => {
-  await pdfToSvgs(pdfPath);
-};
+const convertAndUploadPdf = async (fileType: "webp" | "svg") => {
+  // Delete everything in the temp directory before starting
+  try {
+    const existingFiles = await readdir("./temp");
+    for (const file of existingFiles) {
+      await unlink(`./temp/${file}`);
+    }
+    console.log("Cleaned up temp directory");
+  } catch (error) {
+    // If the directory doesn't exist yet, that's fine
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      console.error("Error cleaning temp directory:", error);
+    }
+  }
 
-const convertAndUploadPdfAsWebp = async () => {
-  // const response = await convertApiClient.convert(
-  //   "webp",
-  //   {
-  //     File: pdfPath,
-  //   },
-  //   "pdf"
-  // );
+  const response = await convertApiClient.convert(
+    fileType,
+    {
+      File: pdfPath,
+    },
+    "pdf"
+  );
 
-  // await response.saveFiles("./temp");
+  await response.saveFiles("./temp");
 
   // List all files in the temp directory
   const fileNames = await readdir("./temp");
@@ -53,16 +63,16 @@ const convertAndUploadPdfAsWebp = async () => {
     let bucketFileName;
     const fileNameParts = fileName.split("-");
     if (fileNameParts.length < 2) {
-      bucketFileName = "1.webp";
+      bucketFileName = `1.${fileType}`;
     } else {
       bucketFileName = fileNameParts.pop();
     }
-    console.log(`Uploading ${bucketFileName} to ${bucketPath}/webp/`);
+    console.log(`Uploading ${bucketFileName} to ${bucketPath}/${fileType}/`);
 
     const { data, error } = await supabase.storage
       .from(BUCKET)
-      .upload(`${bucketPath}/webp/${bucketFileName}`, fileContent, {
-        contentType: "image/webp",
+      .upload(`${bucketPath}/${fileType}/${bucketFileName}`, fileContent, {
+        contentType: `image/${fileType}`,
         upsert: true,
       });
 
@@ -70,15 +80,14 @@ const convertAndUploadPdfAsWebp = async () => {
       console.error(`Error uploading ${bucketFileName}:`, error);
     } else {
       console.log(
-        `Successfully uploaded ${bucketFileName} to ${bucketPath}/uploaded-plans/`
+        `Successfully uploaded ${bucketFileName} to ${bucketPath}/${fileType}/`
       );
     }
   }
 };
 
 const main = async () => {
-  // await convertPdfToSvg();
-  await convertAndUploadPdfAsWebp();
+  await convertAndUploadPdf("webp");
 };
 
 main().catch(console.error);
