@@ -29,7 +29,7 @@ export default function PlanCheckPage() {
 
     setIsChecking(true);
     try {
-      const response = await fetch("/api/plan-check", {
+      const response = await fetch("/api/plan-check/find-relevant-pages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function PlanCheckPage() {
             </div>
             <div className="relative">
               <div className="rainbow-border-hover">
-                <Button>Check plan</Button>
+                <Button onClick={handleCheck}>Check plan</Button>
               </div>
             </div>
           </div>
