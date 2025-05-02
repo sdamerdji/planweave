@@ -503,7 +503,7 @@ export async function processRAGQuery(
       `;
 
   const response = await OpenAIClient.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4.1",
     messages: [
       { role: "system", content: systemPrompt },
       ...conversationHistory
