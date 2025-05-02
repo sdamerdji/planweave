@@ -20,7 +20,7 @@ Answer:
 `;
 
   const response = await OpenAIClient.chat.completions.create({
-    model: "gpt-4o", // 4o mini is surprisingly bad at determining document relevance
+    model: "gpt-4.1", // 4o mini is surprisingly bad at determining document relevance
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: prompt },
