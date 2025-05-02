@@ -8,82 +8,73 @@ import {
 import Image from "next/image";
 
 import logo from "@/app/icon.png";
-import { NewDemo } from "./components/NewDemo";
+import { AnimatedTagline } from "./components/AnimatedTagline";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-gray-50 text-gray-700">
       <div className="max-w-5xl mx-auto px-8 py-4 text-2xl font-bold flex gap-2">
-        <Image src={logo} alt="TurboADU" width={30} height={30} />
+        <Image src={logo} alt="CodePilot" width={30} height={30} />
         planweave.ai
       </div>
-      <header className="py-16 bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">
+      <header className="py-16 bg-indigo-800 text-white shadow-lg">
         <div className="max-w-5xl mx-auto px-8">
-          <h1 className="text-5xl font-bold">
-            AI-powered search for city planners
+          <h1 className="text-4xl md:text-5xl font-bold" style={{ fontFamily: 'Georgia, Didot, Baskerville, serif' }}>
+            AI Co-pilot for Building Codes
           </h1>
           <div className="text-xl mt-4">
-            All of your department's data, at your fingertips.
+            Navigate complex codes and get building permits faster than ever before.
           </div>
         </div>
       </header>
-      <NewDemo />
-      <section className="max-w-5xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-6 bg-white shadow-md rounded-xl flex gap-2">
-          <div className="mt-1">
-            <SearchCheck />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold">Unified Search</h2>
+      
+      {/* Animated Tagline */}
+      <AnimatedTagline />
+      
+      <section className="max-w-5xl mx-auto px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-8 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="text-indigo-600">
+                <SearchCheck size={24} strokeWidth={1.5} />
+              </div>
+              <h2 className="text-2xl font-semibold">Never Fall for a Local Gotchya</h2>
+            </div>
             <p className="text-gray-700">
-              Search across all your data in one place. Integrates with your
-              land management system, Slack, email, and more.
+              Instantly flag state and local building code amendments that frequently trip up your competitors building similar projects.
             </p>
           </div>
-        </div>
-        <div className="p-6 bg-white shadow-md rounded-xl flex gap-2">
-          <div className="mt-1">
-            <ArrowLeftRight />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold">Transfer Projects</h2>
+          <div className="p-8 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="text-indigo-600">
+                <MessageCircleQuestion size={24} strokeWidth={1.5} />
+              </div>
+              <h2 className="text-2xl font-semibold">AI-Powered Revision Clouds</h2>
+            </div>
             <p className="text-gray-700">
-              Minimize disruption when applications get reassigned. AI-powered
-              search will get the new planner up to speed, fast.
+              Let AI suggest comments based on code violations drawn from hundreds of thousands of real-world examples.
             </p>
           </div>
-        </div>
-        <div className="p-6 bg-white shadow-md rounded-xl flex gap-2">
-          <div className="mt-1">
-            <FileText />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold">Manager Summaries</h2>
+          <div className="p-8 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="text-indigo-600">
+                <FileText size={24} strokeWidth={1.5} />
+              </div>
+              <h2 className="text-2xl font-semibold">Learn from your Competitors' Mistakes</h2>
+            </div>
             <p className="text-gray-700">
-              Get a clear picture of project statuses for better
-              decision-making.
-            </p>
-          </div>
-        </div>
-        <div className="p-6 bg-white shadow-md rounded-xl flex gap-2">
-          <div className="mt-1">
-            <MessageCircleQuestion />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold">Refreshers</h2>
-            <p className="text-gray-700">
-              No need to reread technical memos before every public meeting.
-              Search the key questions and have answers in seconds instead of
-              hours.
+              Access the industry's largest corpus of building review comments with hundreds of thousands of real-world examples.
             </p>
           </div>
         </div>
       </section>
-      <section className="max-w-5xl mx-auto p-12 text-center">
-        <h2 className="text-4xl font-semibold">Sign Up for Updates</h2>
-        <p className="text-lg mt-6 text-gray-700">
-          Enter your email below to stay updated.
-        </p>
+      <section className="max-w-5xl mx-auto px-8 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-semibold" style={{ fontFamily: 'Georgia, Didot, Baskerville, serif' }}>Get Early Access</h2>
+          <p className="text-lg mt-4 text-gray-700">
+            Your clients will thank you.
+          </p>
+        </div>
         <Form />
       </section>
     </div>
