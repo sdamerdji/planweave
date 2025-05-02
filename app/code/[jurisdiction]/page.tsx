@@ -26,6 +26,7 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   losaltos: "los_altos_ca",
   leessummit: "lees_summit_mo",
   canyoncounty: "canyon_county_id",
+  broomfield: "broomfield_co",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
@@ -36,6 +37,7 @@ const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   los_altos_ca: "Los Altos Zoning Code",
   lees_summit_mo: "Lee's Summit Unified Development Ordinance",
   canyon_county_id: "Canyon County Zoning Regulation",
+  broomfield_co: "Broomfield Zoning Code",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -69,9 +71,10 @@ const ExampleQueriesByJurisdiction: Record<
     "What restrictions apply in airport hazard overlay districts?",
   ],
   canyon_county_id: [
-    'Can I have a neon sign for my business?',
-    'Can I have chickens in my backyard?',
+    "Can I have a neon sign for my business?",
+    "Can I have chickens in my backyard?",
   ],
+  broomfield_co: ["What parking requirements are there?"],
 };
 
 export default function CodeSearchPage({
