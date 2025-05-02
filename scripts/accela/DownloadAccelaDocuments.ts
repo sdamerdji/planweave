@@ -1,4 +1,5 @@
 import { chromium, ElementHandle, Page } from "playwright";
+import _ from "lodash";
 
 const getAgencies = async () => {
   const response = await fetch("http://apis.accela.com/v4/search/agencies", {
@@ -92,49 +93,6 @@ const performSearch = async (page: Page, startDate: Date, endDate: Date) => {
   await page.waitForLoadState("networkidle");
 };
 
-const performRecordNumberSearch = async (
-  page: Page,
-  startDate: Date,
-  endDate: Date
-) => {
-  await page.goto(SEARCH_URL);
-
-  const permitTypeSelector = await page.waitForSelector(
-    "select[name='ctl00$PlaceHolderMain$generalSearchForm$ddlGSPermitType']",
-    { timeout: 10000 }
-  );
-
-  await permitTypeSelector.selectOption("Development/Building/Log/NA");
-
-  // selecting a permit type triggers a page load
-  // await page.waitForTimeout(2000);
-  await page.waitForLoadState("networkidle");
-
-  const startDateInput = await page.waitForSelector(
-    "input[name='ctl00$PlaceHolderMain$generalSearchForm$txtGSStartDate']",
-    { timeout: 500 }
-  );
-  await startDateInput.fill("");
-  await page.waitForTimeout(100);
-  await startDateInput.fill(formatDateForInput(startDate));
-
-  const endDateInput = await page.waitForSelector(
-    "input[name='ctl00$PlaceHolderMain$generalSearchForm$txtGSEndDate']",
-    { timeout: 500 }
-  );
-  await endDateInput.fill("");
-  await page.waitForTimeout(100);
-  await endDateInput.fill(formatDateForInput(endDate));
-
-  const searchButton = await page.waitForSelector(
-    "a#ctl00_PlaceHolderMain_btnNewSearch",
-    { timeout: 500 }
-  );
-  await searchButton.click();
-
-  await page.waitForLoadState("networkidle");
-};
-
 // ctl00_PlaceHolderMain_dgvPermitList_gdvPermitList_ctl03_hlPermitNumber
 
 // const getNextRecordLinkElement = async (page: Page) => {
@@ -146,15 +104,13 @@ const performRecordNumberSearch = async (
 
 const downloadAttachmentsForRecord = async (
   page: Page,
-  recordLinkElement: ElementHandle
+  recordNumber: string,
+  i: number
 ) => {
-  await recordLinkElement.click();
-  await page.waitForLoadState("networkidle", { timeout: 20000 });
-
   const dropdownButton = await page.waitForSelector(
     'a[data-label="aca_CB1_recorddetail_section_label_recordinfo"]',
     {
-      timeout: 5000,
+      timeout: 10000,
     }
   );
   await dropdownButton.click();
@@ -172,31 +128,14 @@ const downloadAttachmentsForRecord = async (
       timeout: 20000,
     }
   );
-  console.log("iframe found");
 
   const frame = page.frameLocator(
     "iframe#ctl00_PlaceHolderMain_attachmentEdit_iframeAttachmentList"
   );
 
-  // await page.waitForTimeout(10000);
-  // await page
-  //   .waitForSelector("table#attachmentList_gdvAttachmentList", {
-  //     timeout: 10000,
-  //     // state: "attached",
-  //   })
-  //   .catch(() => page.pause());
-  // console.log("attachment table found");
-
-  // const noRecordsFound = await frame.getByText("No records found.");
-  // if ((await noRecordsFound.all()).some(async (el) => await el.isVisible())) {
-  //   console.log("No records found.");
-  //   page.pause();
-  //   return;
-  // }
-
   await page.waitForTimeout(1000);
 
-  for (const i of [
+  for (const j of [
     "02",
     "03",
     "04",
@@ -209,7 +148,7 @@ const downloadAttachmentsForRecord = async (
     "11",
   ]) {
     const attachmentLink = await frame.locator(
-      `a#attachmentList_gdvAttachmentList_ctl${i}_lnkFileName`
+      `a#attachmentList_gdvAttachmentList_ctl${j}_lnkFileName`
     );
 
     if (!(await attachmentLink.isVisible())) {
@@ -221,67 +160,77 @@ const downloadAttachmentsForRecord = async (
     await attachmentLink.click();
     const download = await downloadPromise;
 
-    console.log("Downloading", download.suggestedFilename());
-    download.saveAs("./temp/" + download.suggestedFilename());
+    console.log(`[${i}] Downloading`, download.suggestedFilename());
+    download.saveAs(
+      "./accela-scrape/" + recordNumber + "/" + download.suggestedFilename()
+    );
   }
+
+  // just extra make sure no download still in progress
+  await page.waitForTimeout(1000);
 };
 
-const getRecordLinkSelector = (index: string) =>
-  `a#ctl00_PlaceHolderMain_dgvPermitList_gdvPermitList_ctl${index}_hlPermitNumber`;
+const YEAR = "2024";
 
 const findBuildingLogAttachments = async () => {
-  const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext();
-  context.setDefaultTimeout(10000);
-  const page = await context.newPage();
+  const browser = await chromium.launch({ headless: true });
 
-  // await performSearch(
-  //   searchPage,
-  //   new Date("2024-01-01"),
-  //   new Date("2024-01-05")
-  // );
+  const recordNumberQueue = _.range(1, 1001).map((i) => {
+    const padded = _.padStart(i.toString(), 7, "0");
+    return `${YEAR}-LOG-${padded}`;
+  });
 
-  await page.goto(SEARCH_URL);
+  const processRecordNumber = async (recordNumber: string, i: number) => {
+    console.log(`[${i}] Processing record number ${recordNumber}`);
 
-  const recordNumberInput = await page.waitForSelector(
-    "input#ctl00_PlaceHolderMain_generalSearchForm_txtGSPermitNumber",
-    { timeout: 10000 }
-  );
+    const context = await browser.newContext();
+    context.setDefaultTimeout(10000);
+    const page = await context.newPage();
 
-  await recordNumberInput.fill("2025-LOG-0000001");
+    await page.goto(SEARCH_URL);
 
-  for (const i of [
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-  ]) {
+    const recordNumberInput = await page.waitForSelector(
+      "input#ctl00_PlaceHolderMain_generalSearchForm_txtGSPermitNumber",
+      { timeout: 10000 }
+    );
+    await recordNumberInput.fill(recordNumber);
+
+    const searchButton = await page.waitForSelector(
+      "a#ctl00_PlaceHolderMain_btnNewSearch",
+      { timeout: 500 }
+    );
+    await searchButton.click();
+    await page.waitForLoadState("networkidle", { timeout: 20000 });
+
     let retries = 0;
     while (retries < 1) {
       try {
-        const recordPage = await context.newPage();
-        await recordPage.goto(SEARCH_URL);
-        const recordLinkElement = await recordPage.waitForSelector(
-          getRecordLinkSelector(i),
-          { timeout: 10000 }
-        );
-
-        await downloadAttachmentsForRecord(recordPage, recordLinkElement);
-        await recordPage.close();
+        await downloadAttachmentsForRecord(page, recordNumber, i);
+        await page.close();
         break;
       } catch (e) {
-        console.log("Error downloading attachments for record", i);
+        console.log(
+          `[${i}] Error downloading attachments for record ${recordNumber}`
+        );
         console.log(e);
         retries++;
       }
     }
-  }
+  };
+
+  const recordNumberWorker = async (i: number) => {
+    while (recordNumberQueue.length > 0) {
+      const recordNumber = recordNumberQueue.shift()!;
+      try {
+        await processRecordNumber(recordNumber, i);
+      } catch (e) {
+        console.log(`[${i}] Error processing record number ${recordNumber}`);
+        console.log(e);
+      }
+    }
+  };
+
+  await Promise.all(_.range(0, 5).map((i) => recordNumberWorker(i)));
 };
 
 const downloadAccelaDocuments = async () => {

@@ -50,3 +50,4 @@ dbt/logs
 code_documents/
 data/
 temp/
+accela-scrape/

@@ -286,3 +286,22 @@ export const hudDocument = pgTable("hud_document", {
   documentUrl: text().notNull().unique(),
   text: text().notNull(),
 });
+
+export const planReviewComment = pgTable(
+  "plan_review_comment",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    createdAt: timestamp().notNull().defaultNow(),
+    jurisdiction: text().notNull(),
+    recordNumber: text().notNull(),
+    documentName: text().notNull(),
+    comment: text().notNull(),
+  },
+  (table) => [
+    unique("record_number_document_name_comment").on(
+      table.recordNumber,
+      table.documentName,
+      table.comment
+    ),
+  ]
+);
