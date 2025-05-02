@@ -365,7 +365,8 @@ export type PlanningSearchJurisdiction =
   | "los_altos_ca"
   | "lees_summit_mo"
   | "canyon_county_id"
-  | "broomfield_co";
+  | "broomfield_co"
+  | "thornton_co";
 
 export const PlanningSearchJurisdictionNames: Record<
   PlanningSearchJurisdiction,
@@ -379,4 +380,5 @@ export const PlanningSearchJurisdictionNames: Record<
   lees_summit_mo: "Lee's Summit, Missouri",
   canyon_county_id: "Canyon County, Idaho",
   broomfield_co: "Broomfield, Colorado",
+  thornton_co: "Thornton, Colorado",
 };

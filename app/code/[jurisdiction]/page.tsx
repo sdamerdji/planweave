@@ -27,6 +27,7 @@ const JurisdictionUrlAliases: Record<string, PlanningSearchJurisdiction> = {
   leessummit: "lees_summit_mo",
   canyoncounty: "canyon_county_id",
   broomfield: "broomfield_co",
+  thornton: "thornton_co",
 };
 
 const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
@@ -38,6 +39,7 @@ const JurisdictionCodeNames: Record<PlanningSearchJurisdiction, string> = {
   lees_summit_mo: "Lee's Summit Unified Development Ordinance",
   canyon_county_id: "Canyon County Zoning Regulation",
   broomfield_co: "Broomfield Zoning Code",
+  thornton_co: "Thornton Development Code",
 };
 
 const ExampleQueriesByJurisdiction: Record<
@@ -75,6 +77,7 @@ const ExampleQueriesByJurisdiction: Record<
     "Can I have chickens in my backyard?",
   ],
   broomfield_co: ["What parking requirements are there?"],
+  thornton_co: ["What parking requirements are there?"],
 };
 
 export default function CodeSearchPage({
@@ -221,7 +224,7 @@ export default function CodeSearchPage({
                   </p>
                 </div>
                 <ul onMouseDown={(e) => e.preventDefault()}>
-                  {ExampleQueriesByJurisdiction[jurisdiction].map(
+                  {ExampleQueriesByJurisdiction[jurisdiction]?.map(
                     (suggestion, index) => (
                       <li
                         key={index}
