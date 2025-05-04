@@ -19,10 +19,10 @@ export default function Home() {
       </div>
       <header className="py-16 bg-indigo-800 text-white shadow-lg">
         <div className="max-w-5xl mx-auto px-8">
-          <h1 className="text-4xl md:text-5xl font-bold" style={{ fontFamily: 'Georgia, Didot, Baskerville, serif' }}>
+          <h1 className="text-4xl md:text-5xl font-semibold" style={{ fontFamily: 'lora' }}>
             AI Co-pilot for Building Codes
           </h1>
-          <div className="text-xl mt-4">
+          <div className="text-xl" style={{ fontFamily: 'lora' }}>
             Navigate complex codes and get building permits faster than ever before.
           </div>
         </div>
@@ -63,14 +63,14 @@ export default function Home() {
               <h2 className="text-2xl font-semibold">Learn from your Competitors' Mistakes</h2>
             </div>
             <p className="text-gray-700">
-              Access the industry's largest corpus of building review comments with hundreds of thousands of real-world examples.
+              Access the industry's largest corpus of building review comments.
             </p>
           </div>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-8 py-12">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-semibold" style={{ fontFamily: 'Georgia, Didot, Baskerville, serif' }}>Get Early Access</h2>
+          <h2 className="text-3xl font-semibold" style={{ fontFamily: 'Baskerville, serif' }}>Get Early Access</h2>
           <p className="text-lg mt-4 text-gray-700">
             Your clients will thank you.
           </p>

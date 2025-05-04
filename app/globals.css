@@ -158,3 +158,10 @@
     background-position: 0% 50%;
   }
 }
+
+@font-face {
+  font-family: 'lora';
+  src: url('/fonts/Lora-VariableFont_wght.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}

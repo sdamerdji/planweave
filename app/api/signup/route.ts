@@ -2,11 +2,22 @@
 import Airtable from "airtable";
 import { NextResponse } from "next/server";
 
-// Configure Airtable with an environment variable for the API key.
-const base = new Airtable({
-  apiKey:
-    "paty9Vb2szSUg6aNq.09b1a331f02f971dd5fd7a9948f84d86eb61a2b5b19eb99fdd3d127c45992d4b",
-}).base("appFI1HPLlijrA6VM");
+// Personal Access Token for Airtable
+const pat =
+  "paty9Vb2szSUg6aNq.160342a758cae55929d35f9ccc2148d95e771366ef034ce2dee8440f501c156d";
+const baseId = "appFI1HPLlijrA6VM";
+
+// Log for debugging
+console.log("Using baseId:", baseId);
+
+// Configure Airtable with the PAT
+Airtable.configure({
+  apiKey: pat,
+  endpointUrl: "https://api.airtable.com",
+});
+
+// Get a reference to the base
+const base = Airtable.base(baseId);
 
 export async function POST(request: Request) {
   try {
@@ -26,12 +37,17 @@ export async function POST(request: Request) {
 
     // Store the email in Airtable
     try {
-      const record = await base("Signups").create({
+      // Try to create record in the table using its ID
+      const tableName = "tblH0VUDLhok5cimV";
+      console.log(`Attempting to create record in '${tableName}' table...`);
+
+      const record = await base(tableName).create({
         Email: email,
       });
 
+      console.log(`Success with table: ${tableName}`);
       console.log(
-        "New signup added to Airtable:",
+        `New signup added to Airtable table '${tableName}':`,
         email,
         "Record ID:",
         record.getId()
