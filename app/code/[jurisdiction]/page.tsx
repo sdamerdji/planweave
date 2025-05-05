@@ -77,7 +77,7 @@ const ExampleQueriesByJurisdiction: Record<
     "Can I have chickens in my backyard?",
   ],
   broomfield_co: ["What parking requirements are there?"],
-  thornton_co: ["What parking requirements are there?"],
+  thornton_co: ["What are the requirements around parking lot islands?"],
 };
 
 export default function CodeSearchPage({
