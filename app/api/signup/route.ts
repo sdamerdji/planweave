@@ -21,7 +21,14 @@ const base = Airtable.base(baseId);
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, additionalQuestion, additionalAnswer } =
+      await request.json();
+
+    console.log("Received form data:", {
+      email,
+      additionalQuestion,
+      additionalAnswer,
+    });
 
     // Simple validation
     if (!email) {
@@ -35,20 +42,31 @@ export async function POST(request: Request) {
       );
     }
 
-    // Store the email in Airtable
+    // Store the email and additional information in Airtable
     try {
       // Try to create record in the table using its ID
       const tableName = "tblH0VUDLhok5cimV";
       console.log(`Attempting to create record in '${tableName}' table...`);
 
-      const record = await base(tableName).create({
+      // Prepare the record data - use the exact column names from Airtable
+      const recordData: Record<string, any> = {
         Email: email,
-      });
+      };
+
+      // Only add these fields if they exist - using the exact column names from Airtable
+      if (additionalQuestion && additionalAnswer) {
+        recordData["additionalQuestion"] = additionalQuestion;
+        recordData["additionalAnswer"] = additionalAnswer;
+      }
+
+      console.log("Sending to Airtable:", recordData);
+
+      const record = await base(tableName).create(recordData);
 
       console.log(`Success with table: ${tableName}`);
       console.log(
         `New signup added to Airtable table '${tableName}':`,
-        email,
+        recordData,
         "Record ID:",
         record.getId()
       );
@@ -59,8 +77,12 @@ export async function POST(request: Request) {
       );
     } catch (airtableError) {
       console.error("Airtable error:", airtableError);
-      // Fallback - just log the email if Airtable fails
-      console.log("Fallback logging - new signup:", email);
+      // Fallback - just log the data if Airtable fails
+      console.log("Fallback logging - new signup:", {
+        email,
+        additionalQuestion,
+        additionalAnswer,
+      });
 
       // Still return success to the user even if Airtable fails
       return NextResponse.json(
