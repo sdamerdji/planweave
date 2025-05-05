@@ -122,11 +122,14 @@
   }
 }
 
-.rainbow-border-hover:hover {
+.rainbow-border-hover {
   position: absolute;
   top: -12px;
   right: -12px;
   padding: 12px;
+}
+
+.rainbow-border-hover:hover {
   background: linear-gradient(45deg, violet, #ff0000, #ff7f00, #ff0000, violet);
   background-size: 200% 200%;
   background-position: 50% 50%;

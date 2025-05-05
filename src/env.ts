@@ -14,6 +14,7 @@ export const env = {
   CONVERT_API_SECRET_KEY: process.env.CONVERT_API_SECRET_KEY!,
   SUPABASE_URL: process.env.SUPABASE_URL!,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY!,
 } as const;
 
 if (Object.values(env).some((value) => !value)) {

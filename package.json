@@ -6,9 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "backfill-embeddings": "tsx scripts/backfill-plan-comment-embeddings.ts"
   },
   "dependencies": {
+    "@google/genai": "^0.12.0",
     "@langchain/core": "^0.3.42",
     "@langchain/textsplitters": "^0.1.0",
     "@mistralai/mistralai": "^1.5.2",
@@ -56,6 +58,7 @@
     "test": "^3.3.0",
     "tsconfig-paths": "^4.2.0",
     "twilio": "^5.5.2",
+    "use-resize-observer": "^9.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

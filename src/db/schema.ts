@@ -296,12 +296,17 @@ export const planReviewComment = pgTable(
     recordNumber: text().notNull(),
     documentName: text().notNull(),
     comment: text().notNull(),
+    embedding: vector("embedding", { dimensions: 1536 }),
   },
   (table) => [
     unique("record_number_document_name_comment").on(
       table.recordNumber,
       table.documentName,
       table.comment
+    ),
+    index("plan_review_comment_embedding_index").using(
+      "hnsw",
+      table.embedding.op("vector_cosine_ops")
     ),
   ]
 );
