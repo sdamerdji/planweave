@@ -9,6 +9,7 @@ import {
   jsonb,
   unique,
   timestamp,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { PlanningSearchJurisdiction } from "@/src/constants";
@@ -309,4 +310,16 @@ export const planReviewComment = pgTable(
       table.embedding.op("vector_cosine_ops")
     ),
   ]
+);
+
+export const jurisdictions = pgTable(
+  "jurisdictions",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    jurisdiction: text().notNull(),
+    state: text().notNull(),
+    isCity: boolean().default(false).notNull(),
+    isCounty: boolean().default(false).notNull(),
+  },
+  (table) => [unique("jurisdiction_state").on(table.jurisdiction, table.state)]
 );
