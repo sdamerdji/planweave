@@ -4,6 +4,7 @@ import {
   FileText,
   MessageCircleQuestion,
   MapPin,
+  ExternalLink,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -73,6 +74,58 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      {/* Plan Check Demo Section */}
+      <section className="max-w-5xl mx-auto px-8 py-12 border-t border-gray-200">
+        <div className="mb-12">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-semibold mb-2" style={{ fontFamily: 'Baskerville, serif' }}>AI Plan Check</h2>
+              <p className="text-gray-700 text-lg mb-6">
+                Our AI analyzes your permit set and identifies potential building code issues before submission.
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
+            <div className="p-6">
+              <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden relative">
+                <Image 
+                  src="https://dbnbeqjmkqdrmhxqoybt.supabase.co/storage/v1/object/public/uploaded-plans/denver_townhome/webp-small/8.webp" 
+                  alt="Plan Check Demo" 
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  className="mix-blend-darken"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                  <Link href="/plan-check" className="group">
+                    <div className="bg-white text-indigo-700 font-medium px-5 py-3 rounded-lg shadow-md flex items-center gap-2 transition-all hover:bg-indigo-700 hover:text-white">
+                      <span>Try Plan Check Demo</span>
+                      <ExternalLink size={16} className="transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="rounded-lg p-4 bg-indigo-50 text-indigo-800">
+                  <div className="font-medium mb-1">Instant Analysis</div>
+                  <div className="text-sm text-indigo-700">AI identifies code issues within seconds</div>
+                </div>
+                <div className="rounded-lg p-4 bg-indigo-50 text-indigo-800">
+                  <div className="font-medium mb-1">Visual Annotations</div>
+                  <div className="text-sm text-indigo-700">Flags problem areas directly on plans</div>
+                </div>
+                <div className="rounded-lg p-4 bg-indigo-50 text-indigo-800">
+                  <div className="font-medium mb-1">Verifiable</div>
+                  <div className="text-sm text-indigo-700">Clear explanations with code references</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <section className="max-w-5xl mx-auto px-8 py-12">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-semibold" style={{ fontFamily: 'Baskerville, serif' }}>Get Early Access</h2>
