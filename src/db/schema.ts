@@ -272,6 +272,7 @@ export const userSearch = pgTable("user_search", {
   createdAt: timestamp().notNull().defaultNow(),
   firstSearchId: integer(),
   jurisdiction: text().$type<PlanningSearchJurisdiction>(),
+  jankUserHash: text(),
 
   query: text().notNull(),
   responseText: text().notNull(),

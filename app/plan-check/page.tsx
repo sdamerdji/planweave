@@ -304,7 +304,7 @@ export default function PlanCheckPage() {
                 </div>
                 <div className="basis-1/4 flex flex-col items-end gap-4">
                   {commentAnalyses.length === 0 && (
-                    <div className="w-full flex flex-col gap-4">
+                    <div className="w-full flex flex-col gap-4 pl-4">
                       <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
                         {getIconForPhase("describe-plan", phase)}
                         <h2>Analyzing plan</h2>
