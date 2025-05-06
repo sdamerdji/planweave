@@ -79,26 +79,30 @@ export const Form = ({ additionalQuestion }: FormProps) => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="flex mb-4">
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="flex-grow px-4 py-3 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none rounded-l-lg text-base"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={loading || submitted}
-        />
-        <button
-          className={`px-6 py-3 font-medium rounded-r-lg transition-colors ${
-            loading 
-              ? "bg-indigo-400 cursor-not-allowed" 
-              : "bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-800"
-          } text-white`}
-          onClick={handleSubmit}
-          disabled={loading || submitted}
-        >
-          {loading ? "Submitting..." : submitted ? "Submitted" : "Submit"}
-        </button>
+      <div className="mb-4">
+        <div className="flex">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className={`flex-grow px-4 py-3 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none ${additionalQuestion ? 'rounded-lg' : 'rounded-l-lg'} text-base`}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading || submitted}
+          />
+          {!additionalQuestion && (
+            <button
+              className={`px-6 py-3 font-medium rounded-r-lg transition-colors ${
+                loading 
+                  ? "bg-indigo-400 cursor-not-allowed" 
+                  : "bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-800"
+              } text-white`}
+              onClick={handleSubmit}
+              disabled={loading || submitted}
+            >
+              {loading ? "Submitting..." : submitted ? "Submitted" : "Submit"}
+            </button>
+          )}
+        </div>
       </div>
       
       {additionalQuestion && (
@@ -106,14 +110,27 @@ export const Form = ({ additionalQuestion }: FormProps) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {additionalQuestion}
           </label>
-          <input
-            type="text"
-            placeholder="Your answer"
-            className="w-full px-4 py-3 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none rounded-lg text-base"
-            value={additionalAnswer}
-            onChange={(e) => setAdditionalAnswer(e.target.value)}
-            disabled={loading || submitted}
-          />
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Your answer"
+              className="flex-grow px-4 py-3 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none rounded-l-lg text-base"
+              value={additionalAnswer}
+              onChange={(e) => setAdditionalAnswer(e.target.value)}
+              disabled={loading || submitted}
+            />
+            <button
+              className={`px-6 py-3 font-medium rounded-r-lg transition-colors ${
+                loading 
+                  ? "bg-indigo-400 cursor-not-allowed" 
+                  : "bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-800"
+              } text-white`}
+              onClick={handleSubmit}
+              disabled={loading || submitted}
+            >
+              {loading ? "Submitting..." : submitted ? "Submitted" : "Submit"}
+            </button>
+          </div>
         </div>
       )}
       
