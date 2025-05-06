@@ -79,64 +79,105 @@ export default function Home() {
         </div>
       </header>
       
-      {/* Refined Tagline Section */}
-      <section className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-5xl mx-auto py-16 px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-            {[
-              "Fewer rounds of reviews",
-              "Fewer revisions",
-              "Faster approvals",
-              "More time for design",
-            ].map((phrase, index) => (
-              <div key={index} className="flex items-start gap-3">
-                <div className="mt-1 bg-indigo-100 p-1 rounded-full">
-                  <Check size={16} className="text-indigo-600" />
-                </div>
-                <div className="font-serif text-lg text-gray-800">{phrase}</div>
-              </div>
-            ))}
-          </div>
+      {/* Architectural Canvas Section - Reimagined Middle Section */}
+      <section className="py-32 relative">
+        {/* Abstract architectural background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -right-10 top-1/4 w-64 h-64 bg-indigo-50 rounded-full opacity-60"></div>
+          <div className="absolute left-1/3 top-3/4 w-80 h-80 bg-indigo-50 rounded-full opacity-40"></div>
+          <div className="absolute right-1/4 bottom-0 w-96 h-96 bg-indigo-50 rounded-full opacity-30"></div>
+          <div className="absolute top-20 left-20 w-1 h-40 bg-indigo-200"></div>
+          <div className="absolute top-40 left-20 w-40 h-1 bg-indigo-200"></div>
+          <div className="absolute bottom-40 right-20 w-1 h-40 bg-indigo-200"></div>
+          <div className="absolute bottom-40 right-20 w-40 h-1 bg-indigo-200"></div>
         </div>
-      </section>
-      
-      {/* Value props with more architectural grid layout */}
-      <section className="max-w-5xl mx-auto px-8 py-24">
-        <h2 className="text-3xl font-semibold mb-16 text-center" style={{ fontFamily: 'Baskerville, serif' }}>
-          How We Accelerate Your Permitting Process
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="group">
-            <div className="h-1 w-12 bg-indigo-600 mb-8 transition-all group-hover:w-24"></div>
-            <div className="text-indigo-600 mb-4">
-              <SearchCheck size={32} strokeWidth={1.5} />
+        
+        <div className="max-w-6xl mx-auto px-8 relative z-10">
+          <div className="flex flex-col md:flex-row gap-16 items-center">
+            {/* Left: Value Propositions */}
+            <div className="md:w-1/2">
+              <h2 className="text-3xl font-semibold mb-12" style={{ fontFamily: 'Baskerville, serif' }}>
+                Designed for <span className="text-indigo-600">Visionaries</span>
+              </h2>
+              
+              <div className="space-y-10">
+                <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                    <SearchCheck size={26} className="text-indigo-600" strokeWidth={1.5} />
+                  </div>
+                  <div className="border-l border-indigo-100 pl-8 py-2">
+                    <h3 className="text-xl font-semibold mb-2">Never Fall for a Local Gotchya</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Instantly flag state and local building code amendments that frequently trip up your competitors building similar projects.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                    <MessageCircleQuestion size={26} className="text-indigo-600" strokeWidth={1.5} />
+                  </div>
+                  <div className="border-l border-indigo-100 pl-8 py-2">
+                    <h3 className="text-xl font-semibold mb-2">AI-Powered Revision Clouds</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Let AI suggest comments based on code violations drawn from hundreds of thousands of real-world examples.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                    <FileText size={26} className="text-indigo-600" strokeWidth={1.5} />
+                  </div>
+                  <div className="border-l border-indigo-100 pl-8 py-2">
+                    <h3 className="text-xl font-semibold mb-2">Learn from your Competitors' Mistakes</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Access the industry's largest corpus of building review comments.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="text-2xl font-semibold mb-3">Never Fall for a Local Gotcha</h3>
-            <p className="text-gray-700 leading-relaxed">
-              Instantly flag state and local building code amendments that frequently trip up competitors building similar projects.
-            </p>
-          </div>
-          
-          <div className="group">
-            <div className="h-1 w-12 bg-indigo-600 mb-8 transition-all group-hover:w-24"></div>
-            <div className="text-indigo-600 mb-4">
-              <MessageCircleQuestion size={32} strokeWidth={1.5} />
+            
+            {/* Right: Outcomes Showcase */}
+            <div className="md:w-1/2 relative">
+              <div className="absolute -top-10 -left-10 w-full h-full border-2 border-indigo-100 rounded-lg -z-10"></div>
+              <div className="bg-white rounded-lg overflow-hidden shadow-xl p-8 relative">
+                <h3 className="text-2xl font-serif mb-6 text-indigo-800 flex items-center gap-2">
+                  <span className="relative inline-block h-12 w-1">
+                    <span className="absolute bottom-0 left-0 w-1 h-8 bg-gradient-to-t from-indigo-500 to-indigo-300"></span>
+                  </span>
+                  More time for design
+                </h3>
+                
+                <div className="space-y-5">
+                  {[
+                    "Fewer rounds of reviews",
+                    "Fewer revisions",
+                    "Faster approvals",
+                  ].map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="mt-1 bg-indigo-100 p-1 rounded-full">
+                        <Check size={16} className="text-indigo-600" />
+                      </div>
+                      <div className="text-gray-700">{benefit}</div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-12 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-white"></div>
+                  <div className="pt-6 pl-4">
+                    <Link href="#signup" className="group">
+                      <h4 className="text-lg font-medium text-indigo-700 mb-2 hover:text-indigo-600 transition-colors">Join our early access program</h4>
+                    </Link>
+                    <p className="text-gray-600">
+                      Be among the first architects to experience the future of building code compliance.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="text-2xl font-semibold mb-3">AI-Powered Revision Clouds</h3>
-            <p className="text-gray-700 leading-relaxed">
-              Let AI suggest comments based on code violations drawn from hundreds of thousands of real-world examples.
-            </p>
-          </div>
-          
-          <div className="group">
-            <div className="h-1 w-12 bg-indigo-600 mb-8 transition-all group-hover:w-24"></div>
-            <div className="text-indigo-600 mb-4">
-              <FileText size={32} strokeWidth={1.5} />
-            </div>
-            <h3 className="text-2xl font-semibold mb-3">Learn from Competitors' Mistakes</h3>
-            <p className="text-gray-700 leading-relaxed">
-              Access the industry's largest corpus of building review comments to avoid common pitfalls.
-            </p>
           </div>
         </div>
       </section>
@@ -209,10 +250,6 @@ export default function Home() {
                     className="brightness-90 contrast-125"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent"></div>
-                  
-                  {/* Simulated annotation markers */}
-                  <div className="absolute top-1/4 left-1/3 h-8 w-8 rounded-full bg-indigo-400/80 shadow-lg shadow-indigo-400/30 animate-pulse"></div>
-                  <div className="absolute top-2/3 right-1/4 h-8 w-8 rounded-full bg-indigo-500/80 shadow-lg shadow-indigo-500/30 animate-pulse delay-300"></div>
                 </div>
               </div>
             </div>
