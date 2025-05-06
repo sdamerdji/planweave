@@ -97,7 +97,7 @@ export default function Home() {
             {/* Left: Value Propositions */}
             <div className="md:w-1/2">
               <h2 className="text-3xl font-semibold mb-12" style={{ fontFamily: 'Baskerville, serif' }}>
-                Designed for <span className="text-indigo-600">Visionaries</span>
+                Designed for <span className="text-indigo-600">Visionaries</span> and <span className="text-indigo-600">Pragmatists</span> alike.
               </h2>
               
               <div className="space-y-10">
@@ -172,7 +172,7 @@ export default function Home() {
                       <h4 className="text-lg font-medium text-indigo-700 mb-2 hover:text-indigo-600 transition-colors">Join our early access program</h4>
                     </Link>
                     <p className="text-gray-600">
-                      Be among the first architects to experience the future of building code compliance.
+                      Be among the first architects to experience the future of quality assurance.
                     </p>
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export default function Home() {
           <div className="flex items-center justify-center gap-3 mb-10">
             <div className="h-px bg-gray-300 w-16"></div>
             <div className="text-2xl font-semibold text-indigo-800" style={{ fontFamily: 'Baskerville, serif' }}>
-              Supported Jurisdictions
+              Navigate Local Codes
             </div>
             <div className="h-px bg-gray-300 w-16"></div>
           </div>
