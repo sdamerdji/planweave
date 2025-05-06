@@ -1,22 +1,9 @@
 import { sql } from "drizzle-orm";
 import axios from "axios";
 import * as dotenv from "dotenv";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { jurisdictions } from "@/src/db/schema";
+import { db } from "@/src/db";
 
 dotenv.config();
-
-// Connect to the database
-const connectToDB = () => {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL environment variable is not set");
-  }
-  const client = postgres(connectionString);
-  const db = drizzle(client);
-  return { client, db };
-};
 
 // Function to fetch all incorporated places from Census API
 const fetchIncorporatedPlaces = async () => {
@@ -87,8 +74,6 @@ const fetchCounties = async () => {
 
 // Function to create the jurisdictions table and populate it with data
 export const createAndPopulateJurisdictionsTable = async () => {
-  const { client, db } = connectToDB();
-
   try {
     console.log("Creating jurisdictions table...");
 
@@ -164,7 +149,6 @@ export const createAndPopulateJurisdictionsTable = async () => {
     throw error;
   } finally {
     console.log("Closing database connection...");
-    await client.end();
   }
 };
 
