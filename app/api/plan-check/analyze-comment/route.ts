@@ -6,7 +6,7 @@ import {
 } from "@google/genai";
 import { env } from "@/src/env";
 import { supabase, UPLOADED_PLAN_BUCKET } from "@/src/SupabaseClient";
-
+import { DEMO_BUCKET_PATH } from "@/src/constants";
 const ai = new GoogleGenAI({
   apiKey: env.GEMINI_API_KEY,
 });
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     // Get the plan image from Supabase storage
     const { data, error } = await supabase.storage
       .from(UPLOADED_PLAN_BUCKET)
-      .download("denver_townhome/webp-small/8.webp");
+      .download(DEMO_BUCKET_PATH);
 
     if (error || !data) {
       console.error(error);
@@ -45,9 +45,9 @@ export async function POST(req: Request) {
     const compliancePrompt = `
 You are an expert architect reviewing a building plan. You'll be given a plan, and a comment that other architects frequently recieve on other projects.
 
-Explain that comment's relevance to the plan, and the steps to be taken to make sure *this* plan won't recieve the same comment.
+Explain the steps to be taken to make sure *this* plan won't recieve the same comment.
 
-Your explanation should be concise, two to four sentences.
+Your explanation should be concise, two sentences.
     `;
 
     const complianceResponse = await ai.models.generateContent({
@@ -70,7 +70,9 @@ Your explanation should be concise, two to four sentences.
 
     // Second request: Get bounding box
     const bboxPrompt = `
-    You are an expert architect reviewing a building plan. Given a specific comment about the plan, provide a bounding box of the specific area of the plan that is relevant to this comment.
+You are an expert architect reviewing a building plan.
+
+Given a specific comment about the plan, provide a bounding box of the room or part of the room within the floor plan that is relevant to this comment.
     `;
 
     const bboxResponse = await ai.models.generateContent({

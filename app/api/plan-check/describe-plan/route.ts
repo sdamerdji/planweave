@@ -9,18 +9,16 @@ import {
   createPartFromUri,
 } from "@google/genai";
 import { env } from "@/src/env";
+import { DEMO_BUCKET_PATH } from "@/src/constants";
 
 const ai = new GoogleGenAI({
   apiKey: env.GEMINI_API_KEY,
 });
 
-// TODO
-const BUCKET_PATH = "denver_townhome/webp-small/8.webp";
-
 export async function POST(request: Request) {
   const { data, error } = await supabase.storage
     .from(UPLOADED_PLAN_BUCKET)
-    .download(BUCKET_PATH);
+    .download(DEMO_BUCKET_PATH);
 
   if (error || !data) {
     console.error(error);
@@ -35,9 +33,15 @@ export async function POST(request: Request) {
   const systemPrompt = `
 You are an expert code compliance officer. It's your job to look at architectural plans and flag elements that reviewers should focus on.
 
-Given an image, list out every element of interest and a brief description of why it might cause code compliance violations, one per line, and nothing else. Maximum of 5.
+Given an architectural plan, describe the contents. Focus on items that are known to cause code compliance issues. List the item and the code compliance concern.
 
-Examples of interesting elements are: parking spaces, staircases, smoke detectors`;
+Example:
+Staircases, confirm width and handrail specifications
+Windows near showers/baths, confirm glazing
+Toilets, confirm clearance 
+
+Provide one item per line and nothing else. Provide exactly 5 items.
+`;
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash-preview-04-17",

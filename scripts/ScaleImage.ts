@@ -16,7 +16,7 @@ dotenv.config();
 async function processImage(
   sourcePath: string,
   targetPath: string,
-  maxWidth: number = 2000
+  maxWidth: number
 ) {
   try {
     // Download the image from Supabase storage
@@ -60,7 +60,7 @@ async function processImage(
 if (require.main === module) {
   const sourcePath = process.argv[2];
   const targetPath = process.argv[3];
-  const maxWidth = process.argv[4] ? parseInt(process.argv[4]) : 800;
+  const maxWidth = process.argv[4] ? parseInt(process.argv[4]) : 2500;
 
   if (!sourcePath || !targetPath) {
     console.error(

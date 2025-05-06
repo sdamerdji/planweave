@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/select";
 import { Loader2, CircleCheck, CircleArrowRight } from "lucide-react";
 import useResizeObserver from "use-resize-observer";
+import { CommentMarkup } from "./CommentMarkup";
 
 const EXAMPLE_PLANS = [
   {
     id: "denver_townhome",
     name: "Townhome",
-    path: "https://dbnbeqjmkqdrmhxqoybt.supabase.co/storage/v1/object/public/uploaded-plans/denver_townhome/webp-small/8.webp",
+    path: "https://dbnbeqjmkqdrmhxqoybt.supabase.co/storage/v1/object/public/uploaded-plans/denver_townhome/webp-small/15.webp",
   },
 ];
 
@@ -48,13 +49,51 @@ const getIconForPhase = (
   }
 };
 
+const DemoCommentAnalyses = [
+  {
+    comment:
+      "Using plan graphics, verify stairs comply with dimensional requirements per IRC Section R311, including widths, headroom, riser and tread dimensions, nosings, landings, slope, and handrails.",
+    explanation:
+      "Review the plan to ensure stairs meet IRC Section R311 requirements, checking width, headroom, riser/tread dimensions, nosings, landings, slope, and handrails. Verify these details are clearly dimensioned and noted on the drawing.",
+    bbox: {
+      x1: 517.5,
+      y1: 793.492,
+      x2: 785,
+      y2: 1001.8670000000001,
+    },
+  },
+  {
+    comment: "DRYER VENT TO EXHAUST MIN. 3' FROM WINDOW",
+    explanation:
+      "Ensure the dryer vent is clearly indicated on the plan at least 3 feet away from any windows on the same level. Add a note specifying the minimum required distance from windows per code requirements.",
+    bbox: {
+      x1: 1552.5,
+      y1: 778.489,
+      x2: 1735,
+      y2: 986.864,
+    },
+  },
+  {
+    comment:
+      "Provide dimensions on plans verifying bathroom fixture clearances in accordance with IRC Section R307.1.",
+    explanation:
+      "Review the floor plans for each bathroom shown and verify that all necessary clearances around toilets, sinks, and showers/tubs are depicted with dimensions according to IRC Section R307.1. Add or adjust dimensions as needed on the drawings to clearly indicate these clearances.",
+    bbox: {
+      x1: 292.5,
+      y1: 650.13,
+      x2: 822.5,
+      y2: 978.529,
+    },
+  },
+];
+
+const DEMO_MODE = true;
+
 export default function PlanCheckPage() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isChecking, setIsChecking] = useState(false);
-  const [results, setResults] = useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(
+    "denver_townhome"
+  );
   const [phase, setPhase] = useState<PlanCheckPhase>("upload");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [commentAnalyses, setCommentAnalyses] = useState<
     Array<{
       comment: string;
@@ -67,10 +106,11 @@ export default function PlanCheckPage() {
       };
     }>
   >([]);
-  console.log(commentAnalyses);
   const [selectedCommentIndex, setSelectedCommentIndex] = useState<
     number | null
   >(null);
+
+  console.log(commentAnalyses);
 
   const imageRef = useRef<HTMLImageElement>(null);
   const [naturalImageWidth, setNaturalImageWidth] = useState<number | null>(
@@ -141,7 +181,6 @@ export default function PlanCheckPage() {
   const handleCheck = async () => {
     if (!selectedPlan) return;
 
-    setIsChecking(true);
     setCommentAnalyses([]);
     try {
       setPhase("describe-plan");
@@ -156,11 +195,9 @@ export default function PlanCheckPage() {
       if (!response.ok) throw new Error("Failed to check plans");
 
       const data = await response.json();
-      setResults(data);
       setPhase("search-comments");
 
       // Start searching for similar comments
-      setIsSearching(true);
       const searchResponse = await fetch("/api/plan-check/search-comments", {
         method: "POST",
         headers: {
@@ -173,7 +210,6 @@ export default function PlanCheckPage() {
 
       if (!searchResponse.ok) throw new Error("Failed to search comments");
       const searchData = await searchResponse.json();
-      setSearchResults(searchData.results);
       setPhase("apply-comments");
 
       // Get all comments from search results
@@ -197,26 +233,17 @@ export default function PlanCheckPage() {
       const applyData = await applyResponse.json();
       setPhase("explain-comments");
 
-      //       "Verify stairs conform to dimensional requirements including width, headroom, riser and tread dimensions, nosing, landings, and handrails per IRC R311.7."
-      // 1
-      // :
-      // "Using plan graphics, verify stairs comply with dimensional requirements per IRC Section R311, including widths, headroom, riser and tread dimensions, nosings, landings, slope, and handrails."
-      // 2
-      // :
-      // "Using plan graphics and/or notes, verify stairs conform to dimensional requirements including width and handrail specifications per IRC R311.7."
-      // 3
-      // :
-      // "Access stairs: provide details and dimensions for 2021 IRC fully compliant access stairs and handrails."
-      // 4
-      // :
-      // "Verify smoke alarms are provided as required per Section R314 with location, interconnection, power source, and system requirements."
-
-      // Analyze each comment in sequence
-      for (const comment of applyData.relevantComments) {
-        await analyzeComment(comment);
-        // Don't get ratelimited
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (DEMO_MODE) {
+        setCommentAnalyses(DemoCommentAnalyses);
+      } else {
+        // Analyze each comment in sequence
+        for (const comment of applyData.relevantComments) {
+          await analyzeComment(comment);
+          // Don't get ratelimited
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
       }
+
       setPhase("done");
     } catch (error) {
       console.error("Error:", error);
@@ -239,9 +266,12 @@ export default function PlanCheckPage() {
                     Select Plan
                   </label>
 
-                  <Select onValueChange={setSelectedPlan}>
+                  <Select
+                    onValueChange={setSelectedPlan}
+                    defaultValue="denver_townhome"
+                  >
                     <SelectTrigger className="w-auto">
-                      <SelectValue placeholder="Choose a plan to check" />
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {EXAMPLE_PLANS.map((plan) => (
@@ -253,16 +283,15 @@ export default function PlanCheckPage() {
                   </Select>
                 </div>
                 <div className="relative" style={{ height: "36px" }}>
-                  <div className="rainbow-border-hover">
+                  <div>
                     <Button
                       onClick={handleCheck}
-                      disabled={isChecking || isSearching}
+                      disabled={phase !== "upload" && phase !== "done"}
+                      className="rainbow-button"
                     >
-                      {isChecking
-                        ? "Analyzing plan..."
-                        : isSearching
-                          ? "Searching comments..."
-                          : "Check plan"}
+                      {phase === "upload" || phase === "done"
+                        ? "Check plan"
+                        : "Analyzing..."}
                     </Button>
                   </div>
                 </div>
@@ -278,29 +307,16 @@ export default function PlanCheckPage() {
                       alt="Plan"
                     />
                   )}
-                  {selectedCommentIndex !== null && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top:
-                          commentAnalyses[selectedCommentIndex].bbox.y1 *
-                          imageScaleFactor,
-                        left:
-                          commentAnalyses[selectedCommentIndex].bbox.x1 *
-                          imageScaleFactor,
-                        width:
-                          (commentAnalyses[selectedCommentIndex].bbox.x2 -
-                            commentAnalyses[selectedCommentIndex].bbox.x1) *
-                          imageScaleFactor,
-                        height:
-                          (commentAnalyses[selectedCommentIndex].bbox.y2 -
-                            commentAnalyses[selectedCommentIndex].bbox.y1) *
-                          imageScaleFactor,
-                        backgroundColor: "blue",
-                        opacity: 0.2,
-                      }}
+                  {commentAnalyses.map((analysis, index) => (
+                    <CommentMarkup
+                      key={analysis.comment}
+                      index={index}
+                      analysis={analysis}
+                      isSelected={selectedCommentIndex === index}
+                      onSelect={() => setSelectedCommentIndex(index)}
+                      imageScaleFactor={imageScaleFactor}
                     />
-                  )}
+                  ))}
                 </div>
                 <div className="basis-1/4 flex flex-col items-end gap-4">
                   {commentAnalyses.length === 0 && (
@@ -334,7 +350,18 @@ export default function PlanCheckPage() {
                       {commentAnalyses.map((analysis, index) => (
                         <div
                           key={analysis.comment}
-                          className="border-b cursor-pointer hover:bg-gray-100 p-3"
+                          ref={
+                            selectedCommentIndex === index
+                              ? (el) =>
+                                  el?.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "nearest",
+                                  })
+                              : undefined
+                          }
+                          className={`border-b cursor-pointer hover:bg-gray-100 p-3 ${
+                            selectedCommentIndex === index ? "bg-blue-50" : ""
+                          }`}
                           onClick={() => setSelectedCommentIndex(index)}
                         >
                           <p className="italic border-l-2 pl-2 border-black mb-2">

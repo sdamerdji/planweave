@@ -382,3 +382,5 @@ export const PlanningSearchJurisdictionNames: Record<
   broomfield_co: "Broomfield, Colorado",
   thornton_co: "Thornton, Colorado",
 };
+
+export const DEMO_BUCKET_PATH = "denver_townhome/webp-small/15.webp";

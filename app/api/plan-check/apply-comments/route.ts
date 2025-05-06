@@ -6,6 +6,7 @@ import {
 } from "@google/genai";
 import { env } from "@/src/env";
 import { supabase, UPLOADED_PLAN_BUCKET } from "@/src/SupabaseClient";
+import { DEMO_BUCKET_PATH } from "@/src/constants";
 
 const ai = new GoogleGenAI({
   apiKey: env.GEMINI_API_KEY,
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
     // Get the plan image from Supabase storage
     const { data, error } = await supabase.storage
       .from(UPLOADED_PLAN_BUCKET)
-      .download("denver_townhome/webp-small/8.webp");
+      .download(DEMO_BUCKET_PATH);
 
     if (error || !data) {
       console.error(error);

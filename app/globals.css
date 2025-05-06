@@ -122,6 +122,21 @@
   }
 }
 
+.rainbow-button {
+  background: radial-gradient(
+    circle,
+    rgba(255, 160, 28, 1) 0%,
+    rgba(245, 54, 54, 1) 50%,
+    rgba(165, 44, 245, 1) 100%
+  );
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+}
+
+.rainbow-button:hover {
+  animation: rainbow-border 3s linear infinite;
+}
+
 .rainbow-border-hover {
   position: absolute;
   top: -12px;
@@ -134,7 +149,7 @@
   background-size: 200% 200%;
   background-position: 50% 50%;
   border-radius: 12px;
-  animation: rainbow-border 3s ease infinite;
+  animation: rainbow-border 3s linear infinite;
   /* transition: all 0.3s ease; */
   box-shadow:
     inset 0 0 10px 10px white,
@@ -152,19 +167,19 @@
 
 @keyframes rainbow-border {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 100%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 200% 200%;
   }
 }
 
 @font-face {
-  font-family: 'lora';
-  src: url('/fonts/Lora-VariableFont_wght.ttf') format('ttf');
+  font-family: "lora";
+  src: url("/fonts/Lora-VariableFont_wght.ttf") format("ttf");
   font-weight: 400;
   font-style: normal;
 }
