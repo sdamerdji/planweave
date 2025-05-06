@@ -102,7 +102,7 @@ export default function Home() {
               
               <div className="space-y-10">
                 <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
-                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg shadow-sm group-hover:shadow-md transition-all">
                     <SearchCheck size={26} className="text-indigo-600" strokeWidth={1.5} />
                   </div>
                   <div className="border-l border-indigo-100 pl-8 py-2">
@@ -114,7 +114,7 @@ export default function Home() {
                 </div>
                 
                 <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
-                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg shadow-sm group-hover:shadow-md transition-all">
                     <MessageCircleQuestion size={26} className="text-indigo-600" strokeWidth={1.5} />
                   </div>
                   <div className="border-l border-indigo-100 pl-8 py-2">
@@ -126,7 +126,7 @@ export default function Home() {
                 </div>
                 
                 <div className="group relative pl-20 transform transition-transform duration-500 hover:translate-x-2">
-                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white rounded-lg shadow-md group-hover:shadow-lg transition-all">
+                  <div className="absolute left-0 top-0 w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg shadow-sm group-hover:shadow-md transition-all">
                     <FileText size={26} className="text-indigo-600" strokeWidth={1.5} />
                   </div>
                   <div className="border-l border-indigo-100 pl-8 py-2">
@@ -247,9 +247,9 @@ export default function Home() {
                     alt="Plan Check Demo" 
                     fill
                     style={{ objectFit: 'cover' }}
-                    className="brightness-90 contrast-125"
+                    className="brightness-95 contrast-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/10 to-transparent"></div>
                 </div>
               </div>
             </div>
