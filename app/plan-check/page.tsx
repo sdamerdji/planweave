@@ -13,7 +13,7 @@ import {
 import { Loader2, CircleCheck, CircleArrowRight } from "lucide-react";
 import useResizeObserver from "use-resize-observer";
 import { CommentMarkup } from "./CommentMarkup";
-
+import { twMerge } from "tailwind-merge";
 const EXAMPLE_PLANS = [
   {
     id: "denver_townhome",
@@ -79,10 +79,10 @@ const DemoCommentAnalyses = [
     explanation:
       "Review the floor plans for each bathroom shown and verify that all necessary clearances around toilets, sinks, and showers/tubs are depicted with dimensions according to IRC Section R307.1. Add or adjust dimensions as needed on the drawings to clearly indicate these clearances.",
     bbox: {
-      x1: 292.5,
-      y1: 650.13,
-      x2: 822.5,
-      y2: 978.529,
+      x1: 690,
+      y1: 650,
+      x2: 822,
+      y2: 825,
     },
   },
 ];
@@ -109,8 +109,6 @@ export default function PlanCheckPage() {
   const [selectedCommentIndex, setSelectedCommentIndex] = useState<
     number | null
   >(null);
-
-  console.log(commentAnalyses);
 
   const imageRef = useRef<HTMLImageElement>(null);
   const [naturalImageWidth, setNaturalImageWidth] = useState<number | null>(
@@ -252,7 +250,7 @@ export default function PlanCheckPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Plan Check</h1>
+      <h1 className="text-3xl font-bold mb-8">AI Plan Check</h1>
 
       <Card className="p-6 mb-8">
         <div className="space-y-4">
@@ -318,7 +316,12 @@ export default function PlanCheckPage() {
                     />
                   ))}
                 </div>
-                <div className="basis-1/4 flex flex-col items-end gap-4">
+                <div
+                  className={twMerge(
+                    "basis-1/4 flex flex-col",
+                    commentAnalyses.length === 0 && "gap-4"
+                  )}
+                >
                   {commentAnalyses.length === 0 && (
                     <div className="w-full flex flex-col gap-4 pl-4">
                       <div className="bg-gray-100 p-4 rounded-lg flex items-center gap-2">
@@ -340,37 +343,59 @@ export default function PlanCheckPage() {
                     </div>
                   )}
                   {commentAnalyses.length > 0 && (
-                    <div
-                      className="w-full border-t relative"
-                      style={{ maxHeight: "700px", overflowY: "auto" }}
-                    >
-                      <h2 className="text-lg p-3 font-semibold sticky top-0 bg-white">
+                    <>
+                      <h2 className="text-lg p-3 font-semibold sticky top-0 bg-white border-t">
                         Comments on similar plans
                       </h2>
-                      {commentAnalyses.map((analysis, index) => (
-                        <div
-                          key={analysis.comment}
-                          ref={
-                            selectedCommentIndex === index
-                              ? (el) =>
-                                  el?.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "nearest",
-                                  })
-                              : undefined
-                          }
-                          className={`border-b cursor-pointer hover:bg-gray-100 p-3 ${
-                            selectedCommentIndex === index ? "bg-blue-50" : ""
-                          }`}
-                          onClick={() => setSelectedCommentIndex(index)}
-                        >
-                          <p className="italic border-l-2 pl-2 border-black mb-2">
-                            {analysis.comment}
-                          </p>
-                          <p>{analysis.explanation}</p>
-                        </div>
-                      ))}
-                    </div>
+                      <div
+                        className="w-full"
+                        style={{ maxHeight: "700px", overflowY: "auto" }}
+                      >
+                        {commentAnalyses.map((analysis, index) => (
+                          <div
+                            key={analysis.comment}
+                            ref={
+                              selectedCommentIndex === index
+                                ? (el) =>
+                                    el?.scrollIntoView({
+                                      behavior: "smooth",
+                                      block: "nearest",
+                                    })
+                                : undefined
+                            }
+                            className={`border-b cursor-pointer hover:bg-gray-100 p-3 ${
+                              selectedCommentIndex === index ? "bg-blue-50" : ""
+                            }`}
+                            onClick={() => setSelectedCommentIndex(index)}
+                          >
+                            <div
+                              style={{
+                                width: "20px",
+                                height: "20px",
+                                borderRadius: "50%",
+                                backgroundColor: "rgba(73, 105, 245)",
+                                borderColor: "black",
+                                borderWidth: 1,
+                                color: "white",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "14px",
+                                fontWeight: "bold",
+                                marginBottom: "10px",
+                                marginLeft: "-2px",
+                              }}
+                            >
+                              {index + 1}
+                            </div>
+                            <p className="italic border-l-2 pl-2 border-black mb-2">
+                              {analysis.comment}
+                            </p>
+                            <p>{analysis.explanation}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

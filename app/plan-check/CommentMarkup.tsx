@@ -35,35 +35,37 @@ export const CommentMarkup = ({
         }}
       />
 
-      {!isSelected && (
-        <div
-          key={`comment-bubble-${index}`}
-          onClick={onSelect}
-          style={{
-            position: "absolute",
-            top: ((analysis.bbox.y1 + analysis.bbox.y2) / 2) * imageScaleFactor,
-            left:
-              ((analysis.bbox.x1 + analysis.bbox.x2) / 2) * imageScaleFactor,
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            backgroundColor: "rgba(73, 105, 245)",
-            borderColor: "black",
-            borderWidth: 1,
-            color: "white",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "14px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            zIndex: 1,
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          {index + 1}
-        </div>
-      )}
+      <div
+        key={`comment-bubble-${index}`}
+        onClick={onSelect}
+        style={{
+          position: "absolute",
+          top: isSelected
+            ? analysis.bbox.y1 * imageScaleFactor
+            : ((analysis.bbox.y1 + analysis.bbox.y2) / 2) * imageScaleFactor,
+          left: isSelected
+            ? analysis.bbox.x1 * imageScaleFactor
+            : ((analysis.bbox.x1 + analysis.bbox.x2) / 2) * imageScaleFactor,
+          transition: "all 0.3s ease",
+          width: "20px",
+          height: "20px",
+          borderRadius: "50%",
+          backgroundColor: "rgba(73, 105, 245)",
+          borderColor: "black",
+          borderWidth: 1,
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "14px",
+          fontWeight: "bold",
+          cursor: "pointer",
+          zIndex: 1,
+          transform: "translate(-47%, -47%)",
+        }}
+      >
+        {index + 1}
+      </div>
     </>
   );
 };
