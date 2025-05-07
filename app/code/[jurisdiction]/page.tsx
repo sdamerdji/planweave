@@ -9,6 +9,7 @@ import { asterisksToBold } from "@/src/utils";
 import { Document, ResponseBody } from "@/app/api/codeSearch/apiTypes";
 import { twMerge } from "tailwind-merge";
 import { PlanningSearchJurisdiction } from "@/src/constants";
+import { Answer } from "./Answer";
 
 type QuestionAnswer = {
   searchId: number;
@@ -274,12 +275,7 @@ export default function CodeSearchPage({
           </h1>
           <div className="flex gap-12">
             <div className="basis-1/2">
-              <p
-                className="whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{
-                  __html: asterisksToBold(questionAnswer.answer),
-                }}
-              />
+              <Answer text={questionAnswer.answer} />
               <div className="flex gap-4 mt-4">
                 <ThumbsUp
                   className={`w-5 h-5 cursor-pointer hover:text-green-500 ${
