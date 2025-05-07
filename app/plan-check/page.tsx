@@ -62,17 +62,18 @@ const DemoCommentAnalyses = [
       y2: 1001.8670000000001,
     },
   },
-  {
-    comment: "DRYER VENT TO EXHAUST MIN. 3' FROM WINDOW",
-    explanation:
-      "Ensure the dryer vent is clearly indicated on the plan at least 3 feet away from any windows on the same level. Add a note specifying the minimum required distance from windows per code requirements.",
-    bbox: {
-      x1: 1552.5,
-      y1: 778.489,
-      x2: 1735,
-      y2: 986.864,
-    },
-  },
+  // this one isn't great; vents would probably go on mech plan, not arch plan
+  // {
+  //   comment: "DRYER VENT TO EXHAUST MIN. 3' FROM WINDOW",
+  //   explanation:
+  //     "Ensure the dryer vent is clearly indicated on the plan at least 3 feet away from any windows on the same level. Add a note specifying the minimum required distance from windows per code requirements.",
+  //   bbox: {
+  //     x1: 1552.5,
+  //     y1: 778.489,
+  //     x2: 1735,
+  //     y2: 986.864,
+  //   },
+  // },
   {
     comment:
       "Provide dimensions on plans verifying bathroom fixture clearances in accordance with IRC Section R307.1.",
@@ -83,6 +84,30 @@ const DemoCommentAnalyses = [
       y1: 650,
       x2: 822,
       y2: 825,
+    },
+  },
+  {
+    comment:
+      "Verify ventilation will be provided in the bathrooms. If using natural ventilation, provide dimensions and operation of all windows; if mechanical, verify local exhaust system.",
+    explanation:
+      "Review the floor plans for bathroom windows, confirming their size and operability are noted if natural ventilation is intended. If mechanical ventilation is planned, ensure a local exhaust system is indicated within the bathroom areas on the drawings.",
+    bbox: {
+      x1: 1400,
+      y1: 630,
+      x2: 1980,
+      y2: 830,
+    },
+  },
+  {
+    comment:
+      "Note compliance with glazing safety requirements per R308.4.5 for glazing adjacent to wet areas such as bathrooms and pools in basement and main level bathrooms.",
+    explanation:
+      "Review the drawings for windows in bathrooms, specifically in the basement and main level plans, and ensure they meet the size and location requirements of R308.4.5 for safety glazing. Verify that all shower and tub enclosures, regardless of location, are also designated to receive safety glazing per code.",
+    bbox: {
+      x1: 280,
+      y1: 650,
+      x2: 340,
+      y2: 830,
     },
   },
 ];
