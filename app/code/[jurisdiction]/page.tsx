@@ -111,7 +111,7 @@ export default function CodeSearchPage({
     setError(null);
 
     try {
-      // First get the documents
+      // First get the documents from RAG
       const searchRes = await fetch("/api/codeSearch", {
         method: "POST",
         headers: {
@@ -133,7 +133,7 @@ export default function CodeSearchPage({
       }
 
       const searchData = await searchRes.json();
-      const { documents, searchId } = searchData;
+      const { documents, searchId, keywords } = searchData;
 
       if (documents.length === 0) {
         const newQuestionAnswer: QuestionAnswer = {
@@ -160,6 +160,35 @@ export default function CodeSearchPage({
       ]);
       setQuery("");
 
+      // kick off highlighting on its own coroutine; it takes forever, so let
+      // completions happen at the same time
+      fetch("/api/codeSearch/highlight", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: queryToUse,
+          documents,
+          keywords,
+        }),
+      }).then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Error highlighting: ${res.status}`);
+        }
+
+        const { documents: highlightedDocuments } = await res.json();
+
+        setConversationHistory((oldHistory) => {
+          const lastQuestionAnswer = {
+            ...oldHistory[oldHistory.length - 1],
+            documents: highlightedDocuments,
+          };
+          return [...oldHistory.slice(0, -1), lastQuestionAnswer];
+        });
+      });
+
+      // Then generate the response
       // Then generate the response
       const responseRes = await fetch("/api/codeSearch/generateResponse", {
         method: "POST",

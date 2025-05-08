@@ -11,13 +11,13 @@ export async function POST(request: Request) {
       jurisdiction,
     } = (await request.json()) as RequestBody;
 
-    const { documents } = await processRAGQuery(
+    const { documents, keywords } = await processRAGQuery(
       searchQuery,
       conversationHistory,
       jurisdiction
     );
 
-    return NextResponse.json({ documents }, { status: 200 });
+    return NextResponse.json({ documents, keywords }, { status: 200 });
   } catch (error) {
     console.error("Full error:", error);
     return NextResponse.json(

@@ -9,10 +9,8 @@ import {
   PlanningSearchJurisdiction,
   PlanningSearchJurisdictionNames,
 } from "@/src/constants";
-import { processHighlights } from "./highlightText";
 
 const USE_CRAG = true;
-
 const DEBUG = true;
 
 // Debug logging utility
@@ -71,6 +69,7 @@ export async function processRAGQuery(
   jurisdiction: PlanningSearchJurisdiction
 ): Promise<{
   documents: Document[];
+  keywords: string[];
 }> {
   const timings: Record<string, number> = {};
   const startTime = Date.now();
@@ -108,6 +107,7 @@ export async function processRAGQuery(
   if (documents.length === 0) {
     return {
       documents: [],
+      keywords: [],
     };
   }
 
@@ -139,28 +139,11 @@ export async function processRAGQuery(
   if (relevantDocuments.length === 0) {
     return {
       documents: [],
+      keywords: [],
     };
   }
 
   var topRelevantDocuments = relevantDocuments.slice(0, 5);
-
-  // Process highlights for the documents
-  const highlightsStartTime = Date.now();
-  const highlights = await processHighlights(
-    searchQuery,
-    topRelevantDocuments,
-    keywords
-  );
-  timings.highlights = Date.now() - highlightsStartTime;
-
-  // Apply the highlights to the documents
-  topRelevantDocuments = topRelevantDocuments.map((doc) => {
-    const highlight = highlights.find((h) => h.id === doc.id);
-    return {
-      ...doc,
-      bodyText: highlight ? highlight.highlightedBodyText : doc.bodyText,
-    };
-  });
 
   if (DEBUG) {
     console.log("Process RAG Query Timings (ms):", {
@@ -171,5 +154,6 @@ export async function processRAGQuery(
 
   return {
     documents: topRelevantDocuments,
+    keywords,
   };
 }
