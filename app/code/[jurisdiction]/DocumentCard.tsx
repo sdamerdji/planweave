@@ -46,6 +46,7 @@ export function DocumentCard({
   } else {
     documentLink = doc.pdfUrl;
   }
+  console.log(doc.bodyText);
 
   return (
     <Card>
