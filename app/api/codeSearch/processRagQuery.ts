@@ -70,7 +70,6 @@ export async function processRAGQuery(
   conversationHistory: { question: string; answer: string }[] = [],
   jurisdiction: PlanningSearchJurisdiction
 ): Promise<{
-  responseText: string;
   documents: Document[];
 }> {
   const timings: Record<string, number> = {};
@@ -108,7 +107,6 @@ export async function processRAGQuery(
 
   if (documents.length === 0) {
     return {
-      responseText: "No relevant code chunks found.",
       documents: [],
     };
   }
@@ -140,7 +138,6 @@ export async function processRAGQuery(
   // Return early if no relevant documents are found
   if (relevantDocuments.length === 0) {
     return {
-      responseText: "No relevant code chunks found.",
       documents: [],
     };
   }
@@ -165,55 +162,14 @@ export async function processRAGQuery(
     };
   });
 
-  const systemPrompt = `
-      You will be provided with a USER QUERY as well as some SUPPORTING
-      DOCUMENTS. Use the supporting documents to answer the user's question.
-
-      The SUPPORTING DOCUMENTS are snippets of ${PlanningSearchJurisdictionNames[jurisdiction]} code.
-      It's possible that the SUPPORTING DOCUMENTS do not contain the answer,
-      and in those cases it's ok to say that you don't have enough information
-      to answer the question.
-      `;
-
-  const userPrompt = `
-      USER QUERY:
-      ${searchQuery}
-
-      SUPPORTING DOCUMENTS:
-      ${topRelevantDocuments.map((doc) => doc.text).join("\n\n")}
-      `;
-
-  const llmStartTime = Date.now();
-  const response = await OpenAIClient.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      { role: "system", content: systemPrompt },
-      ...conversationHistory
-        .map((q) => [
-          { role: "user", content: q.question } as const,
-          { role: "assistant", content: q.answer } as const,
-        ])
-        .flat(),
-      { role: "user", content: userPrompt },
-    ],
-    temperature: 0,
-  });
-  timings.llmResponse = Date.now() - llmStartTime;
-
-  const responseText = response.choices[0].message.content ?? "";
-
   if (DEBUG) {
     console.log("Process RAG Query Timings (ms):", {
       ...timings,
       total: Date.now() - startTime,
     });
-    console.log(
-      `Tokens used: ${response.usage?.prompt_tokens} in/${response.usage?.completion_tokens} out`
-    );
   }
 
   return {
-    responseText: responseText,
     documents: topRelevantDocuments,
   };
 }

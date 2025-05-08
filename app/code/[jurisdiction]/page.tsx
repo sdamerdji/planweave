@@ -111,7 +111,8 @@ export default function CodeSearchPage({
     setError(null);
 
     try {
-      const res = await fetch("/api/codeSearch", {
+      // First get the documents
+      const searchRes = await fetch("/api/codeSearch", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -127,20 +128,83 @@ export default function CodeSearchPage({
         }),
       });
 
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status}`);
+      if (!searchRes.ok) {
+        throw new Error(`Error: ${searchRes.status}`);
       }
 
-      const data = (await res.json()) as ResponseBody;
-      const newQuestionAnswer: QuestionAnswer = {
-        question: queryToUse,
-        answer: data.responseText,
-        documents: data.documents,
-        searchId: data.searchId,
-        feedback: null,
-      };
-      setConversationHistory([...conversationHistory, newQuestionAnswer]);
+      const searchData = await searchRes.json();
+      const { documents, searchId } = searchData;
+
+      if (documents.length === 0) {
+        const newQuestionAnswer: QuestionAnswer = {
+          question: queryToUse,
+          answer: "No relevant code chunks found.",
+          documents: [],
+          searchId,
+          feedback: null,
+        };
+        setConversationHistory([...conversationHistory, newQuestionAnswer]);
+        setQuery("");
+        return;
+      }
+
+      setConversationHistory([
+        ...conversationHistory,
+        {
+          question: queryToUse,
+          answer: "",
+          documents,
+          searchId,
+          feedback: null,
+        },
+      ]);
       setQuery("");
+
+      // Then generate the response
+      const responseRes = await fetch("/api/codeSearch/generateResponse", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: queryToUse,
+          conversationHistory: conversationHistory.map((q) => ({
+            question: q.question,
+            answer: q.answer,
+            searchId: q.searchId,
+          })),
+          jurisdiction,
+          documents,
+        }),
+      });
+
+      if (!responseRes.ok) {
+        throw new Error(`Error: ${responseRes.status}`);
+      }
+
+      if (!responseRes.body) {
+        throw new Error("No response body");
+      }
+
+      const reader = responseRes.body.getReader();
+      const decoder = new TextDecoder();
+      let responseText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        responseText += chunk;
+
+        setConversationHistory((oldHistory) => {
+          const lastQuestionAnswer = {
+            ...oldHistory[oldHistory.length - 1],
+            answer: responseText,
+          };
+          return [...oldHistory.slice(0, -1), lastQuestionAnswer];
+        });
+      }
 
       await new Promise((resolve) => setTimeout(resolve, 100));
 
