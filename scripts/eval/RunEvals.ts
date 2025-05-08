@@ -56,9 +56,12 @@ async function runTests() {
         [],
         "johnson_county_ks"
       );
+
+      // TODO: fix evals
       const passed = await evaluateResponse(
         testCase.query,
         testCase.answerContent,
+        // @ts-expect-error
         result.responseText
       );
 
@@ -66,6 +69,7 @@ async function runTests() {
         failedTests++;
         console.log("❌");
         console.log("Expected content:", testCase.answerContent);
+        // @ts-expect-error
         console.log("Actual response:", result.responseText);
       } else {
         console.log("✅");
