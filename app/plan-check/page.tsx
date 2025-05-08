@@ -139,18 +139,62 @@ export default function PlanCheckPage() {
   const [naturalImageWidth, setNaturalImageWidth] = useState<number | null>(
     null
   );
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { width: imageWidth } = useResizeObserver<HTMLImageElement>({
     // @ts-expect-error
     ref: imageRef,
   });
+  
+  // Handle image load event to ensure dimensions are set correctly
+  const handleImageLoad = () => {
+    if (imageRef.current) {
+      console.log("Image loaded, naturalWidth:", imageRef.current.naturalWidth);
+      // Set natural width immediately
+      setNaturalImageWidth(imageRef.current.naturalWidth);
+      
+      // Small delay to ensure ResizeObserver has accurate measurements
+      setTimeout(() => {
+        setImageLoaded(true);
+      }, 100);
+    }
+  };
+
+  // Still keep the useEffect for when the ref changes
   useEffect(() => {
     if (imageRef.current) {
-      setNaturalImageWidth(imageRef.current.naturalWidth);
+      // Handle case where image is already loaded from cache
+      if (imageRef.current.complete) {
+        console.log("Image already loaded from cache");
+        handleImageLoad();
+      }
     }
   }, [imageRef.current]);
 
-  const imageScaleFactor =
-    imageWidth && naturalImageWidth ? imageWidth / naturalImageWidth : 1;
+  // Calculate the image scale factor more robustly
+  const calculateImageScaleFactor = () => {
+    if (!imageWidth || !naturalImageWidth || naturalImageWidth === 0) {
+      return 1; // Default to 1 if we don't have valid measurements
+    }
+    
+    const calculatedFactor = imageWidth / naturalImageWidth;
+    
+    // Validate the result is a reasonable number
+    if (isNaN(calculatedFactor) || !isFinite(calculatedFactor) || calculatedFactor <= 0) {
+      console.warn("Invalid scale factor calculated:", calculatedFactor, 
+        "imageWidth:", imageWidth, "naturalImageWidth:", naturalImageWidth);
+      return 1;
+    }
+    
+    return calculatedFactor;
+  };
+
+  const imageScaleFactor = calculateImageScaleFactor();
+  
+  // Log when values change
+  useEffect(() => {
+    console.log("Values updated - imageScaleFactor:", imageScaleFactor, 
+      "imageWidth:", imageWidth, "naturalImageWidth:", naturalImageWidth);
+  }, [imageScaleFactor, imageWidth, naturalImageWidth]);
 
   const analyzeComment = async (comment: string) => {
     if (!selectedPlan) return;
@@ -205,6 +249,8 @@ export default function PlanCheckPage() {
     if (!selectedPlan) return;
 
     setCommentAnalyses([]);
+    setImageLoaded(false); // Reset image loaded state
+    
     try {
       setPhase("describe-plan");
       const response = await fetch("/api/plan-check/describe-plan", {
@@ -257,7 +303,42 @@ export default function PlanCheckPage() {
       setPhase("explain-comments");
 
       if (DEMO_MODE) {
-        setCommentAnalyses(DemoCommentAnalyses);
+        // Ensure we have the correct image dimensions before setting demo analyses
+        if (imageRef.current && imageRef.current.complete) {
+          // Make sure naturalImageWidth is set
+          if (!naturalImageWidth && imageRef.current.naturalWidth) {
+            setNaturalImageWidth(imageRef.current.naturalWidth);
+          }
+          
+          // Small delay to ensure ResizeObserver has accurate measurements
+          setTimeout(() => {
+            setCommentAnalyses(DemoCommentAnalyses);
+            setImageLoaded(true);
+          }, 200);
+        } else {
+          // If image is not yet loaded, wait for it
+          const checkImageLoaded = setInterval(() => {
+            if (imageRef.current && imageRef.current.complete) {
+              clearInterval(checkImageLoaded);
+              // Make sure naturalImageWidth is set
+              if (!naturalImageWidth && imageRef.current.naturalWidth) {
+                setNaturalImageWidth(imageRef.current.naturalWidth);
+              }
+              
+              setTimeout(() => {
+                setCommentAnalyses(DemoCommentAnalyses);
+                setImageLoaded(true);
+              }, 200);
+            }
+          }, 100);
+          
+          // Safety cleanup after 5 seconds
+          setTimeout(() => {
+            clearInterval(checkImageLoaded);
+            setCommentAnalyses(DemoCommentAnalyses);
+            setImageLoaded(true);
+          }, 5000);
+        }
       } else {
         // Analyze each comment in sequence
         for (const comment of applyData.relevantComments) {
@@ -265,11 +346,14 @@ export default function PlanCheckPage() {
           // Don't get ratelimited
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
+        setImageLoaded(true);
       }
 
       setPhase("done");
     } catch (error) {
       console.error("Error:", error);
+      // Ensure we set imageLoaded even on error
+      setImageLoaded(true);
     }
   };
 
@@ -328,9 +412,10 @@ export default function PlanCheckPage() {
                         EXAMPLE_PLANS.find((p) => p.id === selectedPlan)?.path
                       }
                       alt="Plan"
+                      onLoad={handleImageLoad}
                     />
                   )}
-                  {commentAnalyses.map((analysis, index) => (
+                  {imageLoaded && commentAnalyses.map((analysis, index) => (
                     <CommentMarkup
                       key={analysis.comment}
                       index={index}
