@@ -10,6 +10,8 @@ import { Document, ResponseBody } from "@/app/api/codeSearch/apiTypes";
 import { twMerge } from "tailwind-merge";
 import { PlanningSearchJurisdiction } from "@/src/constants";
 import { Answer } from "./Answer";
+import { DocumentCard } from "./DocumentCard";
+import { DocumentModal } from "./DocumentModal";
 
 type QuestionAnswer = {
   searchId: number;
@@ -90,6 +92,7 @@ export default function CodeSearchPage({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchIsFocused, setSearchIsFocused] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
   const [conversationHistory, setConversationHistory] = useState<
     QuestionAnswer[]
@@ -302,53 +305,14 @@ export default function CodeSearchPage({
               <div className="basis-1/2">
                 <h2 className="text-xl font-semibold mb-4">Code citations</h2>
                 <div className="space-y-4">
-                  {questionAnswer.documents.map((doc, index) => {
-                    const highlightedBodyText =
-                      doc.bodyText.match(/<mark>(.*?)<\/mark>/)?.[1];
-
-                    let documentLink = null;
-                    if (jurisdiction === "oak_ridge_tn") {
-                      // TODO
-                    } else if (
-                      jurisdiction === "johnson_county_ks" &&
-                      highlightedBodyText
-                    ) {
-                      documentLink = `/pdf-viewer?url=${encodeURIComponent(doc.pdfUrl)}&s=${encodeURIComponent(highlightedBodyText)}`;
-                    } else {
-                      documentLink = doc.pdfUrl;
-                    }
-
-                    return (
-                      <Card key={doc.id}>
-                        <div className="p-4 space-y-4">
-                          <div>
-                            <div className="text-lg font-semibold">
-                              {doc.pdfTitle}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {doc.headingText}
-                            </div>
-                          </div>
-                          <p
-                            className="whitespace-pre-wrap line-clamp-[12]"
-                            dangerouslySetInnerHTML={{ __html: doc.bodyText }}
-                          />
-                          {documentLink && (
-                            <div>
-                              <a
-                                href={documentLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 hover:underline"
-                              >
-                                View code
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    );
-                  })}
+                  {questionAnswer.documents.map((doc, index) => (
+                    <DocumentCard
+                      key={doc.id}
+                      doc={doc}
+                      jurisdiction={jurisdiction}
+                      onOpenModal={setSelectedDoc}
+                    />
+                  ))}
                 </div>
               </div>
             )}
@@ -377,6 +341,10 @@ export default function CodeSearchPage({
             </Button>
           </div>
         </div>
+      )}
+
+      {selectedDoc && (
+        <DocumentModal onClose={() => setSelectedDoc(null)} doc={selectedDoc} />
       )}
     </div>
   );

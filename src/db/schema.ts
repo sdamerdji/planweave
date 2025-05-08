@@ -247,13 +247,14 @@ export const codeChunk = pgTable(
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     jurisdiction: text().$type<PlanningSearchJurisdiction>().notNull(),
-    // pdfTitle + headingText + bodyText
+    // pdfTitle + headingText + bodyText (text that is actually embedded)
     text: text().notNull(),
     pdfTitle: text().notNull(),
     headingText: text().notNull(),
     bodyText: text().notNull(),
+    htmlContent: text(), // if available, this will be rendered
     embedding: vector("embedding", { dimensions: 1536 }).notNull(),
-    pdfUrl: text().notNull(),
+    pdfUrl: text(),
   },
   (table) => [
     index("code_chunk_tsvector_index").using(

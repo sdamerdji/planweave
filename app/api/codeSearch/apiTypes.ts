@@ -13,7 +13,7 @@ export type RequestBody = {
 export type Document = {
   id: number;
   text: string;
-  pdfUrl: string;
+  pdfUrl: string | null;
   pdfTitle: string;
   headingText: string;
   bodyText: string;

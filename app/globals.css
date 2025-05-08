@@ -137,34 +137,6 @@
   animation: rainbow-border 3s linear infinite;
 }
 
-.rainbow-border-hover {
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  padding: 12px;
-}
-
-.rainbow-border-hover:hover {
-  background: linear-gradient(45deg, violet, #ff0000, #ff7f00, #ff0000, violet);
-  background-size: 200% 200%;
-  background-position: 50% 50%;
-  border-radius: 12px;
-  animation: rainbow-border 3s linear infinite;
-  /* transition: all 0.3s ease; */
-  box-shadow:
-    inset 0 0 10px 10px white,
-    inset 0 0 3px 2px white;
-  border: none;
-}
-
-/* .rainbow-border-hover > * {
-  opacity: 1;
-}
-
-.rainbow-border-hover:hover {
-  opacity: 1;
-} */
-
 @keyframes rainbow-border {
   0% {
     background-position: 0% 0%;
@@ -175,6 +147,35 @@
   100% {
     background-position: 200% 200%;
   }
+}
+
+.content-container table {
+  @apply border-collapse border border-slate-300 my-4;
+}
+
+.content-container table td {
+  @apply border border-slate-300 px-4 py-2;
+}
+
+/* Hacky: our municodes import strategy merges header row in with body rows */
+.content-container table tr:first-child td {
+  @apply bg-slate-100 font-bold;
+}
+
+/* These are generally sub-headings within the table */
+.content-container table td:only-child {
+  @apply font-bold;
+}
+
+.overflow-fade {
+  background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0)
+    )
+    center bottom;
+
+  background-attachment: scroll;
 }
 
 @font-face {

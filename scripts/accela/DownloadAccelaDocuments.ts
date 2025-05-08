@@ -93,15 +93,6 @@ const performSearch = async (page: Page, startDate: Date, endDate: Date) => {
   await page.waitForLoadState("networkidle");
 };
 
-// ctl00_PlaceHolderMain_dgvPermitList_gdvPermitList_ctl03_hlPermitNumber
-
-// const getNextRecordLinkElement = async (page: Page) => {
-//   return await page.waitForSelector(
-//     "a#ctl00_PlaceHolderMain_dgvPermitList_gdvPermitList_ctl02_hlPermitNumber",
-//     { timeout: 5000 }
-//   );
-// };
-
 const downloadAttachmentsForRecord = async (
   page: Page,
   recordNumber: string,
@@ -170,12 +161,14 @@ const downloadAttachmentsForRecord = async (
   await page.waitForTimeout(1000);
 };
 
-const YEAR = "2024";
+const YEAR = "2023";
+
+const FINAL_RECORD_NUMBER = 14106;
 
 const findBuildingLogAttachments = async () => {
   const browser = await chromium.launch({ headless: true });
 
-  const recordNumberQueue = _.range(1, 1001).map((i) => {
+  const recordNumberQueue = _.range(1, FINAL_RECORD_NUMBER + 1).map((i) => {
     const padded = _.padStart(i.toString(), 7, "0");
     return `${YEAR}-LOG-${padded}`;
   });

@@ -233,7 +233,8 @@ export async function processRAGQuery(
       text: codeChunk.text,
       pdfTitle: codeChunk.pdfTitle,
       headingText: codeChunk.headingText,
-      bodyText: codeChunk.bodyText,
+      // TODO: this is a hack, should probably select both of these and handle differently
+      bodyText: sql<string>`coalesce(${codeChunk.htmlContent}, ${codeChunk.bodyText}) as body_text`,
       jurisdiction: codeChunk.jurisdiction,
       pdfUrl: codeChunk.pdfUrl,
     })
